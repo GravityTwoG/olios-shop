@@ -1,0 +1,28 @@
+.App {
+  min-height: 100vh;
+  padding-left: 70px;
+
+  background-color: #f0f0f0;
+  position: relative;
+
+  & .content {
+    width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+.AppBurgerButton {
+  position: fixed;
+  top: 25px;
+  right: 35px;
+  z-index: 5;
+}
+
+@media screen and (max-width: 767px) {
+  .App {
+    padding: 60px 0 0;
+  }
+  .AppBurgerButton {
+    display: none;
+  }
+}
