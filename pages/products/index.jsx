@@ -1,12 +1,12 @@
 import React from 'react';
-import './products.module.sass';
+import classes from '../../features/Product/components/organisms/allProducts/products.module.sass';
 
-import AllProductsContainer from './allProducts/AllProductsContainer';
+import { AllProducts } from '../../features/Product/components/organisms/allProducts/AllProducts';
 
 function Products(props) {
   return (
-    <div className="products">
-      <AllProductsContainer {...props} />
+    <div className={classes["products"]}>
+      <AllProducts {...props} />
     </div>
   );
 }

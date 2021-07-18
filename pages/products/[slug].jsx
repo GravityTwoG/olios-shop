@@ -1,15 +1,15 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import './products.module.sass';
+import classes from '../../features/Product/components/organisms/allProducts/products.module.sass';
 
-import ProductsByCategoryContainer from './productsByCategory/ProductsByCategoryContainer';
+import ProductsByCategoryContainer from '../../features/Product/components/organisms/productsByCategory/ProductsByCategoryContainer';
 
 function Products() {
-  const router = useRouter();
+  const {query} = useRouter();
 
   return (
-    <div className="products">
-      <ProductsByCategoryContainer category={router.query.slug} />
+    <div className={classes["products"]}>
+      <ProductsByCategoryContainer category={query.slug} />
     </div>
   );
 }

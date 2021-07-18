@@ -1,14 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import {
-  updateSearchWord,
-  resetSearchWord,
-  requestSearchedProducts,
-} from '../../src/store/search/actions';
 
-import SearchPage from './SearchPage';
+import SearchPage from '../../features/Product/components/organisms/SearchPage';
 
-class SearchPageContainer extends React.Component {
+export default class SearchPageContainer extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.searchWord !== prevProps.searchWord) {
       this.props.requestSearchedProducts(this.props.searchWord);
@@ -26,21 +20,3 @@ class SearchPageContainer extends React.Component {
     );
   }
 }
-
-const mapStateToProps = (state) => {
-  return {
-    searchWord: state.search.searchWord,
-    results: state.search.results,
-  };
-};
-
-const mapDispatchToProps = {
-  updateSearchWord,
-  resetSearchWord,
-  requestSearchedProducts,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SearchPageContainer);

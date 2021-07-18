@@ -1,0 +1,44 @@
+.product-card
+  padding: 20px 25px
+  min-width: 220px
+  background-color: #fff
+  transition: box-shadow .3s
+  text-decoration: none
+  color: #000
+  text-align: left
+  &:hover
+    box-shadow: 0px 0px 25px 5px rgba(199, 199, 199, 0.7)
+
+  & &__photo
+    display: block
+    margin: 0 auto
+    height: 190px
+    img
+      margin: 0 auto
+      display: block
+      height: 100%
+      max-width: 100%
+  & &__name
+    margin-top: 8px
+    overflow: hidden
+    text-overflow: ellipsis
+    height: 44px
+    text-transform: uppercase
+    font-weight: 300
+    font-size: 18px
+  & &__desc
+    height: 38px
+    overflow: hidden
+    text-overflow: ellipsis
+    font-size: 16px
+    font-weight: 300
+    color: #a8a8a8
+    margin-bottom: 8px
+  & &__price
+    font-size: 18px
+    font-weight: 700
+    color: #0023ff
+
+.option-enter
+  transform: translate(-100%)
+
