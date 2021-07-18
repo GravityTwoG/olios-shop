@@ -31,7 +31,7 @@ function Basket(props) {
                 onClick={() => {
                   props.deleteItem(product.productId);
                 }}
-              ></button>
+              />
             </div>
           </div>
         );
@@ -43,7 +43,7 @@ function Basket(props) {
     <div className={classes['basket-page']}>
       <div className={classes['basket-page__title']}>Basket</div>
       <div className={classes['basket']}>{renderProducts()}</div>
-      <div className={classes['order']}></div>
+      <div className={classes['order']}/>
     </div>
   );
 }

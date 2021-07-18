@@ -1,29 +1,27 @@
 import React from 'react';
-import styles from './mainPage.module.css';
+import classes from './mainPage.module.css';
 
 import Head from 'next/head';
-import { Button } from '../../components/Button/Button';
+import {StyledLink} from "../../components/atoms/StyledLink";
 
 export function HomePage() {
   return (
-    <div className={styles['MainPage']}>
+    <div className={classes['MainPage']}>
       <Head>
-        <title>Olios Shop</title>
-        {/* <link rel="icon" href="/favicon.ico" /> */}
-        <link rel="icon" href="/LOGO.png" />
+        <title>Olios Shop | Home</title>
       </Head>
 
-      <div className={styles['main-text']}>
-        <div className={styles['main-text-title']}>OLIOS</div>
-        <div className={styles['main-text-subtitle']}>
+      <div className={classes['main-text']}>
+        <div className={classes['main-text-title']}>OLIOS</div>
+        <div className={classes['main-text-subtitle']}>
           NEWEST FURNITURE SHOP
         </div>
-        <Button href="/products" isLink>
+        <StyledLink href="/products">
           View more
-        </Button>
+        </StyledLink>
       </div>
     </div>
   );
 }
 
-export default HomePage;
+export default HomePage
