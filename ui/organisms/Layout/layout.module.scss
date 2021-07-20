@@ -1,6 +1,8 @@
 .App {
   min-height: 100vh;
   padding-left: 70px;
+  display: flex;
+  align-items: stretch;
 
   background-color: #f0f0f0;
   position: relative;

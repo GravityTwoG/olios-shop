@@ -17,13 +17,12 @@ export function Layout({ children }) {
       <Sidebar
         onBurgerMenuClick={toggleMenu}
         burgerMenuOpened={isMenuOpened}
-        className={classes.AppSidebar}
       />
 
-      <div className="content">
+      <div className={classes.content}>
         {children}
         <div className={classes.AppBurgerButton}>
-          <BurgerButton onClick={toggleMenu} isOpened={isMenuOpened} />
+          <BurgerButton onClick={toggleMenu} isOpened={isMenuOpened}/>
         </div>
       </div>
 

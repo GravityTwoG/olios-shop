@@ -2,7 +2,7 @@ import React from 'react';
 import classes from './mainPage.module.css';
 
 import Head from 'next/head';
-import {StyledLink} from "../../components/atoms/StyledLink";
+import {StyledLink} from "../../ui/atoms/StyledLink";
 
 export function HomePage() {
   return (
@@ -16,6 +16,7 @@ export function HomePage() {
         <div className={classes['main-text-subtitle']}>
           NEWEST FURNITURE SHOP
         </div>
+
         <StyledLink href="/products">
           View more
         </StyledLink>
