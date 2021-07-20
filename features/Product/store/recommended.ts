@@ -4,9 +4,9 @@ import {fetchRecommendedProducts} from "../api";
 
 export const $recommendedProducts = createStore<IProduct[]>([]);
 
-export const setRecommendedProducts = createEvent<IProduct[]>('set products');
+export const setRecommendedProducts = createEvent<IProduct[]>('set recommended products');
 
-export const fetchRecommendedProductsFx = createEffect<void, IProduct[]>(async () => {
+export const fetchRecommendedProductsFx = createEffect<string, IProduct[]>(async (productCategory) => {
     return fetchRecommendedProducts();
 });
 fetchRecommendedProductsFx.done.watch(({result}) => {

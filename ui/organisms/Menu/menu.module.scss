@@ -1,6 +1,7 @@
 .Menu {
   padding: 110px 30px 40px;
   max-width: 100%;
+  width: 360px;
   height: 100%;
   overflow: auto;
   box-sizing: border-box;
@@ -9,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  transition: 0.2s ease-in;
+  transition: 0.15s ease-in-out;
   position: fixed;
   top: 0;
   right: 0;

@@ -1,9 +1,9 @@
 import React from 'react';
 import classes from '../../../../pages/product/product-page.module.sass';
 
-import Category from '../../../../components/molecules/Category';
-import  {ProductCard} from '../molecules/productCard/ProductCard';
-import {Button} from "../../../../components/atoms/Button";
+import Category from '../../../../ui/molecules/Category';
+import {ProductCard} from '../molecules/productCard/ProductCard';
+import {Button} from "../../../../ui/atoms/Button";
 
 class ProductPage extends React.Component {
   quantity = React.createRef();
