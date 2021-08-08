@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 
 import { User } from '../users/user.model';
 
@@ -26,5 +35,12 @@ export class AuthController {
   @Post('register')
   async register(@Body() registerUserDto: RegisterUserDto): Promise<User> {
     return this.authService.register(registerUserDto);
+  }
+
+  @Get('logout')
+  async logout(@Req() req, @Res() res) {
+    await req.session.destroy();
+    res.clearCookie('connect.sid');
+    throw new UnauthorizedException();
   }
 }
