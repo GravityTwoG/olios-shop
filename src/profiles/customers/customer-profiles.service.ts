@@ -12,8 +12,11 @@ export class CustomerProfilesService {
   ) {}
 
   async createProfile(user: User): Promise<CustomerProfile> {
-    const profile = this.customerProfilesRepository.create({ user });
-    await this.customerProfilesRepository.save(profile);
-    return profile;
+    const profile = this.generateProfile(user);
+    return this.customerProfilesRepository.save(profile);
+  }
+
+  generateProfile(user: User): CustomerProfile {
+    return this.customerProfilesRepository.create({ user });
   }
 }

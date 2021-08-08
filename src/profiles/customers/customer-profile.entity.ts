@@ -1,45 +1,52 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from '../../users/user.entity';
 
 export type ICustomerProfile = {
   id: string;
-  userId: string;
-  basketId: string;
+  user: User;
+  // basketId: string;
 
   country: string;
   city: string;
   street: string;
   house: string;
-  floor: string;
+  floor: number;
   flat: string;
 };
 
 @Entity()
-export class CustomerProfile {
+export class CustomerProfile implements ICustomerProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { cascade: true })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ unique: true })
-  basketId: string;
+  // @Column({ unique: true })
+  // basketId: string;
 
-  @Column()
+  @Column({ default: '' })
   country: string;
 
-  @Column()
+  @Column({ default: '' })
   city: string;
 
-  @Column()
+  @Column({ default: '' })
   street: string;
 
-  @Column()
+  @Column({ default: '' })
   house: string;
 
-  @Column()
-  floor: string;
+  @Column({ default: 1 })
+  floor: number;
 
-  @Column()
+  @Column({ default: '' })
   flat: string;
 }

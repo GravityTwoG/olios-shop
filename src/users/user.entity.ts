@@ -1,9 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { UserRole } from './user-role.enum';
+import { CustomerProfile } from '../profiles/customers/customer-profile.entity';
 
 export type IUser = {
   id: string;
+  customerProfile: CustomerProfile;
   email: string;
   isEmailVerified: boolean;
   password: string;
@@ -16,9 +24,13 @@ export type IUser = {
 };
 
 @Entity()
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @OneToOne(() => CustomerProfile, { cascade: true, nullable: true })
+  @JoinColumn({ name: 'customer_profile_id' })
+  customerProfile: CustomerProfile;
 
   @Column({ unique: true })
   email: string;

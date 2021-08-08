@@ -1,10 +1,16 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+
+import { CustomerProfileType } from '../profiles/customers/customer-profile.type';
+
 import { UserRole } from './user-role.enum';
 
 @ObjectType('user')
 export class UserType {
   @Field(() => ID)
   id: string;
+
+  @Field(() => CustomerProfileType)
+  customerProfile: CustomerProfileType;
 
   @Field()
   email: string;
