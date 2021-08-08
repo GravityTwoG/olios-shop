@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { User } from '../users/user.model';
+import { User } from '../users/user.entity';
 
 import { AuthService } from './auth.service';
 import { LoginAuthGuard } from './guards/login-auth.guard';

@@ -1,29 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 
-import { User } from './user.model';
+import { User } from './user.entity';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel(User)
-    private userModel: typeof User,
-  ) {}
+  constructor(private usersRepository: UsersRepository) {}
 
   async getUsers(): Promise<User[]> {
-    return this.userModel.findAll();
+    return this.usersRepository.find();
   }
 
   getUser(filter: { id: string } | { email: string }): Promise<User> {
     if ('id' in filter) {
-      return this.userModel.findOne({
+      return this.usersRepository.findOne({
         where: {
           id: filter.id,
         },
       });
     }
     if ('email' in filter) {
-      return this.userModel.findOne({
+      return this.usersRepository.findOne({
         where: {
           id: filter.email,
         },
@@ -33,6 +30,6 @@ export class UsersService {
 
   async deleteUser(id: string): Promise<void> {
     const user = await this.getUser({ id });
-    await user.destroy();
+    // await user.destroy();
   }
 }

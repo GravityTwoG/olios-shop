@@ -2,23 +2,19 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 
-import { User } from '../users/user.model';
+import { User } from '../users/user.entity';
 
 import { comparePasswords, hashPassword } from './passwords-hashing';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { UsersRepository } from '../users/users.repository';
 
 const PG_DUPLICATION_ERROR_CODE = '23505';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @InjectModel(User)
-    private userModel: typeof User,
-  ) {}
+  constructor(private usersRepository: UsersRepository) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.findUserByEmail(email);
@@ -41,10 +37,10 @@ export class AuthService {
     const hashedPassword = hashPassword(password);
 
     try {
-      const user = this.userModel.build();
+      const user = this.usersRepository.create();
       user.email = email;
       user.password = hashedPassword;
-      await user.save(); // should be awaited here to catch db errors
+      await this.usersRepository.save(user); // should be awaited here to catch db errors
       return user;
     } catch (e) {
       if (e.parent?.code === PG_DUPLICATION_ERROR_CODE) {
@@ -56,6 +52,6 @@ export class AuthService {
   }
 
   async findUserByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ where: { email } });
+    return this.usersRepository.findOne({ email });
   }
 }

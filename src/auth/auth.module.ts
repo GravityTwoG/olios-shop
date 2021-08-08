@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
-import { SequelizeModule } from '@nestjs/sequelize';
 
 import { UsersModule } from '../users/users.module';
-import { User } from '../users/user.model';
 
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './local.strategy';
 import { SessionSerializer } from './session.serializer';
+import { UsersRepository } from '../users/users.repository';
 
 @Module({
   imports: [
     UsersModule,
-    SequelizeModule.forFeature([User]),
+    TypeOrmModule.forFeature([UsersRepository]),
     PassportModule.register({ session: true }),
   ],
   providers: [AuthService, LocalStrategy, SessionSerializer],

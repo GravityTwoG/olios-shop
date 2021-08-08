@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration, DatabaseConfig } from './configuration';
@@ -17,20 +18,21 @@ import { AuthModule } from './auth/auth.module';
       cache: true,
       validationSchema: configValidationSchema,
     }),
-    SequelizeModule.forRootAsync({
+    TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         const dbConfig = configService.get<DatabaseConfig>('database');
         return {
-          dialect: 'postgres',
-          database: dbConfig.name,
+          type: 'postgres',
+          autoLoadModels: true,
+          synchronize: true,
+          entities: [join(__dirname, '**', '*.entity.{js,ts}')],
           host: dbConfig.host,
           port: dbConfig.port,
           username: dbConfig.username,
           password: dbConfig.password,
-          autoLoadModels: true,
-          synchronize: true,
+          database: dbConfig.name,
         };
       },
     }),
