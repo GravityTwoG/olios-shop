@@ -4,17 +4,17 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 
+import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
 
-import { comparePasswords, hashPassword } from './passwords-hashing';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { UsersRepository } from '../users/users.repository';
+import { comparePasswords, hashPassword } from './passwords-hashing';
 
 const PG_DUPLICATION_ERROR_CODE = '23505';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(private usersService: UsersService) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.findUserByEmail(email);
@@ -28,22 +28,22 @@ export class AuthService {
     return user;
   }
 
-  async register(registerUserInput: RegisterUserDto) {
-    return this.createUser(registerUserInput);
+  async register(registerUserDto: RegisterUserDto): Promise<User> {
+    return this.createUser(registerUserDto);
   }
 
   async createUser(registerUserDto: RegisterUserDto): Promise<User> {
     const { email, password } = registerUserDto;
     const hashedPassword = hashPassword(password);
-
+    console.log(registerUserDto);
     try {
-      const user = this.usersRepository.create();
-      user.email = email;
-      user.password = hashedPassword;
-      await this.usersRepository.save(user); // should be awaited here to catch db errors
+      const user = await this.usersService.createUser({
+        email,
+        password: hashedPassword,
+      }); // should be awaited here to catch db errors
       return user;
     } catch (e) {
-      if (e.parent?.code === PG_DUPLICATION_ERROR_CODE) {
+      if (e.code === PG_DUPLICATION_ERROR_CODE) {
         throw new ConflictException('username already exists');
       } else {
         throw new InternalServerErrorException();
@@ -52,6 +52,6 @@ export class AuthService {
   }
 
   async findUserByEmail(email: string): Promise<User> {
-    return this.usersRepository.findOne({ email });
+    return this.usersService.getUser({ email });
   }
 }

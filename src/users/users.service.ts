@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { User } from './user.entity';
 import { UsersRepository } from './users.repository';
+import { RegisterUserDto } from '../auth/dto/register-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -12,24 +13,18 @@ export class UsersService {
   }
 
   getUser(filter: { id: string } | { email: string }): Promise<User> {
-    if ('id' in filter) {
-      return this.usersRepository.findOne({
-        where: {
-          id: filter.id,
-        },
-      });
-    }
-    if ('email' in filter) {
-      return this.usersRepository.findOne({
-        where: {
-          id: filter.email,
-        },
-      });
-    }
+    return this.usersRepository.getUser(filter);
+  }
+
+  async createUser(createUserDto: RegisterUserDto): Promise<User> {
+    const user = await this.usersRepository.createUser(createUserDto);
+    return user;
   }
 
   async deleteUser(id: string): Promise<void> {
-    const user = await this.getUser({ id });
-    // await user.destroy();
+    const result = await this.usersRepository.delete({ id });
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with id "${id}" not found`);
+    }
   }
 }
