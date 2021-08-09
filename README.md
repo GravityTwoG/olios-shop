@@ -1,8 +1,12 @@
-## Redis
+Run Redis and Postgres
 
 ```shell
-docker run --name olios-redis -p 6379:6379 -d redis redis-server --appendonly yes
+docker-compose up
 ```
+
+![img.png](img.png)
+
+![img_1.png](img_1.png)
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
