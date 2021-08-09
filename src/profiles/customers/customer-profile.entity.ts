@@ -5,12 +5,14 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { Basket } from '../../baskets/entities/basket.entity';
 import { User } from '../../users/user.entity';
 
 export type ICustomerProfile = {
   id: string;
   user: User;
-  // basketId: string;
+  basket: Basket;
 
   country: string;
   city: string;
@@ -29,8 +31,9 @@ export class CustomerProfile implements ICustomerProfile {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  // @Column({ unique: true })
-  // basketId: string;
+  @OneToOne(() => Basket)
+  @JoinColumn({ name: 'basket_id' })
+  basket: Basket;
 
   @Column({ default: '' })
   country: string;

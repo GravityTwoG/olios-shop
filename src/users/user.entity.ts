@@ -29,9 +29,8 @@ export class User implements IUser {
   id: string;
 
   @OneToOne(() => CustomerProfile, {
-    cascade: true,
+    cascade: ['insert', 'update', 'remove', 'soft-remove', 'recover'],
     nullable: true,
-    eager: true,
   })
   @JoinColumn({ name: 'customer_profile_id' })
   customerProfile: CustomerProfile;

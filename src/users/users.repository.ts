@@ -6,13 +6,19 @@ import { User } from './user.entity';
 export class UsersRepository extends Repository<User> {
   getUser(filter: { id: string } | { email: string }): Promise<User> {
     if ('id' in filter) {
-      return this.findOne({
-        id: filter.id,
-      });
+      return this.findOne(
+        {
+          id: filter.id,
+        },
+        { loadRelationIds: true },
+      );
     } else if ('email' in filter) {
-      return this.findOne({
-        email: filter.email,
-      });
+      return this.findOne(
+        {
+          email: filter.email,
+        },
+        { loadRelationIds: true },
+      );
     }
   }
 }

@@ -1,15 +1,15 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { User } from '../../users/user.entity';
 import { UserType } from '../../users/user.type';
+import { BasketType } from '../../baskets/basket.type';
 
 @ObjectType('CustomerProfile')
 export class CustomerProfileType {
-  @Field()
+  @Field(() => ID)
   id: string;
 
-  // @Field(() => UserType)
-  // user: UserType;
+  @Field(() => ID)
+  basket: string;
 
   @Field()
   country: string;

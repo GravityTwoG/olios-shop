@@ -9,6 +9,7 @@ import { configValidationSchema } from './configuration.schema';
 
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { BasketsModule } from './baskets/baskets.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    BasketsModule,
   ],
 })
 export class AppModule {}
