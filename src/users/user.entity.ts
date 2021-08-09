@@ -28,7 +28,11 @@ export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => CustomerProfile, { cascade: true, nullable: true })
+  @OneToOne(() => CustomerProfile, {
+    cascade: true,
+    nullable: true,
+    eager: true,
+  })
   @JoinColumn({ name: 'customer_profile_id' })
   customerProfile: CustomerProfile;
 

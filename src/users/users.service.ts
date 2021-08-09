@@ -5,12 +5,12 @@ import {
 } from '@nestjs/common';
 import { Connection } from 'typeorm';
 
-import { User } from './user.entity';
-import { UsersRepository } from './users.repository';
-import { RegisterUserDto } from '../auth/dto/register-user.dto';
-import { UserRole } from './user-role.enum';
 import { CustomerProfilesService } from '../profiles/customers/customer-profiles.service';
-import { CustomerProfile } from '../profiles/customers/customer-profile.entity';
+import { RegisterUserDto } from '../auth/dto/register-user.dto';
+
+import { User } from './user.entity';
+import { UserRole } from './user-role.enum';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +21,7 @@ export class UsersService {
   ) {}
 
   async getUsers(): Promise<User[]> {
-    return this.usersRepository.find({ relations: ['customerProfile'] });
+    return this.usersRepository.find();
   }
 
   getUser(filter: { id: string } | { email: string }): Promise<User> {
