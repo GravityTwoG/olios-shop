@@ -12,7 +12,13 @@ async function bootstrap() {
   const redisClient = redis.createClient({ url: process.env.REDIS_URI });
   const RedisStore = connectRedis(session);
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe()); // validation bu class-validator, class-transformer
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  ); // validation bu class-validator, class-transformer
   app.enableCors();
   app.use(
     session({
