@@ -1,22 +1,17 @@
-import {
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
+import { UserDto } from '../users/dto/user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
-import { RegisterUserDto } from './dto/register-user.dto';
 import { comparePasswords, hashPassword } from './passwords-hashing';
-
-const PG_DUPLICATION_ERROR_CODE = '23505';
 
 @Injectable()
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
-  async validateUser(email: string, password: string): Promise<User | null> {
+  async validateUser(email: string, password: string): Promise<UserDto | null> {
     const user = await this.findUserByEmail(email);
     if (!user) {
       return null;
@@ -28,30 +23,21 @@ export class AuthService {
     return user;
   }
 
-  async register(registerUserDto: RegisterUserDto): Promise<User> {
+  async register(registerUserDto: CreateUserDto): Promise<User> {
     return this.createUser(registerUserDto);
   }
 
-  async createUser(registerUserDto: RegisterUserDto): Promise<User> {
+  async createUser(registerUserDto: CreateUserDto): Promise<User> {
     const { email, password } = registerUserDto;
     const hashedPassword = hashPassword(password);
 
-    try {
-      const user = await this.usersService.createUser({
-        email,
-        password: hashedPassword,
-      }); // should be awaited here to catch db errors
-      return user;
-    } catch (e) {
-      if (e.code === PG_DUPLICATION_ERROR_CODE) {
-        throw new ConflictException('username already exists');
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
+    return this.usersService.createUser({
+      email,
+      password: hashedPassword,
+    });
   }
 
-  async findUserByEmail(email: string): Promise<User> {
+  async findUserByEmail(email: string): Promise<UserDto> {
     return this.usersService.getUser({ email });
   }
 }

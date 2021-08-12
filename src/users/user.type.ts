@@ -1,14 +1,15 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { UserRole } from './user-role.enum';
+import { UserDto } from './dto/user.dto';
 
 @ObjectType('User')
-export class UserType {
+export class UserType implements UserDto {
   @Field(() => ID)
   id: string;
 
   @Field(() => ID)
-  customerProfile: string;
+  customerProfileId: string;
 
   @Field()
   email: string;
