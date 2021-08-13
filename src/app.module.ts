@@ -41,6 +41,7 @@ import { ProductCategoriesModule } from './product-categories/product-categories
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
+      uploads: false,
     }),
     UsersModule,
     AuthModule,

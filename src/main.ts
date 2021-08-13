@@ -6,6 +6,7 @@ import * as redis from 'redis';
 import * as connectRedis from 'connect-redis';
 
 import { AppModule } from './app.module';
+import { graphqlUploadExpress } from 'graphql-upload';
 
 async function bootstrap() {
   const PORT = process.env.PORT;
@@ -18,8 +19,15 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
     }),
-  ); // validation bu class-validator, class-transformer
+  ); // validation by class-validator, class-transformer
+
   app.enableCors();
+  app.use(
+    graphqlUploadExpress({
+      maxFiles: 5,
+      maxFileSize: 10000000,
+    }),
+  );
   app.use(
     session({
       secret: process.env.SESSION_SECRET,

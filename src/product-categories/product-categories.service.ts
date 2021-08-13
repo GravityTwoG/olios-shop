@@ -4,6 +4,8 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { createWriteStream } from 'fs';
+import { randomUUID } from 'crypto';
 
 import { CreateProductCategoryInput } from './dto/create-product-category.input';
 import { UpdateProductCategoryInput } from './dto/update-product-category.input';
@@ -20,18 +22,37 @@ export class ProductCategoriesService {
     createProductCategoryInput: CreateProductCategoryInput,
   ): Promise<ProductCategory> {
     const { name } = createProductCategoryInput;
+    const isAlreadyExists = await this.productCategoriesRepository.findOne({
+      name,
+    });
+    if (isAlreadyExists) {
+      throw new ConflictException(`Category "${name}" already exists`);
+    }
 
     try {
+      let iconName = '';
+      if ('iconFile' in createProductCategoryInput) {
+        const { filename, createReadStream } =
+          await createProductCategoryInput.iconFile;
+
+        const stream = createReadStream();
+        iconName = `${randomUUID()}_${filename}`;
+        const out = createWriteStream(`./uploads/${iconName}`);
+        await stream.pipe(out);
+      }
+
       const category = await this.productCategoriesRepository.create({
         name,
-        iconUrl: '',
+        iconUrl: iconName,
       });
 
       await this.productCategoriesRepository.save(category);
       return category;
     } catch (err) {
       if (err.code === '23505') {
-        throw new ConflictException(`Category "${name}" already exists`);
+        throw new ConflictException(
+          `Category "${createProductCategoryInput.name}" already exists`,
+        );
       } else {
         throw new InternalServerErrorException();
       }

@@ -1,4 +1,5 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+
 import { ProductCategoriesService } from './product-categories.service';
 import { CreateProductCategoryInput } from './dto/create-product-category.input';
 import { UpdateProductCategoryInput } from './dto/update-product-category.input';
@@ -11,12 +12,19 @@ export class ProductCategoriesResolver {
   ) {}
 
   @Mutation(() => ProductCategoryType)
-  createProductCategory(
-    @Args('createProductCategoryInput')
-    createProductCategoryInput: CreateProductCategoryInput,
+  async createProductCategory(
+    @Args({
+      name: 'createProductCategoryInput',
+      type: () => CreateProductCategoryInput,
+    })
+    // Do not use CreateProductCategoryInput for validation
+    createProductCategoryInput,
   ) {
     return this.productCategoriesService.create(createProductCategoryInput);
   }
+
+  @Mutation(() => ProductCategoryType)
+  async updateCategoryIcon() {}
 
   @Query(() => [ProductCategoryType])
   productCategories(): Promise<ProductCategoryType[]> {
@@ -30,8 +38,11 @@ export class ProductCategoriesResolver {
 
   @Mutation(() => ProductCategoryType)
   updateProductCategory(
-    @Args('updateProductCategoryInput')
-    updateProductCategoryInput: UpdateProductCategoryInput,
+    @Args({
+      name: 'updateProductCategoryInput',
+      type: () => UpdateProductCategoryInput,
+    })
+    updateProductCategoryInput,
   ): Promise<ProductCategoryType> {
     return this.productCategoriesService.update(
       updateProductCategoryInput.id,
