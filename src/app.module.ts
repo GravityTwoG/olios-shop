@@ -10,6 +10,8 @@ import { configValidationSchema } from './configuration.schema';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { BasketsModule } from './baskets/baskets.module';
+import { ProductsModule } from './products/products.module';
+import { ProductCategoriesModule } from './product-categories/product-categories.module';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { BasketsModule } from './baskets/baskets.module';
     UsersModule,
     AuthModule,
     BasketsModule,
+    ProductsModule,
+    ProductCategoriesModule,
   ],
 })
 export class AppModule {}

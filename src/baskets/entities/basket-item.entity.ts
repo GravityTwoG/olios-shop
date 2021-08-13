@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Basket } from './basket.entity';
 
 export const BASKET_ITEM_UUID_VERSION = 4;
@@ -10,4 +10,10 @@ export class BasketItem {
 
   @ManyToOne(() => Basket)
   basket: Basket;
+
+  @Column()
+  quantity: number;
+
+  @ManyToOne(() => Basket)
+  product: Basket;
 }
