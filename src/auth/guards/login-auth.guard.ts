@@ -1,11 +1,44 @@
-import { AuthGuard } from '@nestjs/passport';
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  UnauthorizedException,
+} from '@nestjs/common';
+import type * as Passport from 'passport';
 
-// Checks if login credentials are valid
-export class LoginAuthGuard extends AuthGuard('local') {
-  async canActivate(ctx): Promise<boolean> {
-    const result = (await super.canActivate(ctx)) as boolean;
-    const req = ctx.switchToHttp().getRequest();
-    await super.logIn(req);
-    return result;
+export class LoginAuthGuard implements CanActivate {
+  constructor(
+    @Inject('PASSPORT') private readonly passport: Passport.Authenticator,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const req = context.switchToHttp().getRequest();
+    const res = context.switchToHttp().getResponse();
+
+    req.user = await new Promise((resolve, reject) => {
+      this.passport.authenticate(
+        'local',
+        {
+          session: true,
+        },
+        (err, user, info) => {
+          try {
+            req.authInfo = info;
+            return resolve(this.handleRequest(err, user));
+          } catch (err) {
+            reject(err);
+          }
+        },
+      )(req, res);
+    });
+
+    return true;
+  }
+
+  handleRequest(err, user) {
+    if (err || !user) {
+      throw err || new UnauthorizedException();
+    }
+    return user;
   }
 }

@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
-import * as passport from 'passport';
 import * as redis from 'redis';
 import * as connectRedis from 'connect-redis';
 
@@ -37,8 +36,6 @@ async function bootstrap() {
       store: new RedisStore({ client: redisClient }),
     }),
   );
-  app.use(passport.initialize());
-  app.use(passport.session());
   await app.listen(PORT);
   console.log(`App listening on port: ${PORT}`);
 }

@@ -5,6 +5,7 @@ import {
   Post,
   Req,
   Res,
+  Session,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
@@ -15,20 +16,25 @@ import { AuthService } from './auth.service';
 import { LoginAuthGuard } from './guards/login-auth.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { CurrentUser } from './current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard)
   @Get('me')
-  async me(@Req() req): Promise<User> {
-    return req.user;
+  @UseGuards(AuthGuard)
+  async me(@CurrentUser() user): Promise<User> {
+    return user;
   }
 
-  @UseGuards(LoginAuthGuard)
   @Post('login')
-  async login(@Req() req): Promise<User> {
+  @UseGuards(LoginAuthGuard)
+  async login(
+    @Req() req,
+    @Session() session: Record<string, any>,
+  ): Promise<User> {
+    session.user = req.user;
     return req.user;
   }
 
