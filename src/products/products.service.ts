@@ -4,6 +4,8 @@ import { UpdateProductInput } from './dto/update-product.input';
 import { ProductsRepository } from './products.repository';
 import { ProductCategoriesService } from '../product-categories/product-categories.service';
 import { Product } from './entities/product.entity';
+import { randomUUID } from 'crypto';
+import { createWriteStream } from 'fs';
 
 @Injectable()
 export class ProductsService {
@@ -26,6 +28,16 @@ export class ProductsService {
       category,
       thumbUrl: '',
     });
+
+    if ('thumbFile' in createProductInput) {
+      const { createReadStream, filename } = await createProductInput.thumbFile;
+
+      const stream = createReadStream();
+      const thumbName = `${randomUUID()}_${filename}`;
+      const out = createWriteStream(`./uploads/${thumbName}`);
+      await stream.pipe(out);
+      product.thumbUrl = thumbName;
+    }
 
     await this.productRepository.save(product);
     return product;

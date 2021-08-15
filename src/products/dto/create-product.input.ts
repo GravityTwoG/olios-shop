@@ -1,5 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
 
 @InputType()
 export class CreateProductInput {
@@ -24,4 +25,8 @@ export class CreateProductInput {
   @IsNumber()
   @Field()
   categoryId: number;
+
+  @IsOptional()
+  @Field(() => GraphQLUpload, { nullable: true })
+  thumbFile?: FileUpload;
 }
