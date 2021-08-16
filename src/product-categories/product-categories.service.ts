@@ -4,13 +4,14 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { createWriteStream } from 'fs';
 import { randomUUID } from 'crypto';
+import { FileStorage } from '../common/FileStorage';
+
+import { ProductCategoriesRepository } from './product-categories.repository';
+import { ProductCategory } from './entities/product-category.entity';
 
 import { CreateProductCategoryInput } from './dto/create-product-category.input';
 import { UpdateProductCategoryInput } from './dto/update-product-category.input';
-import { ProductCategoriesRepository } from './product-categories.repository';
-import { ProductCategory } from './entities/product-category.entity';
 
 @Injectable()
 export class ProductCategoriesService {
@@ -30,21 +31,19 @@ export class ProductCategoriesService {
     }
 
     try {
-      let iconName = '';
+      const category = await this.productCategoriesRepository.create({
+        name,
+      });
+
       if ('iconFile' in createProductCategoryInput) {
         const { filename, createReadStream } =
           await createProductCategoryInput.iconFile;
 
         const stream = createReadStream();
-        iconName = `${randomUUID()}_${filename}`;
-        const out = createWriteStream(`./uploads/${iconName}`);
-        await stream.pipe(out);
+        const iconName = `${randomUUID()}_${filename}`;
+        await FileStorage.save(stream, iconName);
+        category.iconUrl = iconName;
       }
-
-      const category = await this.productCategoriesRepository.create({
-        name,
-        iconUrl: iconName,
-      });
 
       await this.productCategoriesRepository.save(category);
       return category;

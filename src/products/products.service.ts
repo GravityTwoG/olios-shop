@@ -1,11 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { FileStorage } from '../common/FileStorage';
+import { randomUUID } from 'crypto';
+
+import { ProductCategoriesService } from '../product-categories/product-categories.service';
+
+import { ProductsRepository } from './products.repository';
+import { Product } from './entities/product.entity';
+
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
-import { ProductsRepository } from './products.repository';
-import { ProductCategoriesService } from '../product-categories/product-categories.service';
-import { Product } from './entities/product.entity';
-import { randomUUID } from 'crypto';
-import { createWriteStream } from 'fs';
 
 @Injectable()
 export class ProductsService {
@@ -34,8 +37,7 @@ export class ProductsService {
 
       const stream = createReadStream();
       const thumbName = `${randomUUID()}_${filename}`;
-      const out = createWriteStream(`./uploads/${thumbName}`);
-      await stream.pipe(out);
+      await FileStorage.save(stream, thumbName);
       product.thumbUrl = thumbName;
     }
 
