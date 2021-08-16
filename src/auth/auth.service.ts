@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
@@ -11,16 +11,27 @@ import { comparePasswords, hashPassword } from './passwords-hashing';
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
-  async validateUser(email: string, password: string): Promise<UserDto | null> {
-    const user = await this.findUserByEmail(email);
-    if (!user) {
-      return null;
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<{ user: UserDto | null; error?: string }> {
+    try {
+      const user = await this.findUserByEmail(email);
+      if (!user) {
+        return { user: null, error: 'Invalid credentials' };
+      }
+      const areEqual = comparePasswords(user.password, password);
+      if (!areEqual) {
+        return { user: null, error: 'Invalid credentials' };
+      }
+      return { user };
+    } catch (err) {
+      if (err instanceof NotFoundException) {
+        return { user: null, error: 'Invalid credentials' };
+      }
+
+      return { user: null, error: 'Invalid credentials' };
     }
-    const areEqual = comparePasswords(user.password, password);
-    if (!areEqual) {
-      return null;
-    }
-    return user;
   }
 
   async register(registerUserDto: CreateUserDto): Promise<User> {

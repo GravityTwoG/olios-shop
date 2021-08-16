@@ -24,7 +24,7 @@ export class LoginAuthGuard implements CanActivate {
         (err, user, info) => {
           try {
             req.authInfo = info;
-            return resolve(this.handleRequest(err, user));
+            return resolve(this.handleRequest(err, user, info));
           } catch (err) {
             reject(err);
           }
@@ -35,8 +35,11 @@ export class LoginAuthGuard implements CanActivate {
     return true;
   }
 
-  handleRequest(err, user) {
+  handleRequest(err, user, info: any) {
     if (err || !user) {
+      if (info && info.message === 'Missing credentials') {
+        throw err || new UnauthorizedException(info.message);
+      }
       throw err || new UnauthorizedException();
     }
     return user;

@@ -24,9 +24,12 @@ import { AuthController } from './auth.controller';
               session: true,
             },
             async (email: string, password: string, done) => {
-              const user = await authService.validateUser(email, password);
+              const { user, error } = await authService.validateUser(
+                email,
+                password,
+              );
               if (!user) {
-                done('User is not valid', user);
+                done('', null, { message: error });
               } else {
                 done(null, user);
               }

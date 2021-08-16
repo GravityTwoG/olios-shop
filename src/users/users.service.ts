@@ -34,6 +34,11 @@ export class UsersService {
 
   async getUser(filter: { id: string } | { email: string }): Promise<UserDto> {
     const user = await this.usersRepository.getUser(filter);
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
     return mapUserEntityToDto(user);
   }
 
