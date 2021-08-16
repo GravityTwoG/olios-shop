@@ -20,7 +20,10 @@ async function bootstrap() {
     }),
   ); // validation by class-validator, class-transformer
 
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    credentials: true,
+  });
   app.use(
     graphqlUploadExpress({
       maxFiles: 5,
