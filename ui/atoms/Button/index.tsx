@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './button.module.scss';
 
-export type ButtonProps = {} & React.HTMLAttributes<HTMLButtonElement>;
+export type ButtonProps = {} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const Button: React.FC<ButtonProps> = (props) => {
   return (

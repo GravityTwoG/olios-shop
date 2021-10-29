@@ -1,0 +1,21 @@
+.card {
+  padding: 8px 12px;
+  background-color: #fff;
+}
+
+.user_info {
+  & > div {
+    display: flex;
+
+    & > dt {
+      flex: 0.2;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    & > dd {
+      flex: 1;
+      text-align: left;
+    }
+  }
+}
