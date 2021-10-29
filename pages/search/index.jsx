@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SearchPage from '../../features/Product/components/organisms/SearchPage';
+import SearchPage from '@/features/Product/components/organisms/SearchPage';
 
 export default class SearchPageContainer extends React.Component {
   componentDidUpdate(prevProps) {
