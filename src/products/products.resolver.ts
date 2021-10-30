@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 
 import { ProductsService } from './products.service';
 import { ProductType } from './product.type';
+
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { mapProductEntityToProductType } from './mapProductEntityToProductType';

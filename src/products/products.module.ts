@@ -5,11 +5,13 @@ import { ProductCategoriesModule } from '../product-categories/product-categorie
 
 import { ProductsService } from './products.service';
 import { ProductsResolver } from './products.resolver';
+
 import { ProductsRepository } from './products.repository';
+import { ProductImagesRepository } from './product-images.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ProductsRepository]),
+    TypeOrmModule.forFeature([ProductsRepository, ProductImagesRepository]),
     ProductCategoriesModule,
   ],
   providers: [ProductsResolver, ProductsService],

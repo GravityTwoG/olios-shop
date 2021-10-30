@@ -8,10 +8,10 @@ export function mapProductEntityToProductType(product: Product): ProductType {
     categoryId: product.category as unknown as number,
     description: product.description,
     name: product.name,
-    images: product.images,
     oldPrice: product.oldPrice,
     realPrice: product.realPrice,
     thumbUrl: product.thumbUrl,
+    images: product.images.map((im) => im.imageUrl),
   };
 
   if (product.category instanceof ProductCategory) {

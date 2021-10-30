@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ProductCategory } from '../../product-categories/entities/product-category.entity';
+import { ProductImage } from './product-image.entity';
 
 @Entity()
 export class Product {
@@ -18,8 +19,8 @@ export class Product {
   @Column({ default: '' })
   thumbUrl: string;
 
-  @Column({ type: 'simple-array', array: true, default: [] })
-  images: string[];
+  @ManyToOne(() => ProductImage)
+  images: ProductImage[];
 
   @Column({ default: -1 })
   oldPrice: number;
