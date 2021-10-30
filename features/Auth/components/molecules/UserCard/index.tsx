@@ -1,48 +1,64 @@
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
 import classes from './user-card.module.scss';
 
 import { IUser } from '../../../types';
 
 export type UserCardProps = {
   user: IUser;
+  isAuthorizationChecked: boolean;
 };
 
-export const UserCard = ({ user }: UserCardProps) => {
+export const UserCard = ({ user, isAuthorizationChecked }: UserCardProps) => {
   return (
     <div className={classes.card}>
       <dl className={classes['user_info']}>
         <div>
           <dt>ID</dt>
-          <dd>{user.id.slice(0, 16)}...</dd>
+          <dd>
+            {isAuthorizationChecked ? (
+              `${user.id.slice(0, 16)}...`
+            ) : (
+              <Skeleton />
+            )}
+          </dd>
         </div>
 
         <div>
           <dt>Name</dt>
-          <dd>{user.firstName}</dd>
+          <dd>{isAuthorizationChecked ? user.firstName : <Skeleton />}</dd>
         </div>
 
         <div>
           <dt>Last Name</dt>
-          <dd>{user.lastName}</dd>
+          <dd>{isAuthorizationChecked ? user.lastName : <Skeleton />}</dd>
         </div>
 
         <div>
           <dt>Patronymic</dt>
-          <dd>{user.patronymic}</dd>
+          <dd>{isAuthorizationChecked ? user.patronymic : <Skeleton />}</dd>
         </div>
 
         <div>
           <dt>Birth Date</dt>
-          {/*<dd>{user.birthDate}</dd>*/}
+          <dd>{isAuthorizationChecked ? user.birthDate : <Skeleton />}</dd>
         </div>
 
         <div>
           <dt>Email</dt>
-          <dd>{user.email}</dd>
+          <dd>{isAuthorizationChecked ? user.email : <Skeleton />}</dd>
         </div>
 
         <div>
           <dt>Roles</dt>
-          <dd>{user.roles.map((r) => `${r} `)}</dd>
+          <dd>
+            {isAuthorizationChecked ? (
+              user.roles.map((r) => `${r} `)
+            ) : (
+              <Skeleton />
+            )}
+          </dd>
         </div>
       </dl>
     </div>

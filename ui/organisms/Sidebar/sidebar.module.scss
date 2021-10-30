@@ -46,11 +46,11 @@
     transition: fill 0.2s;
   }
   &:hover path {
-    fill: #0023ff;
+    fill: var(--accent-color);
   }
 
   &.NavItemActive path {
-    fill: #0023ff;
+    fill: var(--accent-color);
   }
 }
 
