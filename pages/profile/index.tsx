@@ -32,9 +32,11 @@ export default function ProfilePage(
 
   return (
     <div className={classes.screen}>
-      <UserCard user={user} />
+      <div className={classes.container}>
+        <UserCard user={user} isAuthorizationChecked={isAuthorizationChecked} />
 
-      <Button onClick={() => logoutFx()}>logout</Button>
+        <Button onClick={() => logoutFx()}>logout</Button>
+      </div>
     </div>
   );
 }

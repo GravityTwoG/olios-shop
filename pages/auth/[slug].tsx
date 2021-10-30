@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useStore } from 'effector-react';
 import { useRouter } from 'next/router';
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 
 import {
   $isAuthorizationChecked,
@@ -9,8 +10,7 @@ import {
   RegisterForm,
 } from '../../features/Auth';
 import classes from './auth.module.scss';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
-import { NavLink } from '../../ui/atoms/NavLink';
+import { NavLink } from '@/ui/atoms/NavLink';
 
 export default function AuthPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,

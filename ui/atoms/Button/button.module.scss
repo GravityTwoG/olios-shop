@@ -1,6 +1,6 @@
 .BaseButton {
   display: inline-block;
-  background-color: #0023ff;
+  background-color: var(--accent-color);
   padding: 16px 44px 14px;
   border-radius: 1.5em;
   border: none;
@@ -10,18 +10,20 @@
   text-transform: uppercase;
   font-family: inherit;
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1;
   color: #fff;
   white-space: nowrap;
   transition: all 0.3s ease-in-out;
+
   & > a {
     color: #fff;
     text-transform: uppercase;
     text-decoration: none;
   }
+
   &:hover {
-    background-color: #0011c9;
+    background-color: var(--accent-hover-color);
   }
   &--black {
     background-color: #555;

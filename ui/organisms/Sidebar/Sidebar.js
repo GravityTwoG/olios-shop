@@ -9,25 +9,35 @@ import HomeIcon from './img/Home.svg';
 import BasketIcon from './img/Basket.svg';
 import SearchIcon from './img/Search.svg';
 import AboutIcon from './img/About.svg';
+import ProfileIcon from './img/Profile.svg';
 
 export default function Sidebar(props) {
   return (
     <aside className={`${classes.sidebar} ${props.className}`}>
       <Link href="/">
         <a className={classes.SidebarLogo}>
-          <img src="/LOGO.png" alt="Olios Shop" />
+          <img src="/LOGO.png" alt="Olios Shop"/>
         </a>
       </Link>
 
-      <MainNavigation />
+      <MainNavigation/>
 
-      <NavLink
-        href="/about"
-        className={classes.NavItem}
-        activeClassName={classes.NavItemActive}
-      >
-        <AboutIcon />
-      </NavLink>
+      <div>
+        <NavLink
+          href="/profile"
+          className={classes.NavItem}
+          activeClassName={classes.NavItemActive}
+        >
+          <ProfileIcon/>
+        </NavLink>
+        <NavLink
+          href="/about"
+          className={classes.NavItem}
+          activeClassName={classes.NavItemActive}
+        >
+          <AboutIcon/>
+        </NavLink>
+      </div>
 
       <BurgerButton
         onClick={props.onBurgerMenuClick}

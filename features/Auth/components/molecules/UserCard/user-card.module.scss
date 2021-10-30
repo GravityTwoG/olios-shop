@@ -4,6 +4,8 @@
 }
 
 .user_info {
+  max-width: 450px;
+
   & > div {
     display: flex;
 
@@ -11,6 +13,7 @@
       flex: 0.2;
       font-weight: 700;
       margin-right: 4px;
+      max-width: 80px;
     }
 
     & > dd {
