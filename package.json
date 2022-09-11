@@ -11,6 +11,7 @@
   "dependencies": {
     "@svgr/webpack": "^5.5.0",
     "@zeit/next-css": "^1.0.1",
+    "axios": "^0.27.2",
     "effector": "^21.8.12",
     "effector-react": "^21.3.3",
     "file-loader": "^6.2.0",

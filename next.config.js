@@ -37,6 +37,12 @@ nextConfig = {
 
     return config;
   },
+  compiler: {
+    styledComponents: {
+      // Not supported yet.
+      pure: true,
+    },
+  },
 };
 
 module.exports = withPlugins([], nextConfig);
