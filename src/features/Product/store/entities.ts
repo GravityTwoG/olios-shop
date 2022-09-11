@@ -1,4 +1,4 @@
-import { IProduct } from './types';
+import { IProduct } from '../../../types/IProduct';
 
 export const emptyProduct: IProduct = {
   id: 0,

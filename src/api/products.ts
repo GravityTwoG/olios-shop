@@ -1,4 +1,4 @@
-import { IProduct } from '../store';
+import { IProduct } from '@/src/features/Product/store';
 
 const productMock = {
   id: 1,

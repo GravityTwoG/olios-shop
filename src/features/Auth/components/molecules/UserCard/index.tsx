@@ -1,7 +1,7 @@
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import { IUser } from '@/src/types/User';
+import { IUser } from '@/src/types/IUser';
 
 import classes from './user-card.module.scss';
 

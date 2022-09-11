@@ -1,6 +1,6 @@
-import { IProduct } from './types';
+import { IProduct } from '../../../types/IProduct';
 import { createEffect, createEvent, createStore } from 'effector';
-import { fetchProduct } from '../api';
+import { fetchProduct } from '../../../api/products';
 import { emptyProduct } from './entities';
 
 export const $product = createStore<IProduct>(emptyProduct);

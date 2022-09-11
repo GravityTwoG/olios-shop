@@ -1,7 +1,8 @@
 import { createEvent, createStore, createEffect } from 'effector';
-import { ILoginCredentials, IRegisterCredentials } from '../types';
-import { AuthService } from '../api';
-import { IUser, IUserRole } from '@/src/types/User';
+import { ILoginCredentials, IRegisterCredentials } from '@/src/api/auth';
+import * as authApi from '@/src/api/auth';
+
+import { IUser, IUserRole } from '@/src/types/IUser';
 
 export const $isAuthorized = createStore(false);
 export const setIsAuthorized = createEvent<boolean>('set isAuthorized');
@@ -34,7 +35,7 @@ $loginError.on(setLoginError, (_, payload) => payload);
 
 export const loginFx = createEffect<ILoginCredentials, IUser>(
   async (credentials): Promise<IUser> => {
-    const user = await AuthService.login(credentials);
+    const user = await authApi.login(credentials);
 
     return {
       id: user.id,
@@ -65,8 +66,8 @@ $registerError.on(setRegisterError, (_, payload) => payload);
 
 export const registerFx = createEffect<IRegisterCredentials, IUser>(
   async (credentials): Promise<IUser> => {
-    const user = await AuthService.register(credentials);
-    await AuthService.login(credentials);
+    const user = await authApi.register(credentials);
+    await authApi.login(credentials);
 
     return {
       id: user.id,
@@ -93,7 +94,7 @@ registerFx.fail.watch(({ error }) => {
 
 export const checkAuthorizationFx = createEffect<void, IUser>(
   async (): Promise<IUser> => {
-    const user = await AuthService.check();
+    const user = await authApi.check();
 
     return {
       id: user.id,
@@ -121,7 +122,7 @@ checkAuthorizationFx.fail.watch(() => {
 });
 
 export const logoutFx = createEffect<void, void>(async (): Promise<void> => {
-  await AuthService.logout();
+  await authApi.logout();
 });
 
 logoutFx.done.watch(() => {
