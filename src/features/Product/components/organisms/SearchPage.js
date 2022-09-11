@@ -1,8 +1,8 @@
 import React from 'react';
-import '../../../../pages/search/search.module.sass';
+import '@/pages/search/search.module.sass';
 
-import {ProductCard} from '../molecules/productCard/ProductCard';
-import {ProductsGrid} from '../molecules/productsGrid/ProductsGrid';
+import { ProductCard } from '../molecules/productCard/ProductCard';
+import { ProductsGrid } from '../molecules/productsGrid/ProductsGrid';
 
 function SearchPage(props) {
   const getResults = () => {

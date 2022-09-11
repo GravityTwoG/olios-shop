@@ -8,9 +8,9 @@ import {
   $isAuthorized,
   LoginForm,
   RegisterForm,
-} from '../../features/Auth';
+} from '@/src/features/Auth';
 import classes from './auth.module.scss';
-import { NavLink } from '@/ui/atoms/NavLink';
+import { NavLink } from '@/src/ui/atoms/NavLink';
 
 export default function AuthPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,

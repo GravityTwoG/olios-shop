@@ -4,7 +4,7 @@ import classes from './register-form.module.scss';
 import { useStore } from 'effector-react';
 import { $registerError, registerFx } from '../../../store';
 
-import { Button } from '../../../../../ui/atoms/Button';
+import { Button } from '@/src/ui/atoms/Button';
 import { InputField } from '../../atoms/InputField';
 
 export const RegisterForm = () => {

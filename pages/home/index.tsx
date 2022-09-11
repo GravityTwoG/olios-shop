@@ -2,7 +2,7 @@ import React from 'react';
 import classes from './mainPage.module.css';
 
 import Head from 'next/head';
-import {StyledLink} from "../../ui/atoms/StyledLink";
+import { StyledLink } from '../../src/ui/atoms/StyledLink';
 
 export function HomePage() {
   return (
@@ -17,12 +17,10 @@ export function HomePage() {
           NEWEST FURNITURE SHOP
         </div>
 
-        <StyledLink href="/products">
-          View more
-        </StyledLink>
+        <StyledLink href="/products">View more</StyledLink>
       </div>
     </div>
   );
 }
 
-export default HomePage
+export default HomePage;

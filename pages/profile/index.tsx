@@ -11,8 +11,8 @@ import {
   $user,
   logoutFx,
   UserCard,
-} from '../../features/Auth';
-import { Button } from '../../ui/atoms/Button';
+} from '@/src/features/Auth';
+import { Button } from '../../src/ui/atoms/Button';
 
 const authPath = '/auth/sign-in';
 
