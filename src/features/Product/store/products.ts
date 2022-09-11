@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore } from 'effector';
-import { IProduct } from './types';
-import { fetchProducts } from '../api';
+import { IProduct } from '../../../types/IProduct';
+import { fetchProducts } from '../../../api/products';
 
 const PAGE_SIZE = 24;
 

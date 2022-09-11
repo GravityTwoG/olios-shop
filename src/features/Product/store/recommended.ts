@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore } from 'effector';
-import { IProduct } from './types';
-import { fetchRecommendedProducts } from '../api';
+import { IProduct } from '../../../types/IProduct';
+import { fetchRecommendedProducts } from '../../../api/products';
 
 export const $recommendedProducts = createStore<IProduct[]>([]);
 
