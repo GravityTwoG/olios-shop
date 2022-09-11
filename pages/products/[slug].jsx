@@ -1,42 +1,43 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classes from './products.module.sass';
-import {useRouter} from 'next/router';
-import {useStore} from "effector-react";
-import {$products, fetchProductsFx} from "../../features/Product";
+import { useRouter } from 'next/router';
+import { useStore } from 'effector-react';
 
-import {ProductCard} from "../../features/Product/components/molecules/productCard/ProductCard";
-import {ProductsGrid} from "../../features/Product/components/molecules/productsGrid/ProductsGrid";
+import { $products, fetchProductsFx } from '@/src/features/Product';
+
+import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
+import { ProductsGrid } from '@/src/features/Product/components/molecules/productsGrid/ProductsGrid';
 
 const categories = {
   'living-room': {
     label: 'living room',
-    icon: '/category-icons/Living-room.png'
+    icon: '/category-icons/Living-room.png',
   },
-  'office': {
+  office: {
     label: 'office',
-    icon: '/category-icons/Office.png'
+    icon: '/category-icons/Office.png',
   },
   'for-kids': {
     label: 'for kids',
-    icon: '/category-icons/For-kids.png'
+    icon: '/category-icons/For-kids.png',
   },
-  'kitchen': {
+  kitchen: {
     label: 'kitchen',
-    icon: '/category-icons/Kitchen.png'
+    icon: '/category-icons/Kitchen.png',
   },
-  'accessories': {
+  accessories: {
     label: 'accessories',
-    icon: '/category-icons/Accessories.png'
+    icon: '/category-icons/Accessories.png',
   },
-}
+};
 
 export default function ProductsByCategoryPage() {
-  const {query} = useRouter();
+  const { query } = useRouter();
   const products = useStore($products);
   const [state, setState] = useState({
     category: '',
-    categoryIcon: {}
-  })
+    categoryIcon: {},
+  });
 
   useEffect(() => {
     if (query.slug) {
@@ -47,37 +48,34 @@ export default function ProductsByCategoryPage() {
 
   useEffect(() => {
     fetchProductsFx(state.category);
-  }, [state.category])
+  }, [state.category]);
 
   const computeCategory = useCallback((categoryUrl) => {
     if (!categories[categoryUrl]) return;
     setState({
       category: categories[categoryUrl].label,
       categoryIcon: categories[categoryUrl].icon,
-    })
+    });
   }, []);
 
   return (
-    <div className={classes["products"]}>
+    <div className={classes['products']}>
       <div>
-        <div className={classes["products__header"]}>
-          <div className={classes["products__title"]}>Products</div>
-          <div className={classes["products__category"]}>
+        <div className={classes['products__header']}>
+          <div className={classes['products__title']}>Products</div>
+          <div className={classes['products__category']}>
             <span>{state.category}</span>
             <p>
-              <img src={state.categoryIcon} alt="category icon"/>
+              <img src={state.categoryIcon} alt="category icon" />
             </p>
           </div>
         </div>
         <ProductsGrid>
           {products.map((product) => (
-            <ProductCard
-              product={product}
-              key={product.id}
-            />
+            <ProductCard product={product} key={product.id} />
           ))}
         </ProductsGrid>
-        <button className={classes["more-products"]}>Show more products</button>
+        <button className={classes['more-products']}>Show more products</button>
       </div>
     </div>
   );

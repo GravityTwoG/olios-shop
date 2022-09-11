@@ -4,7 +4,7 @@ import classes from './login-form.module.scss';
 import { $loginError, loginFx } from '../../../store';
 import { useStore } from 'effector-react';
 
-import { Button } from '../../../../../ui/atoms/Button';
+import { Button } from '@/src/ui/atoms/Button';
 import { InputField } from '../../atoms/InputField';
 
 export const LoginForm = () => {

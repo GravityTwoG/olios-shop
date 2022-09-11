@@ -1,16 +1,15 @@
-import React, {useEffect} from "react";
-import '@/styles/reset.css';
-import '@/styles/theme.css';
+import React, { useEffect } from 'react';
+import '@/src/styles/reset.css';
+import '@/src/styles/theme.css';
 
-import {checkAuthorizationFx} from "@/features/Auth/store";
+import { checkAuthorizationFx } from '@/src/features/Auth/store';
 
-import {Layout} from '@/ui/organisms/Layout/Layout';
+import { Layout } from '@/src/ui/organisms/Layout/Layout';
 
-export default function App({Component, pageProps}) {
-
+export default function App({ Component, pageProps }) {
   useEffect(() => {
-    checkAuthorizationFx()
-  }, [])
+    checkAuthorizationFx();
+  }, []);
 
   return (
     <Layout>

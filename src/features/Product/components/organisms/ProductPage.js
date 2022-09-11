@@ -1,9 +1,9 @@
 import React from 'react';
-import classes from '../../../../pages/product/product-page.module.sass';
+import classes from '@/pages/product/product-page.module.sass';
 
-import Category from '../../../../ui/molecules/Category';
-import {ProductCard} from '../molecules/productCard/ProductCard';
-import {Button} from "../../../../ui/atoms/Button";
+import { Button } from '@/src/ui/atoms/Button';
+import Category from '@/src/ui/molecules/Category';
+import { ProductCard } from '../molecules/productCard/ProductCard';
 
 class ProductPage extends React.Component {
   quantity = React.createRef();
@@ -30,7 +30,7 @@ class ProductPage extends React.Component {
   getLastPrice = () => {
     if (this.props.product.lastPrice) {
       return (
-        <span className={classes["product__price-prev"]}>
+        <span className={classes['product__price-prev']}>
           {this.props.product.lastPrice}
         </span>
       );
@@ -39,31 +39,26 @@ class ProductPage extends React.Component {
 
   renderRecomendedProducts = () => {
     return this.props.recomendedProducts.map((product) => {
-      return (
-        <ProductCard
-          product={product}
-          key={product.id}
-        />
-      );
+      return <ProductCard product={product} key={product.id} />;
     });
   };
 
   render() {
     return (
-      <div className={classes["product"]}>
-        <div className={classes["product__preview"]}>
+      <div className={classes['product']}>
+        <div className={classes['product__preview']}>
           <img src={this.props.product.imgUrl} alt="" />
-          <div className={classes["product__preview-like"]}>
+          <div className={classes['product__preview-like']}>
             <span>409</span> ❤
           </div>
-          <div className={classes["product__preview-arrows"]}>
+          <div className={classes['product__preview-arrows']}>
             <button>prev</button>
             <button>next</button>
           </div>
         </div>
-        <div className={classes["product__right"]}>
-          <div className={classes["product__right-inner"]}>
-            <div className={classes["product__header"]}>
+        <div className={classes['product__right']}>
+          <div className={classes['product__right-inner']}>
+            <div className={classes['product__header']}>
               <Category
                 name={this.props.product.category}
                 href="/products/living-room"
@@ -71,23 +66,29 @@ class ProductPage extends React.Component {
                 <img src={this.props.categoryIcon} alt="" />
               </Category>
             </div>
-            <div className={classes["product__info"]}>
-              <div className={classes["product__name"]}>{this.props.product.name}</div>
-              <div className={classes["product__desc"]}>{this.props.product.desc}</div>
-              <div className={classes["product__line"]}>
-                <div className={classes["product__price"]}>
-                  <div className={classes["product__price-label"]}>Cost</div>
+            <div className={classes['product__info']}>
+              <div className={classes['product__name']}>
+                {this.props.product.name}
+              </div>
+              <div className={classes['product__desc']}>
+                {this.props.product.desc}
+              </div>
+              <div className={classes['product__line']}>
+                <div className={classes['product__price']}>
+                  <div className={classes['product__price-label']}>Cost</div>
                   <span>
-                    <span className={classes["product__price-curr"]}>
+                    <span className={classes['product__price-curr']}>
                       {this.props.product.price}
                     </span>
                     {this.getLastPrice()}
                   </span>
                 </div>
-                <div className={classes["product__quantity"]}>
-                  <div className={classes["product__quantity-label"]}>Quantity</div>
+                <div className={classes['product__quantity']}>
+                  <div className={classes['product__quantity-label']}>
+                    Quantity
+                  </div>
                   <input
-                    className={classes["product__quantity-input"]}
+                    className={classes['product__quantity-input']}
                     ref={this.quantity}
                     type="number"
                     defaultValue="1"
@@ -97,9 +98,11 @@ class ProductPage extends React.Component {
               </div>
             </div>
           </div>
-          <div className={classes["product__recomended"]}>
-            <div className={classes["product__recomended-title"]}>Recomended</div>
-            <div className={classes["product__recomended-cont"]}>
+          <div className={classes['product__recomended']}>
+            <div className={classes['product__recomended-title']}>
+              Recomended
+            </div>
+            <div className={classes['product__recomended-cont']}>
               {this.renderRecomendedProducts()}
             </div>
           </div>
