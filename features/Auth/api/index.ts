@@ -59,7 +59,7 @@ export class AuthService {
 
   static async logout() {
     const res = await fetch('http://localhost:5000/auth/logout', {
-      method: 'GET',
+      method: 'POST',
       credentials: 'include',
       headers: {
         'Access-Control-Allow-Credentials': 'true',
@@ -67,7 +67,7 @@ export class AuthService {
       },
     });
 
-    if (!res.ok && res.status !== 401) {
+    if (!res.ok) {
       const body = await res.json();
       throw new Error(body.message || 'Unauthorized');
     }

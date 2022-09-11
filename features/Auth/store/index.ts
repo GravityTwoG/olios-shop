@@ -1,6 +1,7 @@
 import { createEvent, createStore, createEffect } from 'effector';
-import { IUser, ILoginCredentials, IRegisterCredentials } from '../types';
+import { ILoginCredentials, IRegisterCredentials } from '../types';
 import { AuthService } from '../api';
+import { IUser, IUserRole } from '@/src/types/User';
 
 export const $isAuthorized = createStore(false);
 export const setIsAuthorized = createEvent<boolean>('set isAuthorized');
@@ -18,7 +19,7 @@ const defaultUser: IUser = {
   firstName: '',
   lastName: '',
   patronymic: '',
-  roles: [],
+  role: IUserRole.CUSTOMER,
   customerProfileId: '',
   birthDate: '',
 };
@@ -41,7 +42,7 @@ export const loginFx = createEffect<ILoginCredentials, IUser>(
       firstName: user.firstName,
       lastName: user.lastName,
       patronymic: user.patronymic,
-      roles: user.roles,
+      role: user.role,
       customerProfileId: user.customerProfileId,
       birthDate: user.birthDate,
     };
@@ -73,7 +74,7 @@ export const registerFx = createEffect<IRegisterCredentials, IUser>(
       firstName: user.firstName,
       lastName: user.lastName,
       patronymic: user.patronymic,
-      roles: user.roles,
+      role: user.role,
       customerProfileId: user.customerProfileId,
       birthDate: user.birthDate,
     };
@@ -100,7 +101,7 @@ export const checkAuthorizationFx = createEffect<void, IUser>(
       firstName: user.firstName,
       lastName: user.lastName,
       patronymic: user.patronymic,
-      roles: user.roles,
+      role: user.role,
       customerProfileId: user.customerProfileId,
       birthDate: user.birthDate,
     };

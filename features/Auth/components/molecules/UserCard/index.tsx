@@ -1,9 +1,9 @@
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import classes from './user-card.module.scss';
+import { IUser } from '@/src/types/User';
 
-import { IUser } from '../../../types';
+import classes from './user-card.module.scss';
 
 export type UserCardProps = {
   user: IUser;
@@ -51,14 +51,8 @@ export const UserCard = ({ user, isAuthorizationChecked }: UserCardProps) => {
         </div>
 
         <div>
-          <dt>Roles</dt>
-          <dd>
-            {isAuthorizationChecked ? (
-              user.roles.map((r) => `${r} `)
-            ) : (
-              <Skeleton />
-            )}
-          </dd>
+          <dt>Role</dt>
+          <dd>{isAuthorizationChecked ? user.role : <Skeleton />}</dd>
         </div>
       </dl>
     </div>
