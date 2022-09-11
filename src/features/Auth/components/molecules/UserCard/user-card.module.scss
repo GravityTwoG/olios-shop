@@ -4,16 +4,15 @@
 }
 
 .user_info {
-  max-width: 450px;
-
   & > div {
     display: flex;
+    margin: 0.5rem 0;
 
     & > dt {
       flex: 0.2;
       font-weight: 700;
       margin-right: 4px;
-      max-width: 80px;
+      max-width: 90px;
     }
 
     & > dd {

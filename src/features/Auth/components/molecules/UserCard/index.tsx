@@ -16,13 +16,7 @@ export const UserCard = ({ user, isAuthorizationChecked }: UserCardProps) => {
       <dl className={classes['user_info']}>
         <div>
           <dt>ID</dt>
-          <dd>
-            {isAuthorizationChecked ? (
-              `${user.id.slice(0, 16)}...`
-            ) : (
-              <Skeleton />
-            )}
-          </dd>
+          <dd>{isAuthorizationChecked ? user.id : <Skeleton />}</dd>
         </div>
 
         <div>

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import classes from './profile.module.scss';
 
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useStore } from 'effector-react';
 import { useRouter } from 'next/router';
 
@@ -13,12 +12,11 @@ import {
   UserCard,
 } from '@/src/features/Auth';
 import { Button } from '../../src/ui/atoms/Button';
+import { Flex } from '@/src/ui/atoms/Flex';
 
 const authPath = '/auth/sign-in';
 
-export default function ProfilePage(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>,
-) {
+export default function ProfilePage() {
   const router = useRouter();
   const isAuthorized = useStore($isAuthorized);
   const isAuthorizationChecked = useStore($isAuthorizationChecked);
@@ -35,22 +33,10 @@ export default function ProfilePage(
       <div className={classes.container}>
         <UserCard user={user} isAuthorizationChecked={isAuthorizationChecked} />
 
-        <Button onClick={() => logoutFx()}>logout</Button>
+        <Flex jcc margin="1rem 0">
+          <Button onClick={() => logoutFx()}>logout</Button>
+        </Flex>
       </div>
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  if (!ctx.req?.headers.cookie) {
-    return {
-      props: {},
-      redirect: {
-        destination: authPath,
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-};
