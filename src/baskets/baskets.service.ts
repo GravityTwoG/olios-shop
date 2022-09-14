@@ -1,39 +1,32 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-import { BasketsRepository } from './baskets.repository';
-import { Basket } from './entities/basket.entity';
+import { Basket, Prisma } from '@prisma/client';
 
-import { CreateBasketDto } from './dto/create-basket.dto';
-import { UpdateBasketInput } from './dto/update-basket.input';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class BasketsService {
-  constructor(private readonly basketsRepository: BasketsRepository) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  generateBasket(createBasketDto: CreateBasketDto): Basket {
-    const { customerProfile } = createBasketDto;
-    return this.basketsRepository.create({
-      customerProfile,
+  createBasket(customerProfileId: string): Promise<Basket> {
+    return this.createBasketInTransaction(customerProfileId, this.prisma);
+  }
+
+  createBasketInTransaction(
+    customerProfileId: string,
+    prisma: Prisma.TransactionClient,
+  ): Promise<Basket> {
+    return prisma.basket.create({
+      data: { customerProfileId },
     });
   }
 
-  async create(createBasketDto: CreateBasketDto): Promise<Basket> {
-    const basket = this.generateBasket(createBasketDto);
-    return this.basketsRepository.save(basket);
-  }
-
   findAll(): Promise<Basket[]> {
-    return this.basketsRepository.find({ loadRelationIds: true });
+    return this.prisma.basket.findMany({});
   }
 
   async findOne(id: string): Promise<Basket> {
-    const basket = await this.basketsRepository.findOne(
-      { id },
-      { loadRelationIds: true },
-    );
-    if (!basket) {
-      throw new NotFoundException();
-    }
+    const basket = await this.prisma.basket.findUnique({ where: { id } });
     return basket;
   }
 

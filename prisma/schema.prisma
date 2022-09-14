@@ -1,0 +1,98 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions", "fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  CONTENT_MANAGER
+  MANAGER
+}
+
+model User {
+  id              String   @id @default(uuid()) @db.Uuid
+  email           String   @unique() @db.VarChar
+  isEmailVerified Boolean  @default(false)
+  password        String   @db.VarChar
+  passwordSalt    String
+  role            UserRole @default(CUSTOMER)
+  firstName       String   @default("") @db.VarChar
+  lastName        String   @default("") @db.VarChar
+  patronymic      String   @default("") @db.VarChar
+  birthDate       DateTime
+  isActive        Boolean  @default(true)
+
+  customerProfile CustomerProfile?
+}
+
+model CustomerProfile {
+  id      String @id @default(uuid()) @db.Uuid
+  country String @default("") @db.VarChar
+  city    String @default("") @db.VarChar
+  street  String @default("") @db.VarChar
+  house   String @default("") @db.VarChar
+  floor   Int    @default(1)
+  flat    String @default("") @db.VarChar
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique() @db.Uuid
+
+  basket Basket?
+}
+
+model Basket {
+  id String @id @default(uuid()) @db.Uuid
+
+  customerProfile   CustomerProfile @relation(fields: [customerProfileId], references: [id])
+  customerProfileId String          @unique() @db.Uuid
+
+  basketItems BasketItem[]
+}
+
+model BasketItem {
+  id       String @id @default(uuid()) @db.Uuid
+  quantity Int
+
+  basket   Basket? @relation(fields: [basketId], references: [id])
+  basketId String? @db.Uuid
+
+  product   Product? @relation(fields: [productId], references: [id])
+  productId Int
+}
+
+model Product {
+  id          Int    @id @default(autoincrement())
+  name        String @db.VarChar
+  description String @default("") @db.VarChar
+  thumbUrl    String @default("") @db.VarChar
+  oldPrice    Int    @default(-1)
+  realPrice   Int
+
+  productImages ProductImage[] @relation
+
+  productCategory ProductCategory? @relation(fields: [categoryId], references: [id])
+  categoryId      Int?
+
+  basketItems BasketItem[]
+}
+
+model ProductCategory {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique @db.VarChar
+  iconUrl  String    @db.VarChar
+  products Product[]
+}
+
+model ProductImage {
+  id        Int    @id @default(autoincrement())
+  imageUrl  String @db.VarChar
+  imagePath String @db.VarChar
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+}

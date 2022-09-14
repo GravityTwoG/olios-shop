@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CustomerProfilesService } from './customer-profiles.service';
-import { CustomerProfilesRepository } from './customer-profiles.repository';
-import { CustomerProfilesResolver } from './customer-profiles.resolver';
+import { CustomerProfilesController } from './customer-profiles.controller';
+import { BasketsModule } from 'src/baskets/baskets.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CustomerProfilesRepository])],
-  providers: [CustomerProfilesService, CustomerProfilesResolver],
+  imports: [BasketsModule],
+  providers: [CustomerProfilesService],
+  controllers: [CustomerProfilesController],
   exports: [CustomerProfilesService],
 })
 export class CustomerProfilesModule {}

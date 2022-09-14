@@ -6,6 +6,7 @@
 /node_modules
 
 /uploads
+/s3
 
 # Logs
 logs

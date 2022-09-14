@@ -2,38 +2,46 @@ version: "3"
 services:
   postgres:
     container_name: postgres-olios
-    image: postgres:latest
+    image: postgres:14.4
     ports:
-      - "5432:5432"
+      - "5555:5432"
     volumes:
       - /data/postgres:/data/postgres
-    env_file:
-      - docker.env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1212
+      POSTGRES_DB: olios-db
     networks:
-      - postgres
+      - internal
 
   redis:
     container_name: redis-olios
-    image: redis:latest
+    image: redis:7.0.2
     ports:
       - "6379:6379"
     volumes:
       - /data/redis:/data/redis
 
-  pgadmin:
-    links:
-      - postgres:postgres
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    ports:
-      - "8080:80"
+  minio:
+    image: minio/minio:RELEASE.2022-07-08T00-05-23Z
     volumes:
-      - /data/pgadmin:/root/.pgadmin
-    env_file:
-      - docker.env
+      - ./s3/data1-1:/data1
+      - ./s3/data1-2:/data2
+    ports:
+      - '9000:9000'
+      - '9001:9001'
     networks:
-      - postgres
+      - internal
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server http://minio/data{1...2} --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 30s
+      timeout: 20s
+      retries: 3
 
 networks:
-  postgres:
+  internal:
     driver: bridge

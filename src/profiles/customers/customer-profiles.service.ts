@@ -1,41 +1,45 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
-import { User } from '../../users/user.entity';
+import { User, CustomerProfile, Prisma } from '@prisma/client';
 
-import { CustomerProfilesRepository } from './customer-profiles.repository';
-import { CustomerProfile } from './customer-profile.entity';
+import { BasketsService } from 'src/baskets/baskets.service';
+
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CustomerProfilesService {
   constructor(
-    private readonly customerProfilesRepository: CustomerProfilesRepository,
+    private readonly prisma: PrismaService,
+    private readonly basketsService: BasketsService,
   ) {}
 
   async createProfile(user: User): Promise<CustomerProfile> {
-    const profile = this.generateProfile(user);
-    return this.customerProfilesRepository.save(profile);
+    return this.createProfileInTransaction(user, this.prisma);
   }
 
-  generateProfile(user: User): CustomerProfile {
-    return this.customerProfilesRepository.create({ user });
+  async createProfileInTransaction(
+    user: User,
+    prisma: Prisma.TransactionClient,
+  ): Promise<CustomerProfile> {
+    const profile = await prisma.customerProfile.create({
+      data: {
+        userId: user.id,
+      },
+    });
+    // create basket for customer
+    await this.basketsService.createBasketInTransaction(profile.id, prisma);
+
+    return profile;
   }
 
   async find(id: string): Promise<CustomerProfile> {
-    const profile = await this.customerProfilesRepository.findOne(
-      { id },
-      { loadRelationIds: true },
-    );
-    if (!profile) {
-      throw new NotFoundException();
-    }
+    const profile = await this.prisma.customerProfile.findUnique({
+      where: { id },
+    });
     return profile;
   }
 
   async findAll(): Promise<CustomerProfile[]> {
-    return this.customerProfilesRepository.find({ loadRelationIds: true });
+    return this.prisma.customerProfile.findMany();
   }
 }

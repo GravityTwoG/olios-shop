@@ -1,4 +1,4 @@
-import { CustomerProfile } from '../../profiles/customers/customer-profile.entity';
+import { CustomerProfile } from '@prisma/client';
 
 export class CreateBasketDto {
   customerProfile: CustomerProfile;

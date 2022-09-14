@@ -1,20 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
+import { Product } from '@prisma/client';
 import { ProductCategoriesService } from '../product-categories/product-categories.service';
-
-import { ProductsRepository } from './products.repository';
-import { ProductImagesRepository } from './product-images.repository';
-import { Product } from './entities/product.entity';
 
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    private readonly productsRepository: ProductsRepository,
-    private readonly productImagesRepository: ProductImagesRepository,
     private readonly productCategoriesService: ProductCategoriesService,
+    private readonly prisma: PrismaService,
   ) {}
 
   async create(createProductInput: CreateProductInput) {
@@ -23,34 +20,26 @@ export class ProductsService {
 
     const category = await this.productCategoriesService.findOne(categoryId);
 
-    const product = this.productsRepository.create({
-      name,
-      oldPrice,
-      realPrice,
-      description,
-      category,
-      thumbUrl: '',
+    const product = this.prisma.product.create({
+      data: {
+        name,
+        oldPrice,
+        realPrice,
+        description,
+        categoryId: category.id,
+        thumbUrl: '',
+      },
     });
 
-    await this.productsRepository.save(product);
     return product;
   }
 
   async findAll(): Promise<Product[]> {
-    return this.productsRepository.find({
-      loadRelationIds: true,
-    });
+    return this.prisma.product.findMany({});
   }
 
   async findOne(id: number): Promise<Product> {
-    const product = await this.productsRepository.findOne(
-      { id },
-      { loadRelationIds: true },
-    );
-
-    if (!product) {
-      throw new NotFoundException();
-    }
+    const product = await this.prisma.product.findUnique({ where: { id } });
 
     return product;
   }

@@ -7,67 +7,45 @@ import {
 import { randomUUID } from 'crypto';
 import { FileStorage } from '../common/FileStorage';
 
-import { ProductCategoriesRepository } from './product-categories.repository';
-import { ProductCategory } from './entities/product-category.entity';
+import { ProductCategory } from '@prisma/client';
 
 import { CreateProductCategoryInput } from './dto/create-product-category.input';
 import { UpdateProductCategoryInput } from './dto/update-product-category.input';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ProductCategoriesService {
-  constructor(
-    private readonly productCategoriesRepository: ProductCategoriesRepository,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(
     createProductCategoryInput: CreateProductCategoryInput,
   ): Promise<ProductCategory> {
     const { name } = createProductCategoryInput;
-    const isAlreadyExists = await this.productCategoriesRepository.findOne({
-      name,
+    const category = await this.prisma.productCategory.create({
+      data: { name, iconUrl: '' },
     });
-    if (isAlreadyExists) {
-      throw new ConflictException(`Category "${name}" already exists`);
+
+    if ('iconFile' in createProductCategoryInput) {
+      const { filename, createReadStream } =
+        await createProductCategoryInput.iconFile;
+
+      const stream = createReadStream();
+      const iconName = `${randomUUID()}_${filename}`;
+      await FileStorage.save(stream, iconName);
+      category.iconUrl = iconName;
     }
 
-    try {
-      const category = await this.productCategoriesRepository.create({
-        name,
-      });
-
-      if ('iconFile' in createProductCategoryInput) {
-        const { filename, createReadStream } =
-          await createProductCategoryInput.iconFile;
-
-        const stream = createReadStream();
-        const iconName = `${randomUUID()}_${filename}`;
-        await FileStorage.save(stream, iconName);
-        category.iconUrl = iconName;
-      }
-
-      await this.productCategoriesRepository.save(category);
-      return category;
-    } catch (err) {
-      if (err.code === '23505') {
-        throw new ConflictException(
-          `Category "${createProductCategoryInput.name}" already exists`,
-        );
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
+    return category;
   }
 
   findAll() {
-    return this.productCategoriesRepository.find();
+    return this.prisma.productCategory.findMany();
   }
 
   async findOne(id: number) {
-    const category = await this.productCategoriesRepository.findOne({ id });
-
-    if (!category) {
-      throw new NotFoundException();
-    }
+    const category = await this.prisma.productCategory.findUnique({
+      where: { id },
+    });
 
     return category;
   }
@@ -78,10 +56,11 @@ export class ProductCategoriesService {
   ) {
     const { name } = updateProductCategoryInput;
 
-    const category = await this.productCategoriesRepository.findOne({ id });
-    category.name = name;
+    const category = await this.prisma.productCategory.update({
+      where: { id },
+      data: { name },
+    });
 
-    await this.productCategoriesRepository.save(category);
     return category;
   }
 

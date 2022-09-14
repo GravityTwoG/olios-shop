@@ -1,11 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { User } from '@prisma/client';
 import { UsersService } from '../users/users.service';
-import { User } from '../users/user.entity';
-import { UserDto } from '../users/dto/user.dto';
-import { CreateUserDto } from '../users/dto/create-user.dto';
 
-import { comparePasswords, hashPassword } from './passwords-hashing';
+import { comparePasswords, hashPassword } from './core/passwords-hashing';
+import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,13 +13,17 @@ export class AuthService {
   async validateUser(
     email: string,
     password: string,
-  ): Promise<{ user: UserDto | null; error?: string }> {
+  ): Promise<{ user: User | null; error?: string }> {
     try {
       const user = await this.findUserByEmail(email);
       if (!user) {
         return { user: null, error: 'Invalid credentials' };
       }
-      const areEqual = comparePasswords(user.password, password);
+      const areEqual = comparePasswords({
+        hashedPassword: user.password,
+        passwordSalt: user.passwordSalt,
+        enteredPassword: password,
+      });
       if (!areEqual) {
         return { user: null, error: 'Invalid credentials' };
       }
@@ -34,21 +37,27 @@ export class AuthService {
     }
   }
 
-  async register(registerUserDto: CreateUserDto): Promise<User> {
+  async register(registerUserDto: RegisterUserDto): Promise<User> {
     return this.createUser(registerUserDto);
   }
 
-  async createUser(registerUserDto: CreateUserDto): Promise<User> {
-    const { email, password } = registerUserDto;
-    const hashedPassword = hashPassword(password);
+  async createUser(registerUserDto: RegisterUserDto): Promise<User> {
+    const { email, password, birthDate, firstName, lastName, patronymic } =
+      registerUserDto;
+    const { salt, hash } = hashPassword(password);
 
     return this.usersService.createUser({
       email,
-      password: hashedPassword,
+      passwordSalt: salt,
+      password: hash,
+      birthDate,
+      firstName,
+      lastName,
+      patronymic,
     });
   }
 
-  async findUserByEmail(email: string): Promise<UserDto> {
+  async findUserByEmail(email: string): Promise<User> {
     return this.usersService.getUser({ email });
   }
 }

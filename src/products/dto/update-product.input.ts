@@ -1,8 +1,6 @@
 import { CreateProductInput } from './create-product.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { PartialType } from '@nestjs/swagger';
 
-@InputType()
 export class UpdateProductInput extends PartialType(CreateProductInput) {
-  @Field(() => Int)
   id: number;
 }

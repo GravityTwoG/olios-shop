@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { GraphQLModule } from '@nestjs/graphql';
-import { join } from 'path';
+import { APP_FILTER } from '@nestjs/core';
 
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { configuration, DatabaseConfig } from './configuration';
+import { ConfigModule } from '@nestjs/config';
+import { configuration } from './configuration';
 import { configValidationSchema } from './configuration.schema';
 
 import { UsersModule } from './users/users.module';
@@ -12,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { BasketsModule } from './baskets/baskets.module';
 import { ProductsModule } from './products/products.module';
 import { ProductCategoriesModule } from './product-categories/product-categories.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { GlobalExceptionFilter } from './global.exception-filter';
 
 @Module({
   imports: [
@@ -21,33 +21,14 @@ import { ProductCategoriesModule } from './product-categories/product-categories
       cache: true,
       validationSchema: configValidationSchema,
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const dbConfig = configService.get<DatabaseConfig>('database');
-        return {
-          type: 'postgres',
-          autoLoadModels: true,
-          synchronize: true,
-          entities: [join(__dirname, '**', '*.entity.{js,ts}')],
-          host: dbConfig.host,
-          port: dbConfig.port,
-          username: dbConfig.username,
-          password: dbConfig.password,
-          database: dbConfig.name,
-        };
-      },
-    }),
-    GraphQLModule.forRoot({
-      autoSchemaFile: true,
-      uploads: false,
-    }),
+    PrismaModule,
+
     UsersModule,
     AuthModule,
     BasketsModule,
     ProductsModule,
     ProductCategoriesModule,
   ],
+  providers: [{ provide: APP_FILTER, useClass: GlobalExceptionFilter }],
 })
 export class AppModule {}

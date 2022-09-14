@@ -14,7 +14,7 @@ import { AuthController } from './auth.controller';
     {
       provide: 'PASSPORT',
       inject: [AuthService],
-      useFactory: (authService) => {
+      useFactory: (authService: AuthService) => {
         return passport.use(
           'local',
           new Strategy(
