@@ -41,9 +41,24 @@ export class UsersService {
     return user;
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    return this.prisma.$transaction(async (prisma) => {
-      const {
+  //
+  async createUserInTransaction(
+    createUserDto: CreateUserDto,
+    prisma: Prisma.TransactionClient,
+  ): Promise<User> {
+    const {
+      email,
+      password,
+      passwordSalt,
+      birthDate,
+      firstName,
+      lastName,
+      patronymic,
+      role,
+    } = createUserDto;
+    const user = await prisma.user.create({
+      data: {
+        role,
         email,
         password,
         passwordSalt,
@@ -51,29 +66,18 @@ export class UsersService {
         firstName,
         lastName,
         patronymic,
-      } = createUserDto;
-      const user = await prisma.user.create({
-        data: {
-          email,
-          password,
-          passwordSalt,
-          birthDate,
-          firstName,
-          lastName,
-          patronymic,
-        },
-      });
-
-      if (user.role == UserRole.CUSTOMER) {
-        // create customer profile
-        await this.customerProfilesService.createProfileInTransaction(
-          user,
-          prisma,
-        );
-      }
-
-      return user;
+      },
     });
+
+    if (user.role == UserRole.CUSTOMER) {
+      // create customer profile
+      await this.customerProfilesService.createProfileInTransaction(
+        user,
+        prisma,
+      );
+    }
+
+    return user;
   }
 
   async updateUser(id: string, data: UpdateUserDTO): Promise<User> {

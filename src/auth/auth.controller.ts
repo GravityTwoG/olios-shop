@@ -5,7 +5,6 @@ import {
   Post,
   Req,
   Res,
-  Session,
   UnauthorizedException,
   UseGuards,
   Inject,
@@ -16,13 +15,14 @@ import { Response } from 'express';
 
 import { User } from '@prisma/client';
 
-import { AuthService } from './auth.service';
-import { AuthGuard } from './guards/auth.guard';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { CurrentUser } from './decorators/current-user.decorator';
-
 import { UserOutputDto } from 'src/users/dto/user-output.dto';
 import { mapUserToDto } from 'src/users/mapUserToDto';
+
+import { AuthService } from './auth.service';
+import { AuthGuard } from './guards/auth.guard';
+import { RegisterCustomerDto } from './dto/register-customer.dto';
+import { RegisterEmployeeDto } from './dto/register-employee.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @ApiTags('Auth')
 @Controller('/auth')
@@ -55,7 +55,7 @@ export class AuthController {
 
   @Post('/login')
   async login(@Req() req, @Res() res: Response): Promise<UserOutputDto> {
-    req.user = await new Promise((resolve, reject) => {
+    req.user = await new Promise<User>((resolve, reject) => {
       this.passport.authenticate(
         'local',
         {
@@ -78,11 +78,19 @@ export class AuthController {
     return mapUserToDto(req.user);
   }
 
-  @Post('/register')
-  async register(
-    @Body() registerUserDto: RegisterUserDto,
+  @Post('/register-customer')
+  async registerCustomer(
+    @Body() registerUserDto: RegisterCustomerDto,
   ): Promise<UserOutputDto> {
-    const user = await this.authService.register(registerUserDto);
+    const user = await this.authService.registerCustomer(registerUserDto);
+    return mapUserToDto(user);
+  }
+
+  @Post('/register-employee')
+  async registerEmployee(
+    @Body() registerEmployeeDto: RegisterEmployeeDto,
+  ): Promise<UserOutputDto> {
+    const user = await this.authService.registerEmployee(registerEmployeeDto);
     return mapUserToDto(user);
   }
 
