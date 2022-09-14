@@ -14,13 +14,13 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { User } from '@prisma/client';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 import { UsersService } from './users.service';
 import { mapUserToDto } from './mapUserToDto';
 import { UserOutputDto } from './dto/user-output.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @ApiTags('Users')
 @Controller('/users')
