@@ -1,10 +1,12 @@
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { CustomerProfile } from '@prisma/client';
 
 import { CustomerProfilesService } from './customer-profiles.service';
 
-@Controller()
+@ApiTags('Customer profiles')
+@Controller('customer-profiles')
 export class CustomerProfilesController {
   constructor(
     private readonly customerProfilesService: CustomerProfilesService,

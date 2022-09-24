@@ -1,50 +1,54 @@
-import {
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
-import { randomUUID } from 'crypto';
-import { FileStorage } from '../common/FileStorage';
+import { Injectable } from '@nestjs/common';
+import { Prisma, ProductCategory } from '@prisma/client';
 
-import { ProductCategory } from '@prisma/client';
-
-import { CreateProductCategoryInput } from './dto/create-product-category.input';
-import { UpdateProductCategoryInput } from './dto/update-product-category.input';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ImagesService } from 'src/lib/images';
+
+import { CreateProductCategoryDTO } from './dto/create-product-category.dto';
+import { UpdateProductCategoryDTO } from './dto/update-product-category.dto';
 
 @Injectable()
 export class ProductCategoriesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly imagesService: ImagesService,
+  ) {}
 
   async create(
-    createProductCategoryInput: CreateProductCategoryInput,
+    createProductCategoryInput: CreateProductCategoryDTO,
+    icon: Express.Multer.File,
   ): Promise<ProductCategory> {
-    const { name } = createProductCategoryInput;
+    const { name, parentId } = createProductCategoryInput;
+
+    const result = await this.imagesService.upload(icon, 'product-categories');
     const category = await this.prisma.productCategory.create({
-      data: { name, iconUrl: '' },
+      data: {
+        name,
+        iconUrl: `${result.path}`,
+        iconObjectName: result.objectName,
+        parentId,
+      },
     });
-
-    if ('iconFile' in createProductCategoryInput) {
-      const { filename, createReadStream } =
-        await createProductCategoryInput.iconFile;
-
-      const stream = createReadStream();
-      const iconName = `${randomUUID()}_${filename}`;
-      await FileStorage.save(stream, iconName);
-      category.iconUrl = iconName;
-    }
 
     return category;
   }
 
-  findAll() {
-    return this.prisma.productCategory.findMany();
+  findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ProductCategoryWhereUniqueInput;
+    where?: Prisma.ProductCategoryWhereInput;
+    orderBy?: Prisma.Enumerable<Prisma.ProductCategoryOrderByWithRelationAndSearchRelevanceInput>;
+  }) {
+    return this.prisma.productCategory.findMany(params);
   }
 
   async findOne(id: number) {
     const category = await this.prisma.productCategory.findUnique({
       where: { id },
+      include: {
+        children: true,
+      },
     });
 
     return category;
@@ -52,7 +56,7 @@ export class ProductCategoriesService {
 
   async update(
     id: number,
-    updateProductCategoryInput: UpdateProductCategoryInput,
+    updateProductCategoryInput: UpdateProductCategoryDTO,
   ) {
     const { name } = updateProductCategoryInput;
 
@@ -64,7 +68,7 @@ export class ProductCategoriesService {
     return category;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} productCategory`;
+  async remove(id: number) {
+    await this.prisma.productCategory.delete({ where: { id } });
   }
 }

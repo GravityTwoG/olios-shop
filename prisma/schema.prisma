@@ -123,6 +123,12 @@ model ProductCategory {
   id       Int       @id @default(autoincrement())
   name     String    @unique @db.VarChar
   iconUrl  String    @db.VarChar
+  iconObjectName  String    @db.VarChar
+
+  parentId Int?
+  parent ProductCategory? @relation(name: "categories-tree", fields: [parentId], references: [id])
+  children ProductCategory[] @relation(name: "categories-tree")
+
   products Product[]
 
   createdAt DateTime @default(now())

@@ -7,33 +7,32 @@ import {
   Delete,
   Param,
   ParseIntPipe,
+  UseInterceptors,
+  UploadedFile,
+  HttpException,
 } from '@nestjs/common';
-
-import { ProductCategoriesService } from './product-categories.service';
-import { CreateProductCategoryInput } from './dto/create-product-category.input';
-import { UpdateProductCategoryInput } from './dto/update-product-category.input';
+import { ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductCategory } from '@prisma/client';
 
-@Controller()
+import { ProductCategoriesService } from './product-categories.service';
+import { CreateProductCategoryDTO } from './dto/create-product-category.dto';
+import { UpdateProductCategoryDTO } from './dto/update-product-category.dto';
+
+@ApiTags('Product categories')
+@Controller('product-categories')
 export class ProductCategoriesController {
   constructor(
     private readonly productCategoriesService: ProductCategoriesService,
   ) {}
 
-  @Post()
-  async createProductCategory(
-    @Body()
-    createProductCategoryInput: CreateProductCategoryInput,
-  ) {
-    return this.productCategoriesService.create(createProductCategoryInput);
-  }
-
-  @Put()
-  async updateCategoryIcon() {}
-
-  @Get()
+  @Get('')
   productCategories(): Promise<ProductCategory[]> {
-    return this.productCategoriesService.findAll();
+    return this.productCategoriesService.findAll({
+      where: {
+        parentId: null,
+      },
+    });
   }
 
   @Get('/:id')
@@ -41,13 +40,41 @@ export class ProductCategoriesController {
     return this.productCategoriesService.findOne(id);
   }
 
+  @Post()
+  @UseInterceptors(
+    FileInterceptor('icon', {
+      limits: { fileSize: 1024 * 1024 * 20, files: 1 },
+    }),
+  )
+  async createProductCategory(
+    @Body()
+    createProductCategoryDTO: CreateProductCategoryDTO,
+    @UploadedFile() icon: Express.Multer.File,
+  ) {
+    const acceptableType = /image\/(jpeg|png)/;
+    if (!acceptableType.test(icon.mimetype)) {
+      throw new HttpException(
+        `Такой тип файла не поддерживается: ${icon.mimetype}`,
+        422,
+      );
+    }
+
+    return this.productCategoriesService.create(createProductCategoryDTO, icon);
+  }
+
   @Put()
+  @UseInterceptors(
+    FileInterceptor('icon', {
+      limits: { fileSize: 1024 * 1024 * 20, files: 1 },
+    }),
+  )
   updateProductCategory(
-    updateProductCategoryInput: UpdateProductCategoryInput,
+    @Body() updateProductCategoryDTO: UpdateProductCategoryDTO,
+    @UploadedFile() icon: Express.Multer.File,
   ): Promise<ProductCategory> {
     return this.productCategoriesService.update(
-      updateProductCategoryInput.id,
-      updateProductCategoryInput,
+      updateProductCategoryDTO.id,
+      updateProductCategoryDTO,
     );
   }
 

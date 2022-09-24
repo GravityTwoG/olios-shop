@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 
 import { ConfigModule } from '@nestjs/config';
-import { configuration } from './configuration';
 import { configValidationSchema } from './configuration.schema';
 
 import { UsersModule } from './users/users.module';
@@ -12,16 +11,17 @@ import { ProductsModule } from './products/products.module';
 import { ProductCategoriesModule } from './product-categories/product-categories.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { GlobalExceptionFilter } from './global.exception-filter';
+import { ImagesModule } from './lib/images';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.STAGE}`,
-      load: [configuration],
       cache: true,
       validationSchema: configValidationSchema,
     }),
     PrismaModule,
+    ImagesModule,
 
     UsersModule,
     AuthModule,
