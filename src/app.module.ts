@@ -16,7 +16,7 @@ import { ImagesModule } from './lib/images';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.STAGE}`,
+      envFilePath: `.env`,
       cache: true,
       validationSchema: configValidationSchema,
     }),
