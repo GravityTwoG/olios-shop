@@ -5,7 +5,7 @@ import { NEST_MINIO_OPTIONS } from './minio.constants';
 import { NestMinioOptions } from './minio.interfaces';
 
 interface INestMinioService {
-  getMinio();
+  getMinio(): Minio.Client;
 }
 
 @Injectable()

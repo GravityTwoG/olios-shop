@@ -7,12 +7,10 @@ import * as connectRedis from 'connect-redis';
 
 import { AppModule } from './app.module';
 import { setupSwagger } from './setupSwagger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const PORT = process.env.PORT;
-
   const app = await NestFactory.create(AppModule);
-
   setupSwagger(app);
 
   app.useGlobalPipes(
@@ -33,18 +31,24 @@ async function bootstrap() {
   const HOUR = 60 * MINUTE;
   const DAY = 24 * HOUR;
 
-  const redisClient = redis.createClient({ url: process.env.REDIS_URI });
+  const configService = app.get(ConfigService);
+  const REDIS_URI = configService.get('REDIS_URI');
+  const SESSION_SECRET = configService.get('SESSION_SECRET');
+  const PORT = configService.get<number>('PORT')!;
+
+  const redisClient = redis.createClient({ url: REDIS_URI });
   const RedisStore = connectRedis(session);
 
   app.use(
     session({
-      secret: process.env.SESSION_SECRET,
+      secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: { maxAge: 7 * DAY, httpOnly: true, sameSite: 'lax' },
       store: new RedisStore({ client: redisClient }),
     }),
   );
+
   await app.listen(PORT);
   Logger.log(`App listening on port: ${PORT}`, 'NestApplication');
 }

@@ -39,7 +39,9 @@ export class ProductsService {
   }
 
   async findOne(id: number): Promise<Product> {
-    const product = await this.prisma.product.findUnique({ where: { id } });
+    const product = await this.prisma.product.findUniqueOrThrow({
+      where: { id },
+    });
 
     return product;
   }

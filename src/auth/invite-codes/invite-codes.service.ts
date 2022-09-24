@@ -35,7 +35,7 @@ export class InviteCodesService implements OnModuleInit {
   async getInviteCode(
     codeWhereUniqueInput: Prisma.InviteCodeWhereUniqueInput,
   ): Promise<InviteCode> {
-    return this.prisma.inviteCode.findUnique({
+    return this.prisma.inviteCode.findUniqueOrThrow({
       where: codeWhereUniqueInput,
     });
   }

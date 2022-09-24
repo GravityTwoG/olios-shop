@@ -13,8 +13,8 @@ export class InviteCodesController {
 
   @Get()
   @Roles('MANAGER')
-  getInviteCodes(@Body() body) {
-    return this.inviteCodesService.getInviteCodes(body);
+  getInviteCodes() {
+    return this.inviteCodesService.getInviteCodes({});
   }
 
   @Post()

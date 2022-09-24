@@ -32,7 +32,10 @@ export class MinioModule {
   }
 
   public static registerAsync(options: NestMinioAsyncOptions): DynamicModule {
-    const allImports = [...new Set([].concat(options.imports))];
+    const allImports: typeof options.imports = [];
+    if (options.imports) {
+      allImports.push(...new Set(options.imports));
+    }
 
     return {
       module: MinioModule,
@@ -58,7 +61,7 @@ export class MinioModule {
       provide: NEST_MINIO_OPTIONS,
       useFactory: async (optionsFactory: NestMinioOptionsFactory) =>
         optionsFactory.createNestMinioOptions(),
-      inject: [options.useExisting || options.useClass],
+      inject: [options.useExisting! || options.useClass],
     };
   }
 }

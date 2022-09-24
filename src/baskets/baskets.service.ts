@@ -26,7 +26,9 @@ export class BasketsService {
   }
 
   async findOne(id: string): Promise<Basket> {
-    const basket = await this.prisma.basket.findUnique({ where: { id } });
+    const basket = await this.prisma.basket.findUniqueOrThrow({
+      where: { id },
+    });
     return basket;
   }
 

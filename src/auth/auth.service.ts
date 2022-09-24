@@ -23,7 +23,7 @@ export class AuthService {
   async validateUser(
     email: string,
     password: string,
-  ): Promise<{ user: User | null; error?: string }> {
+  ): Promise<{ user: User; error: null } | { user: null; error: string }> {
     try {
       const user = await this.usersService.getUser({ email });
 
@@ -38,7 +38,7 @@ export class AuthService {
       if (!areEqual) {
         return { user: null, error: 'Invalid credentials' };
       }
-      return { user };
+      return { user, error: null };
     } catch (err) {
       if (err instanceof NotFoundException) {
         return { user: null, error: 'Invalid credentials' };

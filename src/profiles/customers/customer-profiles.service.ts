@@ -33,7 +33,7 @@ export class CustomerProfilesService {
   }
 
   async find(id: string): Promise<CustomerProfile> {
-    const profile = await this.prisma.customerProfile.findUnique({
+    const profile = await this.prisma.customerProfile.findUniqueOrThrow({
       where: { id },
     });
     return profile;

@@ -44,7 +44,7 @@ export class ProductCategoriesService {
   }
 
   async findOne(id: number) {
-    const category = await this.prisma.productCategory.findUnique({
+    const category = await this.prisma.productCategory.findUniqueOrThrow({
       where: { id },
       include: {
         children: true,

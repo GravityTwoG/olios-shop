@@ -10,14 +10,13 @@ import { ImagesService } from './images.service';
     MinioModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-
       useFactory: (configService: ConfigService) => {
         return {
-          endPoint: configService.get<string>('MINIO_ENDPOINT'),
-          port: configService.get<number>('MINIO_PORT'),
+          endPoint: configService.get<string>('MINIO_ENDPOINT')!,
+          port: configService.get<number>('MINIO_PORT')!,
           useSSL: false,
-          accessKey: configService.get<string>('MINIO_ACCESS_KEY'),
-          secretKey: configService.get<string>('MINIO_SECRET_KEY'),
+          accessKey: configService.get<string>('MINIO_ACCESS_KEY')!,
+          secretKey: configService.get<string>('MINIO_SECRET_KEY')!,
         };
       },
     }),

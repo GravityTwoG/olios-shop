@@ -29,13 +29,13 @@ export class UsersService {
 
   async getUser(filter: { id: string } | { email: string }): Promise<User> {
     if ('id' in filter) {
-      const user = await this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUniqueOrThrow({
         where: { id: filter.id },
       });
       return user;
     }
 
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUniqueOrThrow({
       where: { email: filter.email },
     });
     return user;
@@ -81,13 +81,13 @@ export class UsersService {
   }
 
   async updateUser(id: string, data: UpdateUserDTO): Promise<User> {
-    const update: Partial<UpdateUserDTO> = {};
+    const update: Partial<UpdateUserDTO> & { [key: string]: any } = {};
 
-    Object.keys(data).forEach((key) => {
-      if (data[key] !== undefined && data[key] !== null) {
-        update[key] = data[key];
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined && value !== null) {
+        update[key] = value;
       }
-    });
+    }
 
     return this.prisma.user.update({
       where: { id },

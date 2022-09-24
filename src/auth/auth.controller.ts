@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import * as passport from 'passport';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import { User } from '@prisma/client';
 
@@ -38,7 +38,7 @@ export class AuthController {
     return mapUserToDto(user);
   }
 
-  private handleRequest(err, user: User, info: any): User {
+  private handleRequest(err: any, user: User, info: any): User {
     if (err || !user) {
       if (info && info.message) {
         throw new UnauthorizedException(info.message);
@@ -54,8 +54,11 @@ export class AuthController {
   }
 
   @Post('/login')
-  async login(@Req() req, @Res() res: Response): Promise<UserOutputDto> {
-    req.user = await new Promise<User>((resolve, reject) => {
+  async login(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<UserOutputDto> {
+    const user = await new Promise<User>((resolve, reject) => {
       this.passport.authenticate(
         'local',
         {
@@ -72,10 +75,11 @@ export class AuthController {
       )(req, res);
     });
 
-    req.session.user = req.user;
-    res.send(mapUserToDto(req.user));
+    req.user = user;
+    (req.session as any).user = user;
+    res.send(mapUserToDto(user));
     res.end();
-    return mapUserToDto(req.user);
+    return mapUserToDto(user);
   }
 
   @Post('/register-customer')
@@ -95,8 +99,8 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(@Req() req, @Res() res: Response) {
-    await req.session.destroy();
+  async logout(@Req() req: Request, @Res() res: Response) {
+    await (req.session as any).destroy();
     await res.clearCookie('connect.sid');
     res.send({ message: 'Logged out' });
     res.end();
