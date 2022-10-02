@@ -3,8 +3,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
-    .setTitle('Dordoy Optom API')
-    .setDescription('Dordoy Optom API description')
+    .setTitle('Olios Shop API')
+    .setDescription('Olios Shop API description')
     .setVersion('0.1')
     .build();
 

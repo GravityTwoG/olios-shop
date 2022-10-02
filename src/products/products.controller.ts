@@ -7,27 +7,26 @@ import {
   Delete,
   ParseIntPipe,
   Param,
+  UseInterceptors,
+  UploadedFiles,
+  HttpException,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
+import { Product } from '@prisma/client';
 
 import { ProductsService } from './products.service';
 
-import { CreateProductInput } from './dto/create-product.input';
-import { UpdateProductInput } from './dto/update-product.input';
+import { CreateProductDTO } from './dto/create-product.dto';
+import { UpdateProductDTO } from './dto/update-product.dto';
 import { mapProductEntityToProductType as mapProductEntityToProduct } from './mapProductEntityToProduct';
-import { Product } from '@prisma/client';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
-@Controller()
+@ApiTags('Products')
+@Controller('/products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
-
-  @Post()
-  async createProduct(
-    @Body()
-    createProductInput: CreateProductInput,
-  ): Promise<Product> {
-    const product = await this.productsService.create(createProductInput);
-    return mapProductEntityToProduct(product);
-  }
 
   @Get()
   async findAll(): Promise<Product[]> {
@@ -41,11 +40,51 @@ export class ProductsController {
     return mapProductEntityToProduct(product);
   }
 
+  @Post()
+  @Roles('CONTENT_MANAGER')
+  @UseInterceptors(FilesInterceptor('images'))
+  async createProduct(
+    @Body()
+    createProductInput: CreateProductDTO,
+    @UploadedFiles()
+    images: Express.Multer.File[],
+  ): Promise<Product> {
+    const acceptableType = /image\/(jpeg|png)/;
+    const maxFileSizeInBytes = 1024 * 1024 * 20;
+    for (const image of images) {
+      if (!acceptableType.test(image.mimetype)) {
+        throw new HttpException(
+          `Unacceptable mime type: ${image.mimetype}`,
+          422,
+        );
+      }
+      if (image.size > maxFileSizeInBytes) {
+        throw new HttpException(
+          `Max size of file in bytes: ${maxFileSizeInBytes}`,
+          400,
+        );
+      }
+    }
+
+    const product = await this.productsService.create(
+      createProductInput,
+      images,
+    );
+    return mapProductEntityToProduct(product);
+  }
+
   @Put()
-  updateProduct(@Body() updateProductInput: UpdateProductInput) {
+  @Roles('CONTENT_MANAGER')
+  @UseInterceptors(FilesInterceptor('images'))
+  updateProduct(
+    @Body() updateProductInput: UpdateProductDTO,
+    @UploadedFiles()
+    images: Express.Multer.File[],
+  ) {
     return this.productsService.update(
       updateProductInput.id,
       updateProductInput,
+      images,
     );
   }
 

@@ -1,38 +1,18 @@
 import { Injectable } from '@nestjs/common';
 
 import { Product } from '@prisma/client';
-import { ProductCategoriesService } from '../product-categories/product-categories.service';
-
-import { CreateProductInput } from './dto/create-product.input';
-import { UpdateProductInput } from './dto/update-product.input';
+import { ImagesService } from 'src/lib/images';
 import { PrismaService } from 'src/prisma/prisma.service';
+
+import { CreateProductDTO } from './dto/create-product.dto';
+import { UpdateProductDTO } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    private readonly productCategoriesService: ProductCategoriesService,
     private readonly prisma: PrismaService,
+    private readonly imagesService: ImagesService,
   ) {}
-
-  async create(createProductInput: CreateProductInput) {
-    const { name, oldPrice, realPrice, description, categoryId } =
-      createProductInput;
-
-    const category = await this.productCategoriesService.findOne(categoryId);
-
-    const product = this.prisma.product.create({
-      data: {
-        name,
-        oldPrice,
-        realPrice,
-        description,
-        categoryId: category.id,
-        thumbUrl: '',
-      },
-    });
-
-    return product;
-  }
 
   async findAll(): Promise<Product[]> {
     return this.prisma.product.findMany({});
@@ -46,11 +26,95 @@ export class ProductsService {
     return product;
   }
 
-  update(id: number, updateProductInput: UpdateProductInput) {
-    return `This action updates a #${id} product`;
+  private async uploadImages(images: Express.Multer.File[]) {
+    const r: { url: string; path: string }[] = [];
+
+    const result = await Promise.allSettled(
+      images.map((image) => this.imagesService.upload(image, 'product-images')),
+    );
+    result.forEach((res) => {
+      if (res.status === 'fulfilled') {
+        r.push(res.value);
+      }
+    });
+
+    return r;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async create(
+    createProductDTO: CreateProductDTO,
+    images: Express.Multer.File[],
+  ) {
+    const r = await this.uploadImages(images);
+
+    const { name, oldPrice, realPrice, description, categoryId } =
+      createProductDTO;
+
+    const product = await this.prisma.product.create({
+      data: {
+        name,
+        oldPrice,
+        realPrice,
+        description,
+        categoryId,
+        thumbUrl: '',
+        productImages: {
+          create: r.map((r) => ({ imagePath: r.path, imageUrl: r.url })),
+        },
+      },
+    });
+
+    return product;
+  }
+
+  async update(
+    id: number,
+    updateProductDTO: UpdateProductDTO,
+    images: Express.Multer.File[],
+  ) {
+    const imagesToDelete: { id: number }[] = [];
+    if (updateProductDTO.imagesToDelete) {
+      await Promise.allSettled(
+        updateProductDTO.imagesToDelete.map((image) => {
+          const objectName = image.imagePath.replace('product-heaps/', '');
+          return this.imagesService.delete(objectName, 'product-images');
+        }),
+      );
+      updateProductDTO.imagesToDelete.forEach((i) => {
+        imagesToDelete.push({ id: i.id });
+      });
+    }
+
+    const r = await this.uploadImages(images);
+
+    const product = this.prisma.product.update({
+      where: { id },
+      data: {
+        ...updateProductDTO,
+        productImages: {
+          create: r.map((i) => ({ imagePath: i.path, imageUrl: i.url })),
+          deleteMany: imagesToDelete,
+        },
+      },
+    });
+    return product;
+  }
+
+  async remove(id: number) {
+    return this.prisma.$transaction(async (prisma) => {
+      const product = await prisma.product.delete({
+        where: { id },
+        include: { productImages: true },
+      });
+
+      try {
+        for (const image of product.productImages) {
+          const objectName = image.imagePath.replace('product-images/', '');
+          await this.imagesService.delete(objectName, 'product-images');
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    });
   }
 }
