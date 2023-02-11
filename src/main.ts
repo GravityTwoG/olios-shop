@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import session from 'express-session';
 import { createClient as createRedisClient } from 'redis';
@@ -7,10 +8,11 @@ import connectRedis from 'connect-redis';
 
 import { AppModule } from './app.module';
 import { setupSwagger } from './setupSwagger';
-import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get<ConfigService>(ConfigService);
+
   setupSwagger(app);
 
   app.useGlobalPipes(
@@ -21,8 +23,18 @@ async function bootstrap() {
     }),
   ); // validation by class-validator, class-transformer
 
+  const environment = configService.get('ENVIRONMENT');
+  let origin: string[] | ((origin: string, callback: any) => void) = [
+    'http://localhost:3000',
+  ];
+
+  if (environment === 'local' || environment === 'staging') {
+    origin = function (_, callback) {
+      return callback(null, true);
+    };
+  }
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin,
     credentials: true,
   });
 
@@ -31,20 +43,35 @@ async function bootstrap() {
   const HOUR = 60 * MINUTE;
   const DAY = 24 * HOUR;
 
-  const configService = app.get(ConfigService);
   const REDIS_URI = configService.get('REDIS_URI');
   const SESSION_SECRET = configService.get('SESSION_SECRET');
   const PORT = configService.get<number>('PORT') || 3000;
 
   const redisClient = createRedisClient({ url: REDIS_URI, legacyMode: true });
+  redisClient.on('error', (err) => console.log('Redis Client Error', err));
+  await redisClient.connect();
   const RedisStore = connectRedis(session);
+
+  let sameSite: 'strict' | 'lax' | 'none' = 'strict';
+  let secure = true;
+
+  if (environment === 'local') {
+    sameSite = 'lax';
+    secure = false;
+  } else if (environment === 'staging') {
+    sameSite = 'none';
+    secure = true;
+  } else if (environment === 'production') {
+    sameSite = 'strict';
+    secure = true;
+  }
 
   app.use(
     session({
       secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 7 * DAY, httpOnly: true, sameSite: 'lax' },
+      cookie: { maxAge: 7 * DAY, httpOnly: true, sameSite, secure },
       store: new RedisStore({ client: redisClient }),
     }),
   );
@@ -52,4 +79,5 @@ async function bootstrap() {
   await app.listen(PORT);
   Logger.log(`App listening on port: ${PORT}`, 'NestApplication');
 }
+
 bootstrap();

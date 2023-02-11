@@ -12,4 +12,5 @@ export const configValidationSchema = Joi.object({
   MINIO_PORT: Joi.number().required(),
   MINIO_ACCESS_KEY: Joi.string().required(),
   MINIO_SECRET_KEY: Joi.string().required(),
+  ENVIRONMENT: Joi.string().required().valid('local', 'staging', 'production'),
 });
