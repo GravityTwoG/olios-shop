@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["interactiveTransactions", "fullTextSearch"]
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -69,42 +69,17 @@ model CustomerProfile {
   userId String @unique() @db.Uuid
 
   basket Basket?
+  orders Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Basket {
-  id String @id @default(uuid()) @db.Uuid
-
-  customerProfile   CustomerProfile @relation(fields: [customerProfileId], references: [id])
-  customerProfileId String          @unique() @db.Uuid
-
-  basketItems BasketItem[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model BasketItem {
-  id       String @id @default(uuid()) @db.Uuid
-  quantity Int
-
-  basket   Basket? @relation(fields: [basketId], references: [id])
-  basketId String? @db.Uuid
-
-  product   Product? @relation(fields: [productId], references: [id])
-  productId Int
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
+//==============================================
 model Product {
   id          Int    @id @default(autoincrement())
   name        String @db.VarChar
   description String @default("") @db.VarChar
-  thumbUrl    String @default("") @db.VarChar
   oldPrice    Int    @default(-1)
   realPrice   Int
 
@@ -114,6 +89,7 @@ model Product {
   categoryId      Int?
 
   basketItems BasketItem[]
+  orderItems OrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -139,6 +115,66 @@ model ProductImage {
   id        Int    @id @default(autoincrement())
   imageUrl  String @db.VarChar
   imagePath String @db.VarChar
+  imageObjectName String @db.VarChar
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  isThumb   Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//=======================================
+
+model Basket {
+  id String @id @default(uuid()) @db.Uuid
+
+  customerProfile   CustomerProfile @relation(fields: [customerProfileId], references: [id])
+  customerProfileId String          @unique() @db.Uuid
+
+  basketItems BasketItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BasketItem {
+  id       String @id @default(uuid()) @db.Uuid
+  quantity Int
+
+  basket   Basket @relation(fields: [basketId], references: [id])
+  basketId String @db.Uuid
+
+  product   Product? @relation(fields: [productId], references: [id])
+  productId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+//==========================================
+
+
+model Order {
+  id String @id @default(uuid()) @db.Uuid
+
+  customerProfile   CustomerProfile @relation(fields: [customerProfileId], references: [id])
+  customerProfileId String          @db.Uuid
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id       String @id @default(uuid()) @db.Uuid
+  quantity Int
+  price    Int
+
+  order    Order @relation(fields: [orderId], references: [id])
+  orderId String @db.Uuid
 
   product   Product @relation(fields: [productId], references: [id])
   productId Int

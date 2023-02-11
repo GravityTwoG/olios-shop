@@ -27,7 +27,7 @@ export class ProductsService {
   }
 
   private async uploadImages(images: Express.Multer.File[]) {
-    const r: { url: string; path: string }[] = [];
+    const r: { url: string; path: string; objectName: string }[] = [];
 
     const result = await Promise.allSettled(
       images.map((image) => this.imagesService.upload(image, 'product-images')),
@@ -57,9 +57,13 @@ export class ProductsService {
         realPrice,
         description,
         categoryId,
-        thumbUrl: '',
         productImages: {
-          create: r.map((r) => ({ imagePath: r.path, imageUrl: r.url })),
+          create: r.map((i) => ({
+            imagePath: i.path,
+            imageUrl: i.url,
+            imageObjectName: i.objectName,
+            isThumb: false,
+          })),
         },
       },
     });
@@ -92,7 +96,12 @@ export class ProductsService {
       data: {
         ...updateProductDTO,
         productImages: {
-          create: r.map((i) => ({ imagePath: i.path, imageUrl: i.url })),
+          create: r.map((i) => ({
+            imagePath: i.path,
+            imageUrl: i.url,
+            imageObjectName: i.objectName,
+            isThumb: false,
+          })),
           deleteMany: imagesToDelete,
         },
       },
