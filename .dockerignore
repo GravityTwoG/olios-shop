@@ -1,3 +1,2 @@
-s3/
-data/
 .env
+docker-volumes/

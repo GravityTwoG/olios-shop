@@ -4,8 +4,7 @@
 /dist
 /node_modules
 
-/uploads
-/s3
+/docker-volumes
 
 # Logs
 logs

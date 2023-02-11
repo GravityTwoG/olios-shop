@@ -6,11 +6,24 @@ services:
     ports:
       - '5555:5432'
     volumes:
-      - /data/postgres:/data/postgres
+      - ./docker-volumes/dev/pgdata:/data/postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1212
       POSTGRES_DB: olios-db
+    networks:
+      - internal
+
+  pgadmin:
+    container_name: olios-pgadmin
+    links:
+      - postgres:postgres
+    image: dpage/pgadmin4:6.20
+    ports:
+      - '5050:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: 12121212
     networks:
       - internal
 
@@ -20,21 +33,21 @@ services:
     ports:
       - '6379:6379'
     volumes:
-      - /data/redis:/data/redis
+      - ./docker-volumes/dev/redis:/data/redis
 
   minio:
     image: minio/minio:RELEASE.2022-07-08T00-05-23Z
     volumes:
-      - ./s3/data1-1:/data1
-      - ./s3/data1-2:/data2
+      - ./docker-volumes/dev/s3/data1-1:/data1
+      - ./docker-volumes/dev/s3/data1-2:/data2
     ports:
       - '9000:9000'
       - '9001:9001'
     networks:
       - internal
     environment:
-      MINIO_ACCESS_KEY: minio
-      MINIO_SECRET_KEY: minio123
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
     command: server http://minio/data{1...2} --console-address ":9001"
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
