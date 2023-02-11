@@ -1,5 +1,4 @@
-.env.dev
-.env.prod
+.env
 
 # compiled output
 /dist
