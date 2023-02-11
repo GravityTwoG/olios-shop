@@ -41,7 +41,7 @@ import { InviteCodesModule } from './invite-codes/invite-codes.module';
                 password,
               );
               if (!user) {
-                done('', null, { message: error });
+                done('', false, { message: error });
               } else {
                 done(null, user);
               }
