@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 
-import * as passport from 'passport';
+import passport from 'passport';
 import { Strategy } from 'passport-local';
 
 import { UsersModule } from '../users/users.module';

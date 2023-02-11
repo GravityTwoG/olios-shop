@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
 
-import * as session from 'express-session';
-import * as redis from 'redis';
-import * as connectRedis from 'connect-redis';
+import session from 'express-session';
+import { createClient as createRedisClient } from 'redis';
+import connectRedis from 'connect-redis';
 
 import { AppModule } from './app.module';
 import { setupSwagger } from './setupSwagger';
@@ -34,9 +34,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const REDIS_URI = configService.get('REDIS_URI');
   const SESSION_SECRET = configService.get('SESSION_SECRET');
-  const PORT = configService.get<number>('PORT')!;
+  const PORT = configService.get<number>('PORT') || 3000;
 
-  const redisClient = redis.createClient({ url: REDIS_URI });
+  const redisClient = createRedisClient({ url: REDIS_URI, legacyMode: true });
   const RedisStore = connectRedis(session);
 
   app.use(
