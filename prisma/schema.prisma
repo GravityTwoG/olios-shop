@@ -113,7 +113,6 @@ model ProductCategory {
 
 model ProductImage {
   id        Int    @id @default(autoincrement())
-  imageUrl  String @db.VarChar
   imagePath String @db.VarChar
   imageObjectName String @db.VarChar
 

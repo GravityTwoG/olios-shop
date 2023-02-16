@@ -60,7 +60,6 @@ export class ProductsService {
         productImages: {
           create: r.map((i) => ({
             imagePath: i.path,
-            imageUrl: i.url,
             imageObjectName: i.objectName,
             isThumb: false,
           })),
@@ -98,7 +97,6 @@ export class ProductsService {
         productImages: {
           create: r.map((i) => ({
             imagePath: i.path,
-            imageUrl: i.url,
             imageObjectName: i.objectName,
             isThumb: false,
           })),
