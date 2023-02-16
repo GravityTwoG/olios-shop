@@ -10,7 +10,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import * as passport from 'passport';
+import { Authenticator } from 'passport';
 import { Request, Response } from 'express';
 
 import { User } from '@prisma/client';
@@ -29,7 +29,7 @@ import { CurrentUser } from './decorators/current-user.decorator';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    @Inject('PASSPORT') private readonly passport: passport.Authenticator,
+    @Inject('PASSPORT') private readonly passport: Authenticator,
   ) {}
 
   @Get('/me')
@@ -64,7 +64,7 @@ export class AuthController {
         {
           session: true,
         },
-        (err, user, info) => {
+        (err: string, user: User, info: string) => {
           try {
             req.authInfo = info;
             return resolve(this.handleRequest(err, user, info));

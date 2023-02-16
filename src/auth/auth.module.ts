@@ -4,6 +4,8 @@ import { RouterModule } from '@nestjs/core';
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 
+import { User } from '@prisma/client';
+
 import { UsersModule } from '../users/users.module';
 
 import { AuthService } from './auth.service';
@@ -35,7 +37,15 @@ import { InviteCodesModule } from './invite-codes/invite-codes.module';
               passwordField: 'password',
               session: true,
             },
-            async (email: string, password: string, done) => {
+            async (
+              email: string,
+              password: string,
+              done: (
+                error: string,
+                user: User | false,
+                data?: { message: string },
+              ) => void,
+            ) => {
               const { user, error } = await authService.validateUser(
                 email,
                 password,
@@ -43,7 +53,7 @@ import { InviteCodesModule } from './invite-codes/invite-codes.module';
               if (!user) {
                 done('', false, { message: error });
               } else {
-                done(null, user);
+                done('', user);
               }
             },
           ),
