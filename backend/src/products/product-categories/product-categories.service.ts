@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, ProductCategory } from '@prisma/client';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { ImagesService } from 'src/lib/images';
 
 import { CreateProductCategoryDTO } from './dto/create-product-category.dto';
@@ -59,10 +59,22 @@ export class ProductCategoriesService {
     updateProductCategoryInput: UpdateProductCategoryDTO,
   ) {
     const { name } = updateProductCategoryInput;
-
     const category = await this.prisma.productCategory.update({
       where: { id },
       data: { name },
+    });
+
+    return category;
+  }
+
+  async updateIcon(id: number, icon: Express.Multer.File) {
+    const result = await this.imagesService.upload(icon, 'product-categories');
+    const category = await this.prisma.productCategory.update({
+      where: { id },
+      data: {
+        iconUrl: result.path,
+        iconObjectName: result.objectName,
+      },
     });
 
     return category;

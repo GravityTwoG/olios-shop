@@ -9,7 +9,7 @@ import {
   UseGuards,
   Inject,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { Authenticator } from 'passport';
 import { Request, Response } from 'express';
 
@@ -20,6 +20,7 @@ import { mapUserToDto } from 'src/users/mapUserToDto';
 
 import { AuthService } from './auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterCustomerDto } from './dto/register-customer.dto';
 import { RegisterEmployeeDto } from './dto/register-employee.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
@@ -31,12 +32,6 @@ export class AuthController {
     private readonly authService: AuthService,
     @Inject('PASSPORT') private readonly passport: Authenticator,
   ) {}
-
-  @Get('/me')
-  @UseGuards(AuthGuard)
-  async me(@CurrentUser() user: User): Promise<UserOutputDto> {
-    return mapUserToDto(user);
-  }
 
   private handleRequest(err: any, user: User, info: any): User {
     if (err || !user) {
@@ -53,7 +48,15 @@ export class AuthController {
     return user;
   }
 
+  @ApiCookieAuth()
+  @Get('/me')
+  @UseGuards(AuthGuard)
+  async me(@CurrentUser() user: User): Promise<UserOutputDto> {
+    return mapUserToDto(user);
+  }
+
   @Post('/login')
+  @ApiBody({ type: LoginUserDto })
   async login(
     @Req() req: Request,
     @Res() res: Response,
@@ -98,7 +101,9 @@ export class AuthController {
     return mapUserToDto(user);
   }
 
+  @ApiCookieAuth()
   @Post('/logout')
+  @UseGuards(AuthGuard)
   async logout(@Req() req: Request, @Res() res: Response) {
     await (req.session as any).destroy();
     await res.clearCookie('connect.sid');

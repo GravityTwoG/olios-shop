@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { Prisma, User, UserRole } from '@prisma/client';
 import { DomainException, DomainExceptionCodes } from 'src/domain.exception';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 

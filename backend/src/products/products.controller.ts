@@ -51,6 +51,10 @@ export class ProductsController {
   ): Promise<Product> {
     const acceptableType = /image\/(jpeg|png)/;
     const maxFileSizeInBytes = 1024 * 1024 * 20;
+    if (!images) {
+      throw new HttpException('No images provided', 400);
+    }
+
     for (const image of images) {
       if (!acceptableType.test(image.mimetype)) {
         throw new HttpException(
@@ -73,7 +77,7 @@ export class ProductsController {
     return mapProductEntityToProduct(product);
   }
 
-  @Put()
+  @Put('/:id')
   @Roles('CONTENT_MANAGER')
   @UseInterceptors(FilesInterceptor('images'))
   updateProduct(
@@ -89,6 +93,7 @@ export class ProductsController {
   }
 
   @Delete('/:id')
+  @Roles('CONTENT_MANAGER')
   removeProduct(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.remove(id);
   }

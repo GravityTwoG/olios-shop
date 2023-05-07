@@ -3,6 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
+    .addCookieAuth('connect.sid')
     .setTitle('Olios Shop API')
     .setDescription('Olios Shop API description')
     .setVersion('0.1')
@@ -11,7 +12,7 @@ export const setupSwagger = (app: INestApplication) => {
   const document = SwaggerModule.createDocument(app, config, {
     ignoreGlobalPrefix: true,
   });
-  SwaggerModule.setup('api', app, document, {
+  SwaggerModule.setup('swagger', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
     },

@@ -10,8 +10,9 @@ import {
   UseInterceptors,
   UploadedFile,
   HttpException,
+  Patch,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductCategory } from '@prisma/client';
 
@@ -46,6 +47,7 @@ export class ProductCategoriesController {
       limits: { fileSize: 1024 * 1024 * 20, files: 1 },
     }),
   )
+  @ApiCookieAuth()
   async createProductCategory(
     @Body()
     createProductCategoryDTO: CreateProductCategoryDTO,
@@ -62,15 +64,10 @@ export class ProductCategoriesController {
     return this.productCategoriesService.create(createProductCategoryDTO, icon);
   }
 
-  @Put()
-  @UseInterceptors(
-    FileInterceptor('icon', {
-      limits: { fileSize: 1024 * 1024 * 20, files: 1 },
-    }),
-  )
+  @Put('/:id')
+  @ApiCookieAuth()
   updateProductCategory(
     @Body() updateProductCategoryDTO: UpdateProductCategoryDTO,
-    @UploadedFile() icon: Express.Multer.File,
   ): Promise<ProductCategory> {
     return this.productCategoriesService.update(
       updateProductCategoryDTO.id,
@@ -78,7 +75,22 @@ export class ProductCategoriesController {
     );
   }
 
+  @Patch('/:id/icon')
+  @UseInterceptors(
+    FileInterceptor('icon', {
+      limits: { fileSize: 1024 * 1024 * 20, files: 1 },
+    }),
+  )
+  @ApiCookieAuth()
+  updateProductCategoryIcon(
+    @Param('/:id', ParseIntPipe) id: number,
+    @UploadedFile() icon: Express.Multer.File,
+  ): Promise<ProductCategory> {
+    return this.productCategoriesService.updateIcon(id, icon);
+  }
+
   @Delete('/:id')
+  @ApiCookieAuth()
   removeProductCategory(@Param('id', ParseIntPipe) id: number) {
     return this.productCategoriesService.remove(id);
   }
