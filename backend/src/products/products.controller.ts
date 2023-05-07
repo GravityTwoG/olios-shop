@@ -11,7 +11,7 @@ import {
   UploadedFiles,
   HttpException,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
 import { Product } from '@prisma/client';
 
@@ -43,6 +43,8 @@ export class ProductsController {
   @Post()
   @Roles('CONTENT_MANAGER')
   @UseInterceptors(FilesInterceptor('images'))
+  @ApiConsumes('multipart/form-data')
+  @ApiCookieAuth()
   async createProduct(
     @Body()
     createProductInput: CreateProductDTO,
@@ -80,6 +82,8 @@ export class ProductsController {
   @Put('/:id')
   @Roles('CONTENT_MANAGER')
   @UseInterceptors(FilesInterceptor('images'))
+  @ApiConsumes('multipart/form-data')
+  @ApiCookieAuth()
   updateProduct(
     @Body() updateProductInput: UpdateProductDTO,
     @UploadedFiles()
@@ -94,6 +98,7 @@ export class ProductsController {
 
   @Delete('/:id')
   @Roles('CONTENT_MANAGER')
+  @ApiCookieAuth()
   removeProduct(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.remove(id);
   }

@@ -10,7 +10,7 @@ import {
   ForbiddenException,
   ParseBoolPipe,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
 import { User } from '@prisma/client';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -46,6 +46,7 @@ export class UsersController {
 
   @Post('/:id')
   @UseGuards(AuthGuard)
+  @ApiCookieAuth()
   async updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: UpdateUserDTO,
@@ -60,6 +61,7 @@ export class UsersController {
 
   @Post('/blockOrUnblock/:id')
   @Roles('MANAGER')
+  @ApiCookieAuth()
   async blockOrUnblockUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Query('isActive', ParseBoolPipe) isActive: boolean,
