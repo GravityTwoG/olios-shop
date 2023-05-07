@@ -4,7 +4,7 @@ import { User, CustomerProfile, Prisma } from '@prisma/client';
 
 import { BasketsService } from 'src/baskets/baskets.service';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 @Injectable()
 export class CustomerProfilesService {

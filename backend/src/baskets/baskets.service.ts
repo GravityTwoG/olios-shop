@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Basket, Prisma } from '@prisma/client';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 @Injectable()
 export class BasketsService {

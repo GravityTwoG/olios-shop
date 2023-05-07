@@ -8,8 +8,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { BasketsModule } from './baskets/baskets.module';
 import { ProductsModule } from './products/products.module';
-import { ProductCategoriesModule } from './product-categories/product-categories.module';
-import { PrismaModule } from './prisma/prisma.module';
+import { ProductCategoriesModule } from './products/product-categories/product-categories.module';
+import { PrismaModule } from './lib/prisma/prisma.module';
 import { GlobalExceptionFilter } from './global.exception-filter';
 import { ImagesModule } from './lib/images';
 

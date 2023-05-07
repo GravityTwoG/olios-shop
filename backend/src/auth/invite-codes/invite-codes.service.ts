@@ -3,7 +3,7 @@ import { InviteCode, Prisma, UserRole } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { DomainException } from 'src/domain.exception';
 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 import { CreateInviteCodeDto } from './dto/create-invite-code.dto';
 
@@ -81,8 +81,11 @@ export class InviteCodesService implements OnModuleInit {
   async deleteInviteCode(
     where: Prisma.InviteCodeWhereUniqueInput,
   ): Promise<void> {
+    await this.prisma.inviteCode.findFirstOrThrow({
+      where: { ...where, isUsed: false },
+    });
     await this.prisma.inviteCode.delete({
-      where,
+      where: where,
     });
   }
 
