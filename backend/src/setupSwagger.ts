@@ -5,7 +5,7 @@ export const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
     .addCookieAuth('connect.sid')
     .setTitle('Olios Shop API')
-    .setDescription('Olios Shop API description')
+    .setDescription('Olios Shop Backend API Description')
     .setVersion('0.1')
     .build();
 

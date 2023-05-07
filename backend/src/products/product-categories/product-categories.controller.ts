@@ -12,7 +12,7 @@ import {
   HttpException,
   Patch,
 } from '@nestjs/common';
-import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductCategory } from '@prisma/client';
 
@@ -47,6 +47,7 @@ export class ProductCategoriesController {
       limits: { fileSize: 1024 * 1024 * 20, files: 1 },
     }),
   )
+  @ApiConsumes('multipart/form-data')
   @ApiCookieAuth()
   async createProductCategory(
     @Body()
@@ -82,6 +83,7 @@ export class ProductCategoriesController {
     }),
   )
   @ApiCookieAuth()
+  @ApiConsumes('multipart/form-data')
   updateProductCategoryIcon(
     @Param('/:id', ParseIntPipe) id: number,
     @UploadedFile() icon: Express.Multer.File,
