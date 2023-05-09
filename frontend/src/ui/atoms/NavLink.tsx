@@ -24,8 +24,8 @@ export const NavLink: React.FC<NavLinkProps> = ({
       : className;
 
   return (
-    <Link {...props}>
-      <a className={actualClassName}>{children}</a>
+    <Link {...props} className={actualClassName}>
+      {children}
     </Link>
   );
 };
