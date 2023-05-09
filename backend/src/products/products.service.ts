@@ -4,8 +4,12 @@ import { Product } from '@prisma/client';
 import { ImagesService } from 'src/lib/images';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
+import { PaginationQueryDTO } from 'src/common/dto/pagination-query-dto';
+
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
+
+type ProductsFilter = PaginationQueryDTO;
 
 @Injectable()
 export class ProductsService {
@@ -14,8 +18,8 @@ export class ProductsService {
     private readonly imagesService: ImagesService,
   ) {}
 
-  async findAll(): Promise<Product[]> {
-    return this.prisma.product.findMany({});
+  async findAll(filter: ProductsFilter): Promise<Product[]> {
+    return this.prisma.product.findMany(filter);
   }
 
   async findOne(id: number): Promise<Product> {
