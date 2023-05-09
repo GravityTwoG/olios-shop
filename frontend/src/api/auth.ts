@@ -1,5 +1,7 @@
 import { axiosInstance } from './instance';
 
+const BASE_ROUTE = '/auth';
+
 export type ILoginCredentials = {
   email: string;
   password: string;
@@ -11,7 +13,7 @@ export type IRegisterCredentials = {
 };
 
 export async function login(credentials: ILoginCredentials) {
-  const res = await axiosInstance.post('/auth/login', {
+  const res = await axiosInstance.post(`${BASE_ROUTE}/login`, {
     ...credentials,
   });
 
@@ -19,7 +21,7 @@ export async function login(credentials: ILoginCredentials) {
 }
 
 export async function register(credentials: IRegisterCredentials) {
-  const res = await axiosInstance.post('/auth/register', {
+  const res = await axiosInstance.post(`${BASE_ROUTE}/register`, {
     ...credentials,
   });
 
@@ -27,13 +29,13 @@ export async function register(credentials: IRegisterCredentials) {
 }
 
 export async function check() {
-  const res = await axiosInstance.get('/auth/register');
+  const res = await axiosInstance.get(`${BASE_ROUTE}/me`);
 
   return res.data;
 }
 
 export async function logout() {
-  const res = await axiosInstance.post('/auth/logout');
+  const res = await axiosInstance.post(`${BASE_ROUTE}/logout`);
 
   return res.data;
 }

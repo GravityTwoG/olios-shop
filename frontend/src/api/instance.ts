@@ -1,14 +1,9 @@
 import axios, { AxiosError } from 'axios';
 import { ApiError } from './ApiError';
-
-let baseUrl: string = 'http://localhost:5000';
-
-if (process.env.NODE_ENV === 'production') {
-  baseUrl = '/api/v1';
-}
+import { API_BASE_URL } from '../config';
 
 export const axiosInstance = axios.create({
-  baseURL: baseUrl,
+  baseURL: API_BASE_URL,
   timeout: 5000,
   withCredentials: true,
 });
