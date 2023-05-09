@@ -1,4 +1,11 @@
-import { IsDate, IsEmail, IsEnum, IsString, MinLength } from 'class-validator';
+import {
+  IsDate,
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
@@ -25,7 +32,8 @@ export class CreateUserDto {
   @ApiProperty()
   @Type(() => Date)
   @IsDate()
-  birthDate: Date;
+  @IsOptional()
+  birthDate: Date | null;
 
   @ApiProperty()
   @IsString()

@@ -6,11 +6,11 @@ export function mapUserToDto(user: User): UserOutputDto {
     id: user.id,
     email: user.email,
     birthDate: user.birthDate,
-    firstName: user.firstName,
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+    patronymic: user.patronymic || '',
     isActive: user.isActive,
     isEmailVerified: user.isEmailVerified,
     role: user.role,
-    lastName: user.lastName,
-    patronymic: user.patronymic,
   };
 }
