@@ -8,6 +8,7 @@ import { Layout } from '@/src/ui/organisms/Layout/Layout';
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
+    // check if user is already authenticated
     checkAuthorizationFx();
   }, []);
 
