@@ -14,13 +14,11 @@ import ProfileIcon from './img/Profile.svg';
 export default function Sidebar(props) {
   return (
     <aside className={`${classes.sidebar} ${props.className}`}>
-      <Link href="/">
-        <a className={classes.SidebarLogo}>
-          <img src="/LOGO.png" alt="Olios Shop"/>
-        </a>
+      <Link href="/" className={classes.SidebarLogo}>
+        <img src="/LOGO.png" alt="Olios Shop" />
       </Link>
 
-      <MainNavigation/>
+      <MainNavigation />
 
       <div>
         <NavLink
@@ -28,14 +26,14 @@ export default function Sidebar(props) {
           className={classes.NavItem}
           activeClassName={classes.NavItemActive}
         >
-          <ProfileIcon/>
+          <ProfileIcon />
         </NavLink>
         <NavLink
           href="/about"
           className={classes.NavItem}
           activeClassName={classes.NavItemActive}
         >
-          <AboutIcon/>
+          <AboutIcon />
         </NavLink>
       </div>
 

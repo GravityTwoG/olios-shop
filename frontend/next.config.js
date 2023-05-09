@@ -3,37 +3,58 @@ const withPlugins = require('next-compose-plugins');
 nextConfig = {
   webpack(config) {
     config.module.rules.push({
-      test: /\.svg$/,
+      test: /\.(eot|woff|woff2|ttf|png|jpg|gif)$/,
       issuer: {
-        test: /\.(js|ts)x?$/,
+        and: [/\.(js|ts|css|scss|sass)x?$/],
       },
-      use: ['@svgr/webpack'],
+      use: [
+        {
+          loader: 'url-loader',
+          options: {
+            limit: 100000,
+            name: '[name].[ext]',
+          },
+        },
+      ],
     });
     config.module.rules.push({
       test: /\.(eot|woff|woff2|ttf|png|jpg|gif)$/,
       issuer: {
-        test: /\.(js|ts|css|scss|sass)x?$/,
+        and: [/\.(js|ts|css|scss|sass)x?$/],
       },
-      use: {
-        loader: 'url-loader',
-        options: {
-          limit: 100000,
-          name: '[name].[ext]',
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+          },
         },
-      },
+      ],
     });
-    config.module.rules.push({
-      test: /\.(eot|woff|woff2|ttf|png|jpg|gif)$/,
-      issuer: {
-        test: /\.(js|ts|css|scss|sass)x?$/,
+
+    // Grab the existing rule that handles SVG imports
+    const fileLoaderRule = config.module.rules.find((rule) =>
+      rule.test?.test?.('.svg'),
+    );
+
+    config.module.rules.push(
+      // Reapply the existing rule, but only for svg imports ending in ?url
+      {
+        ...fileLoaderRule,
+        test: /\.svg$/i,
+        resourceQuery: /url/, // *.svg?url
       },
-      use: {
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-        },
+      // Convert all other *.svg imports to React components
+      {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        resourceQuery: { not: /url/ }, // exclude if *.svg?url
+        use: ['@svgr/webpack'],
       },
-    });
+    );
+
+    // Modify the file loader rule to ignore *.svg, since we have it handled now.
+    fileLoaderRule.exclude = /\.svg$/i;
 
     return config;
   },
