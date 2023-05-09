@@ -34,7 +34,7 @@ export class UserOutputDto {
 
   @ApiProperty()
   @IsDate()
-  birthDate: Date;
+  birthDate: Date | null;
 
   @ApiProperty()
   @IsBoolean()

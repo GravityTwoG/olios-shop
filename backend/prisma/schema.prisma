@@ -45,10 +45,10 @@ model User {
   password        String   @db.VarChar
   passwordSalt    String
   role            UserRole @default(CUSTOMER)
-  firstName       String   @default("") @db.VarChar
-  lastName        String   @default("") @db.VarChar
-  patronymic      String   @default("") @db.VarChar
-  birthDate       DateTime
+  firstName       String?   @default("") @db.VarChar
+  lastName        String?   @default("") @db.VarChar
+  patronymic      String?   @default("") @db.VarChar
+  birthDate       DateTime? 
   isActive        Boolean  @default(true)
 
   customerProfile CustomerProfile?
