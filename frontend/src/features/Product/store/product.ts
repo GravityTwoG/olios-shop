@@ -7,9 +7,11 @@ export const $product = createStore<IProduct>(emptyProduct);
 
 export const setProduct = createEvent<IProduct>('set product');
 
-export const fetchProductFx = createEffect<string, IProduct>(
+$product.on(setProduct, (_, product) => product);
+
+export const fetchProductFx = createEffect<number, IProduct>(
   async (productId) => {
-    return fetchProduct();
+    return fetchProduct(productId);
   },
 );
 fetchProductFx.done.watch(({ result }) => {

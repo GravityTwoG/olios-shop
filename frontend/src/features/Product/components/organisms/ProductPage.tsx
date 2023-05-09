@@ -4,22 +4,27 @@ import classes from '@/pages/product/product-page.module.sass';
 import { Button } from '@/src/ui/atoms/Button';
 import Category from '@/src/ui/molecules/Category';
 import { ProductCard } from '../molecules/productCard/ProductCard';
+import { IProduct } from '../../store';
 
-class ProductPage extends React.Component {
-  quantity = React.createRef();
+class ProductPage extends React.Component<{
+  product: IProduct;
+  categoryIcon: string;
+  recommendedProducts: IProduct[];
+}> {
+  quantity = React.createRef<HTMLInputElement>();
 
   addToCart = () => {
     // this.props.addToCart(this.props.productId, this.quantity.current.value);
   };
 
   renderButton = () => {
-    if (this.props.inCart) {
-      return (
-        <Button className="btn btn--black" onClick={this.addToCart}>
-          In cart
-        </Button>
-      );
-    }
+    // if (this.props.inCart) {
+    //   return (
+    //     <Button className="btn btn--black" onClick={this.addToCart}>
+    //       In cart
+    //     </Button>
+    //   );
+    // }
     return (
       <Button className="btn" onClick={this.addToCart}>
         Add to cart
@@ -28,17 +33,17 @@ class ProductPage extends React.Component {
   };
 
   getLastPrice = () => {
-    if (this.props.product.lastPrice) {
+    if (this.props.product.oldPrice !== this.props.product.realPrice) {
       return (
         <span className={classes['product__price-prev']}>
-          {this.props.product.lastPrice}
+          {this.props.product.oldPrice}
         </span>
       );
     }
   };
 
   renderRecomendedProducts = () => {
-    return this.props.recomendedProducts.map((product) => {
+    return this.props.recommendedProducts.map((product) => {
       return <ProductCard product={product} key={product.id} />;
     });
   };
@@ -47,7 +52,7 @@ class ProductPage extends React.Component {
     return (
       <div className={classes['product']}>
         <div className={classes['product__preview']}>
-          <img src={this.props.product.imgUrl} alt="" />
+          <img src={this.props.product.thumbUrl} alt="" />
           <div className={classes['product__preview-like']}>
             <span>409</span> ❤
           </div>
@@ -60,7 +65,7 @@ class ProductPage extends React.Component {
           <div className={classes['product__right-inner']}>
             <div className={classes['product__header']}>
               <Category
-                name={this.props.product.category}
+                name={this.props.product.categoryName}
                 href="/products/living-room"
               >
                 <img src={this.props.categoryIcon} alt="" />
@@ -71,14 +76,14 @@ class ProductPage extends React.Component {
                 {this.props.product.name}
               </div>
               <div className={classes['product__desc']}>
-                {this.props.product.desc}
+                {this.props.product.description}
               </div>
               <div className={classes['product__line']}>
                 <div className={classes['product__price']}>
                   <div className={classes['product__price-label']}>Cost</div>
                   <span>
                     <span className={classes['product__price-curr']}>
-                      {this.props.product.price}
+                      {this.props.product.realPrice}
                     </span>
                     {this.getLastPrice()}
                   </span>

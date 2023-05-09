@@ -4,8 +4,37 @@ import { PaginationQueryDTO } from './types';
 
 const BASE_ROUTE = '/products';
 
-export const fetchProduct = async (): Promise<IProduct> => {
-  return axiosInstance.get(`${BASE_ROUTE}`);
+type CreateProductDTO = {
+  name: string;
+  description: string;
+  price: number;
+  categoryId: number;
+  images: Blob[];
+};
+
+export const createProduct = async (data: CreateProductDTO): Promise<any[]> => {
+  const formData = new FormData();
+  formData.append('name', data.name);
+  formData.append('description', data.description);
+  formData.append('realPrice', data.price.toString());
+  formData.append('categoryId', data.categoryId.toString());
+
+  for (const image of data.images) {
+    formData.append('images', image);
+  }
+
+  const response = await axiosInstance.post(`${BASE_ROUTE}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response.data;
+};
+
+export const fetchProduct = async (productId: number): Promise<IProduct> => {
+  const response = await axiosInstance.get(`${BASE_ROUTE}/${productId}`);
+  return response.data;
 };
 
 export const fetchProducts = async (
@@ -17,9 +46,10 @@ export const fetchProducts = async (
 };
 
 export const fetchRecommendedProducts = async (
-  query: PaginationQueryDTO,
+  query: PaginationQueryDTO & { categoryId: number },
 ): Promise<IProduct[]> => {
-  const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
+  let { categoryId, ...q } = query;
+  const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: q });
 
   return response.data;
 };
