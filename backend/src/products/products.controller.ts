@@ -10,18 +10,23 @@ import {
   UseInterceptors,
   UploadedFiles,
   HttpException,
+  Query,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
 import { Product } from '@prisma/client';
+
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 import { ProductsService } from './products.service';
 
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
+
 import { mapProductEntityToProductType as mapProductEntityToProduct } from './mapProductEntityToProduct';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { FilesInterceptor } from '@nestjs/platform-express';
+
+import { PaginationQueryDTO } from 'src/common/dto/pagination-query-dto';
 
 @ApiTags('Products')
 @Controller('/products')
@@ -29,8 +34,11 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  async findAll(): Promise<Product[]> {
-    const products = await this.productsService.findAll();
+  async findAll(
+    @Query()
+    query: PaginationQueryDTO,
+  ): Promise<Product[]> {
+    const products = await this.productsService.findAll(query);
     return products.map(mapProductEntityToProduct);
   }
 
