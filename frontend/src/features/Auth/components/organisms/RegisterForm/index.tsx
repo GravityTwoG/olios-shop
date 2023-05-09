@@ -5,7 +5,7 @@ import { useStore } from 'effector-react';
 import { $registerError, registerFx } from '../../../store';
 
 import { Button } from '@/src/ui/atoms/Button';
-import { InputField } from '../../atoms/InputField';
+import { InputField } from '../../../../../ui/atoms/InputField';
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState('');

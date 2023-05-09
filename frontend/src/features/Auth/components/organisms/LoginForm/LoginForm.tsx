@@ -5,7 +5,7 @@ import { $loginError, loginFx } from '../../../store';
 import { useStore } from 'effector-react';
 
 import { Button } from '@/src/ui/atoms/Button';
-import { InputField } from '../../atoms/InputField';
+import { InputField } from '@/src/ui/atoms/InputField';
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');

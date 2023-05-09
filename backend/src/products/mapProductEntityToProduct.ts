@@ -1,21 +1,19 @@
-import { Product, ProductCategory } from '@prisma/client';
+import { ProductEntity } from './products.service';
 
-export function mapProductEntityToProductType(product: Product): Product {
-  // const returnValue = {
-  //   id: product.id,
-  //   categoryId: product.category as unknown as number,
-  //   description: product.description,
-  //   name: product.name,
-  //   oldPrice: product.oldPrice,
-  //   realPrice: product.realPrice,
-  //   thumbUrl: product.thumbUrl,
-  //   images: product.images.map((im) => im.imageUrl),
-  // };
+export function mapProductEntityToProductType(product: ProductEntity): any {
+  const returnValue = {
+    id: product.id,
+    categoryId: product.categoryId,
+    categoryName: product.productCategory ? product.productCategory.name : '',
+    description: product.description,
+    name: product.name,
+    oldPrice: product.oldPrice,
+    realPrice: product.realPrice,
+    thumbUrl: product.productImages.length
+      ? `http://localhost:9000/${product.productImages[0].imagePath}`
+      : 'product.thumbUrl',
+    images: product.productImages.map((im) => im.imagePath),
+  };
 
-  // if (product.category instanceof ProductCategory) {
-  //   returnValue.categoryId = product.category.id;
-  // }
-
-  // return returnValue;
-  return product;
+  return returnValue;
 }

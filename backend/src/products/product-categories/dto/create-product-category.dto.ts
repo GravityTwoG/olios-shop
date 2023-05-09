@@ -11,5 +11,5 @@ export class CreateProductCategoryDTO {
   @IsOptional()
   @IsInt()
   @Type(() => Number)
-  parentId?: number;
+  parentId?: number | null;
 }

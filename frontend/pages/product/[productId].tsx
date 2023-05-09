@@ -13,17 +13,17 @@ import { useRouter } from 'next/router';
 import { useStore } from 'effector-react';
 
 const categories: {
-  [index: string]: { label: React.ReactNode; icon: React.ReactNode };
+  [index: string]: { label: React.ReactNode; icon: string };
 } = {
-  'living-room': {
+  '0': {
     label: 'living room',
     icon: '/category-icons/Living-room.png',
   },
-  office: {
+  '1': {
     label: 'office',
     icon: '/category-icons/Office.png',
   },
-  'for-kids': {
+  '2': {
     label: 'for kids',
     icon: '/category-icons/For-kids.png',
   },
@@ -41,12 +41,14 @@ export default function ProductPageContainer() {
   const { query } = useRouter();
 
   useEffect(() => {
-    fetchProductFx(query.productId as string);
-    fetchRecommendedProductsFx(query.productId as string);
+    if (typeof query.productId === 'string') {
+      fetchProductFx(+query.productId);
+      fetchRecommendedProductsFx(+query.productId);
+    }
   }, [query.productId]);
 
   const getCategoryIcon = (category: string) => {
-    if (!categories[category]) return;
+    if (!categories[category]) return '';
     return categories[category].icon;
   };
 
@@ -58,7 +60,7 @@ export default function ProductPageContainer() {
     <ProductPage
       product={product}
       categoryIcon={getCategoryIcon(productCategory)}
-      recomendedProducts={recommendedProducts}
+      recommendedProducts={recommendedProducts}
     />
   );
 }

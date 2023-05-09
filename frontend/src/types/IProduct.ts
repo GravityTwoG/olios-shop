@@ -1,9 +1,10 @@
 export type IProduct = {
   id: number;
   name: string;
-  desc: string;
-  price: number;
-  lastPrice: number;
-  imgUrl: string;
-  imgSize: string;
+  description: string;
+  categoryName: string;
+  categoryId: number;
+  realPrice: number;
+  oldPrice: number;
+  thumbUrl: string;
 };

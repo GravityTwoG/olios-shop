@@ -7,6 +7,7 @@ export type InputFieldProps = {
   value?: React.InputHTMLAttributes<HTMLInputElement>['value'];
   onChange?: React.InputHTMLAttributes<HTMLInputElement>['onChange'];
   placeholder?: React.InputHTMLAttributes<HTMLInputElement>['placeholder'];
+  name?: React.InputHTMLAttributes<HTMLInputElement>['name'];
 };
 
 export const InputField = ({
@@ -23,6 +24,7 @@ export const InputField = ({
         onChange={props.onChange}
         value={props.value}
         placeholder={props.placeholder}
+        name={props.name}
       />
     </label>
   );

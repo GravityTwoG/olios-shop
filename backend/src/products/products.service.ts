@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { Product } from '@prisma/client';
+import { Product, ProductCategory, ProductImage } from '@prisma/client';
 import { ImagesService } from 'src/lib/images';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
@@ -11,6 +11,16 @@ import { UpdateProductDTO } from './dto/update-product.dto';
 
 type ProductsFilter = PaginationQueryDTO;
 
+const includes = {
+  productCategory: true,
+  productImages: true,
+};
+
+export type ProductEntity = Product & {
+  productCategory: ProductCategory | null;
+  productImages: ProductImage[];
+};
+
 @Injectable()
 export class ProductsService {
   constructor(
@@ -18,13 +28,14 @@ export class ProductsService {
     private readonly imagesService: ImagesService,
   ) {}
 
-  async findAll(filter: ProductsFilter): Promise<Product[]> {
-    return this.prisma.product.findMany(filter);
+  async findAll(filter: ProductsFilter): Promise<ProductEntity[]> {
+    return this.prisma.product.findMany({ ...filter, include: includes });
   }
 
-  async findOne(id: number): Promise<Product> {
+  async findOne(id: number): Promise<ProductEntity> {
     const product = await this.prisma.product.findUniqueOrThrow({
       where: { id },
+      include: includes,
     });
 
     return product;
@@ -51,13 +62,12 @@ export class ProductsService {
   ) {
     const r = await this.uploadImages(images);
 
-    const { name, oldPrice, realPrice, description, categoryId } =
-      createProductDTO;
+    const { name, realPrice, description, categoryId } = createProductDTO;
 
     const product = await this.prisma.product.create({
       data: {
         name,
-        oldPrice,
+        oldPrice: realPrice,
         realPrice,
         description,
         categoryId,
@@ -69,6 +79,7 @@ export class ProductsService {
           })),
         },
       },
+      include: includes,
     });
 
     return product;
@@ -107,6 +118,7 @@ export class ProductsService {
           deleteMany: imagesToDelete,
         },
       },
+      include: includes,
     });
     return product;
   }

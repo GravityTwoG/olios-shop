@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Link, { LinkProps } from 'next/link';
 import { useRouter } from 'next/router';
 
 export type NavLinkProps = LinkProps & {
   className?: string;
   activeClassName?: string;
+  children: ReactNode;
 };
 
 export const NavLink: React.FC<NavLinkProps> = ({
