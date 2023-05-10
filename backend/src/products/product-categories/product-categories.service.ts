@@ -33,14 +33,19 @@ export class ProductCategoriesService {
     return category;
   }
 
-  findAll(params: {
+  async findAll(params: {
     skip?: number;
     take?: number;
     cursor?: Prisma.ProductCategoryWhereUniqueInput;
     where?: Prisma.ProductCategoryWhereInput;
     orderBy?: Prisma.Enumerable<Prisma.ProductCategoryOrderByWithRelationAndSearchRelevanceInput>;
   }) {
-    return this.prisma.productCategory.findMany(params);
+    const categories = await this.prisma.productCategory.findMany(params);
+    const count = await this.prisma.productCategory.count({
+      where: params.where,
+    });
+
+    return { count, list: categories };
   }
 
   async findOne(id: number) {

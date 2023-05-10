@@ -29,23 +29,25 @@ function Categories() {
 export type MenuProps = {
   isOpened: boolean;
   className?: string;
-}
+};
 
-export const Menu = React.forwardRef<HTMLDivElement, MenuProps>((props, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={
-        props.isOpened
-          ? `${classes.Menu} ${classes['Menu--active']} ${props.className}`
-          : `${classes.Menu} ${props.className}`
-      }
-    >
-      <Categories />
+export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
+  (props, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={
+          props.isOpened
+            ? `${classes.Menu} ${classes['Menu--active']} ${props.className}`
+            : `${classes.Menu} ${props.className}`
+        }
+      >
+        <Categories />
 
-      <NavLink href="/products" className={classes.showAll}>
-        Show All Categories
-      </NavLink>
-    </div>
-  );
-});
+        <NavLink href="/products" className={classes.showAll}>
+          Show All Categories
+        </NavLink>
+      </div>
+    );
+  },
+);
