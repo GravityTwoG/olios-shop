@@ -5,6 +5,7 @@ import { Button } from '@/src/ui/atoms/Button';
 import Category from '@/src/ui/molecules/Category';
 import { ProductCard } from '../molecules/productCard/ProductCard';
 import { IProduct } from '../../store';
+import { paths } from '@/src/paths';
 
 class ProductPage extends React.Component<{
   product: IProduct;
@@ -66,7 +67,11 @@ class ProductPage extends React.Component<{
             <div className={classes['product__header']}>
               <Category
                 name={this.props.product.categoryName}
-                href="/products/living-room"
+                href={
+                  paths.products({}) +
+                  '?categoryId=' +
+                  this.props.product.categoryId
+                }
               >
                 <img src={this.props.categoryIcon} alt="" />
               </Category>
