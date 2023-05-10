@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import classes from './profile.module.scss';
 
 import { useStore } from 'effector-react';
 import { useRouter } from 'next/router';
 
+import { paths } from '@/src/paths';
 import { IUserRole } from '@/src/types/IUser';
 
 import {
@@ -14,10 +14,10 @@ import {
   UserCard,
 } from '@/src/features/Auth';
 
-import { Button } from '../../src/ui/atoms/Button';
-import { Flex } from '@/src/ui/atoms/Flex';
 import Link from 'next/link';
-import { paths } from '@/src/paths';
+import { Button } from '@/src/ui/atoms/Button';
+import { Flex } from '@/src/ui/atoms/Flex';
+import { Container } from '@/src/ui/atoms/Container';
 
 const authPath = '/auth/sign-in';
 
@@ -34,20 +34,18 @@ export default function ProfilePage() {
   }, [isAuthorized, isAuthorizationChecked]);
 
   return (
-    <div className={classes.screen}>
-      <div className={classes.container}>
-        <UserCard user={user} isAuthorizationChecked={isAuthorizationChecked} />
+    <Container className="py-8">
+      <UserCard user={user} isAuthorizationChecked={isAuthorizationChecked} />
 
-        {user.role === IUserRole.CONTENT_MANAGER && (
-          <Flex jcc margin="1rem 0">
-            <Link href={paths.content({})}>Manage content</Link>
-          </Flex>
-        )}
-
+      {user.role === IUserRole.CONTENT_MANAGER && (
         <Flex jcc margin="1rem 0">
-          <Button onClick={() => logoutFx()}>logout</Button>
+          <Link href={paths.content({})}>Manage content</Link>
         </Flex>
-      </div>
-    </div>
+      )}
+
+      <Flex jcc margin="1rem 0">
+        <Button onClick={() => logoutFx()}>logout</Button>
+      </Flex>
+    </Container>
   );
 }

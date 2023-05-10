@@ -2,3 +2,7 @@
   --accent-color: #0023ff;
   --accent-hover-color: #0011c9;
 }
+
+.bg-accent {
+  background-color: var(--accent-color);
+}

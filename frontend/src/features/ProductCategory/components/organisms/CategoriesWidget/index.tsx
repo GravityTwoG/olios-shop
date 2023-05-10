@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { IProductCategory } from '@/src/types/IProductCategory';
 import { deleteCategory, fetchCategories } from '@/src/api/product-categories';
+
+import { Paper } from '@/src/ui/atoms/Paper';
 import { Button } from '@/src/ui/atoms/Button';
+import { H2 } from '@/src/ui/atoms/Typography';
 
 export const CategoriesWidget = () => {
   const [categories, setCategories] = useState<IProductCategory[]>([]);
@@ -17,8 +20,8 @@ export const CategoriesWidget = () => {
   }, []);
 
   return (
-    <div>
-      <h2>All categories</h2>
+    <Paper>
+      <H2>All categories</H2>
 
       <ul>
         {categories.map((category) => (
@@ -26,8 +29,8 @@ export const CategoriesWidget = () => {
         ))}
       </ul>
 
-      <div>{allCategoriesCount}</div>
-    </div>
+      <div className="text-center">{allCategoriesCount}</div>
+    </Paper>
   );
 };
 
@@ -39,21 +42,15 @@ const ProductCategoryListItem = ({
   category,
 }: ProductCategoryListItemProps) => {
   return (
-    <li
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        padding: '12px',
-      }}
-    >
+    <li className="flex items-center py-4 gap-2">
       <img
         src={category.iconUrl}
         alt={category.name}
-        style={{ width: '60px', height: '60px', marginRight: '8px' }}
+        style={{ width: '60px', height: '60px' }}
       />
       <div>{category.name}</div>
 
-      <div style={{ marginLeft: 'auto' }}>
+      <div className="ml-auto">
         <Button
           onDoubleClick={() => {
             deleteCategory(category.id);

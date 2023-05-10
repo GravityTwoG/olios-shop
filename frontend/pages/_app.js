@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import '@/src/styles/reset.css';
+import '@/src/styles/globals.css';
 import '@/src/styles/theme.css';
 
 import { checkAuthorizationFx } from '@/src/features/Auth/store';

@@ -4,7 +4,7 @@ import classes from './mainPage.module.css';
 import { paths } from '@/src/paths';
 
 import Head from 'next/head';
-import { StyledLink } from '../../src/ui/atoms/StyledLink';
+import { StyledLink } from '@/src/ui/atoms/StyledLink';
 
 export function HomePage() {
   return (
