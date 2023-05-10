@@ -1,4 +1,5 @@
-import { axiosInstance } from './instance';
+import { axiosInstance } from './lib/instance';
+import { UserSchema } from '../types/IUser';
 
 const BASE_ROUTE = '/auth';
 
@@ -17,7 +18,7 @@ export async function login(credentials: ILoginCredentials) {
     ...credentials,
   });
 
-  return res.data;
+  return UserSchema.parse(res.data);
 }
 
 export async function register(credentials: IRegisterCredentials) {
@@ -25,13 +26,13 @@ export async function register(credentials: IRegisterCredentials) {
     ...credentials,
   });
 
-  return res.data;
+  return UserSchema.parse(res.data);
 }
 
 export async function check() {
   const res = await axiosInstance.get(`${BASE_ROUTE}/me`);
 
-  return res.data;
+  return UserSchema.parse(res.data);
 }
 
 export async function logout() {
