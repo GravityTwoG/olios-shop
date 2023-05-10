@@ -1,6 +1,8 @@
 import React from 'react';
 import classes from './mainPage.module.css';
 
+import { paths } from '@/src/paths';
+
 import Head from 'next/head';
 import { StyledLink } from '../../src/ui/atoms/StyledLink';
 
@@ -17,7 +19,7 @@ export function HomePage() {
           NEWEST FURNITURE SHOP
         </div>
 
-        <StyledLink href="/products">View more</StyledLink>
+        <StyledLink href={paths.products({})}>View more</StyledLink>
       </div>
     </div>
   );

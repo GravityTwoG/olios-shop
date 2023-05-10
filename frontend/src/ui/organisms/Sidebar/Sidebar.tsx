@@ -1,6 +1,8 @@
 import React from 'react';
 import classes from './sidebar.module.scss';
 
+import { paths } from '@/src/paths';
+
 import Link from 'next/link';
 import { NavLink } from '../../atoms/NavLink';
 import { BurgerButton } from '../../molecules/BurgerButton';
@@ -11,10 +13,16 @@ import SearchIcon from './img/Search.svg';
 import AboutIcon from './img/About.svg';
 import ProfileIcon from './img/Profile.svg';
 
-export default function Sidebar(props) {
+export type SidebarProps = {
+  className: string;
+  onBurgerMenuClick: () => void;
+  burgerMenuOpened: boolean;
+};
+
+export default function Sidebar(props: SidebarProps) {
   return (
     <aside className={`${classes.sidebar} ${props.className}`}>
-      <Link href="/" className={classes.SidebarLogo}>
+      <Link href={paths.home({})} className={classes.SidebarLogo}>
         <img src="/LOGO.png" alt="Olios Shop" />
       </Link>
 
@@ -22,14 +30,14 @@ export default function Sidebar(props) {
 
       <div>
         <NavLink
-          href="/profile"
+          href={paths.profile({})}
           className={classes.NavItem}
           activeClassName={classes.NavItemActive}
         >
           <ProfileIcon />
         </NavLink>
         <NavLink
-          href="/about"
+          href={paths.about({})}
           className={classes.NavItem}
           activeClassName={classes.NavItemActive}
         >
@@ -50,21 +58,21 @@ function MainNavigation() {
   return (
     <nav className={classes.nav}>
       <NavLink
-        href="/home"
+        href={paths.home({})}
         className={classes.NavItem}
         activeClassName={classes.NavItemActive}
       >
         <HomeIcon />
       </NavLink>
       <NavLink
-        href="/basket"
+        href={paths.basket({})}
         className={classes.NavItem}
         activeClassName={classes.NavItemActive}
       >
         <BasketIcon />
       </NavLink>
       <NavLink
-        href="/search"
+        href={paths.search({})}
         className={classes.NavItem}
         activeClassName={classes.NavItemActive}
       >

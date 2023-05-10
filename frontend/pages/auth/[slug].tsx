@@ -3,6 +3,8 @@ import { useStore } from 'effector-react';
 import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 
+import { paths } from '@/src/paths';
+
 import {
   $isAuthorizationChecked,
   $isAuthorized,
@@ -37,14 +39,14 @@ export default function AuthPage(
       <div className={classes['card']}>
         <nav className={classes['local_nav']}>
           <NavLink
-            href="/auth/sign-in"
+            href={paths.login({})}
             className={classes['local_nav__item']}
             activeClassName={classes['active']}
           >
             Sign In
           </NavLink>
           <NavLink
-            href="/auth/sign-up"
+            href={paths.register({})}
             className={classes['local_nav__item']}
             activeClassName={classes['active']}
           >

@@ -17,6 +17,7 @@ import {
 import { Button } from '../../src/ui/atoms/Button';
 import { Flex } from '@/src/ui/atoms/Flex';
 import Link from 'next/link';
+import { paths } from '@/src/paths';
 
 const authPath = '/auth/sign-in';
 
@@ -39,7 +40,7 @@ export default function ProfilePage() {
 
         {user.role === IUserRole.CONTENT_MANAGER && (
           <Flex jcc margin="1rem 0">
-            <Link href="/content">Manage content</Link>
+            <Link href={paths.content({})}>Manage content</Link>
           </Flex>
         )}
 
