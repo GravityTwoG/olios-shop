@@ -4,8 +4,10 @@ import { useRouter } from 'next/router';
 import { reduceFileSize } from '@/src/lib/reduce-image';
 import { createCategory } from '@/src/api/product-categories';
 
+import { Paper } from '@/src/ui/atoms/Paper';
 import { Button } from '@/src/ui/atoms/Button';
 import { InputField } from '@/src/ui/atoms/InputField';
+import { H2 } from '@/src/ui/atoms/Typography';
 
 const MAX_FILE_SIZE = 1024 * 1024;
 
@@ -48,8 +50,8 @@ export function AddNewCategory() {
   };
 
   return (
-    <div>
-      <p>Add new category</p>
+    <Paper>
+      <H2>Add new category</H2>
 
       <form>
         <InputField
@@ -58,9 +60,10 @@ export function AddNewCategory() {
           placeholder="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className="my-4"
         />
 
-        <input
+        <InputField
           type="file"
           name="file"
           accept="image/*"
@@ -68,12 +71,17 @@ export function AddNewCategory() {
           title="Загрузить фотографию"
           aria-label="Загрузить фотографию"
           onChange={onImageChange}
+          className="my-4"
         />
 
-        {image && imageURL ? <img src={imageURL} alt={name} /> : null}
+        <div className="flex justify-center my-4">
+          {image && imageURL ? <img src={imageURL} alt={name} /> : null}
+        </div>
 
-        <Button onClick={onSubmit}>Add new category</Button>
+        <div className="text-center my-4">
+          <Button onClick={onSubmit}>Add new category</Button>
+        </div>
       </form>
-    </div>
+    </Paper>
   );
 }
