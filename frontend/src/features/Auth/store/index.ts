@@ -21,7 +21,6 @@ const defaultUser: IUser = {
   lastName: '',
   patronymic: '',
   role: IUserRole.CUSTOMER,
-  customerProfileId: '',
   birthDate: '',
 };
 
@@ -36,17 +35,7 @@ $loginError.on(setLoginError, (_, payload) => payload);
 export const loginFx = createEffect<ILoginCredentials, IUser>(
   async (credentials): Promise<IUser> => {
     const user = await authApi.login(credentials);
-
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      patronymic: user.patronymic,
-      role: user.role,
-      customerProfileId: user.customerProfileId,
-      birthDate: user.birthDate,
-    };
+    return user;
   },
 );
 
@@ -68,17 +57,7 @@ export const registerFx = createEffect<IRegisterCredentials, IUser>(
   async (credentials): Promise<IUser> => {
     const user = await authApi.register(credentials);
     await authApi.login(credentials);
-
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      patronymic: user.patronymic,
-      role: user.role,
-      customerProfileId: user.customerProfileId,
-      birthDate: user.birthDate,
-    };
+    return user;
   },
 );
 
@@ -95,17 +74,7 @@ registerFx.fail.watch(({ error }) => {
 export const checkAuthorizationFx = createEffect<void, IUser>(
   async (): Promise<IUser> => {
     const user = await authApi.check();
-
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      patronymic: user.patronymic,
-      role: user.role,
-      customerProfileId: user.customerProfileId,
-      birthDate: user.birthDate,
-    };
+    return user;
   },
 );
 

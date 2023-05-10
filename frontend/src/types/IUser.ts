@@ -1,15 +1,18 @@
+import { z } from 'zod';
+
 export enum IUserRole {
   CUSTOMER = 'CUSTOMER',
   CONTENT_MANAGER = 'CONTENT_MANAGER',
 }
 
-export type IUser = {
-  id: string;
-  email: string;
-  role: IUserRole;
-  firstName: string;
-  lastName: string;
-  customerProfileId: string;
-  patronymic: string;
-  birthDate: string;
-};
+export const UserSchema = z.object({
+  id: z.string(),
+  email: z.string(),
+  role: z.nativeEnum(IUserRole),
+  firstName: z.string(),
+  lastName: z.string(),
+  patronymic: z.string(),
+  birthDate: z.string(),
+});
+
+export type IUser = z.infer<typeof UserSchema>;

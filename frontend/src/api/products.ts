@@ -1,6 +1,7 @@
 import { IProduct } from '@/src/features/Product/store';
-import { axiosInstance } from './instance';
-import { PaginationQueryDTO } from './types';
+import { axiosInstance } from './lib/instance';
+import { PaginationQueryDTO } from './lib/types';
+import { ProductSchema } from '../types/IProduct';
 
 const BASE_ROUTE = '/products';
 
@@ -12,7 +13,9 @@ type CreateProductDTO = {
   images: Blob[];
 };
 
-export const createProduct = async (data: CreateProductDTO): Promise<any[]> => {
+export const createProduct = async (
+  data: CreateProductDTO,
+): Promise<IProduct> => {
   const formData = new FormData();
   formData.append('name', data.name);
   formData.append('description', data.description);
@@ -29,12 +32,12 @@ export const createProduct = async (data: CreateProductDTO): Promise<any[]> => {
     },
   });
 
-  return response.data;
+  return ProductSchema.parse(response.data);
 };
 
 export const fetchProduct = async (productId: number): Promise<IProduct> => {
   const response = await axiosInstance.get(`${BASE_ROUTE}/${productId}`);
-  return response.data;
+  return ProductSchema.parse(response.data);
 };
 
 export const fetchProducts = async (
@@ -42,7 +45,7 @@ export const fetchProducts = async (
 ): Promise<IProduct[]> => {
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
 
-  return response.data;
+  return response.data.map((product: unknown) => ProductSchema.parse(product));
 };
 
 export const fetchRecommendedProducts = async (
@@ -51,5 +54,5 @@ export const fetchRecommendedProducts = async (
   let { categoryId, ...q } = query;
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: q });
 
-  return response.data;
+  return response.data.map((product: unknown) => ProductSchema.parse(product));
 };

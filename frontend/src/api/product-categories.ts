@@ -1,7 +1,16 @@
 import { IProduct } from '@/src/features/Product/store';
-import { axiosInstance } from './instance';
-import { ListOutputDTO, PaginationQueryDTO } from './types';
-import { IProductCategory } from '../types/IProductCategory';
+import { axiosInstance } from './lib/instance';
+import {
+  ListOutputDTO,
+  PaginationQueryDTO,
+  createListOutputSchema,
+} from './lib/types';
+import {
+  IProductCategory,
+  ProductCategorySchema,
+} from '../types/IProductCategory';
+
+const ProductCategoryListSchema = createListOutputSchema(ProductCategorySchema);
 
 const BASE_ROUTE = '/product-categories';
 
@@ -19,7 +28,7 @@ export const createCategory = async (
     },
   });
 
-  return response.data;
+  return ProductCategorySchema.parse(response.data);
 };
 
 export const fetchCategories = async (
@@ -27,7 +36,7 @@ export const fetchCategories = async (
 ): Promise<ListOutputDTO<IProductCategory>> => {
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
 
-  return response.data;
+  return ProductCategoryListSchema.parse(response.data);
 };
 
 export const deleteCategory = async (categoryId: number): Promise<void> => {
