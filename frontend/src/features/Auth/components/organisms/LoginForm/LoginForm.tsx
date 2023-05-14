@@ -5,12 +5,13 @@ import { useStore } from 'effector-react';
 
 import { Button } from '@/src/ui/atoms/Button';
 import { InputField } from '@/src/ui/atoms/InputField';
-import { $loginError, formSubmitted } from './model';
+import { $isLoading, $loginError, formSubmitted } from './model';
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const error = useStore($loginError);
+  const isLoading = useStore($isLoading);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +39,9 @@ export const LoginForm = () => {
 
       <p className={classes['form__error']}>{error}</p>
 
-      <Button type="submit">Sign In</Button>
+      <Button type="submit" isLoading={isLoading}>
+        Sign In
+      </Button>
     </form>
   );
 };
