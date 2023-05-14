@@ -13,10 +13,11 @@ import Link from 'next/link';
 import { Button } from '@/src/ui/atoms/Button';
 import { Flex } from '@/src/ui/atoms/Flex';
 import { Container } from '@/src/ui/atoms/Container';
+import { PrivatePage } from '@/src/PrivatePage';
 
 const authPath = '/auth/sign-in';
 
-export default function ProfilePage() {
+function ProfilePage() {
   const router = useRouter();
   const authStatus = useStore($authStatus);
   const user = useStore($user);
@@ -49,3 +50,5 @@ export default function ProfilePage() {
     </Container>
   );
 }
+
+export default PrivatePage(ProfilePage);
