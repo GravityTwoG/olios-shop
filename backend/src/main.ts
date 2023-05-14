@@ -8,10 +8,14 @@ import connectRedis from 'connect-redis';
 
 import { AppModule } from './app.module';
 import { setupSwagger } from './setupSwagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+
+  // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+  app.set('trust proxy', 1);
 
   setupSwagger(app);
 
@@ -33,6 +37,11 @@ async function bootstrap() {
       return callback(null, true);
     };
   }
+
+  if (environment === 'production' || environment === 'staging') {
+    app.setGlobalPrefix('/api/v1');
+  }
+
   app.enableCors({
     origin,
     credentials: true,

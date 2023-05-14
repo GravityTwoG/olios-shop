@@ -3,6 +3,7 @@ import { z } from 'zod';
 export enum IUserRole {
   CUSTOMER = 'CUSTOMER',
   CONTENT_MANAGER = 'CONTENT_MANAGER',
+  MANAGER = 'MANAGER',
 }
 
 export const UserSchema = z.object({
