@@ -5,6 +5,8 @@ import { useStore } from 'effector-react';
 import { $authStatus, AuthStatus } from './shared/session';
 import { paths } from './paths';
 
+import { PageLoader } from './ui/atoms/PageLoader';
+
 export const PrivatePage = <P extends Record<string, unknown>>(
   Component: React.ComponentType<P>,
 ) => {
@@ -19,7 +21,7 @@ export const PrivatePage = <P extends Record<string, unknown>>(
     }, [authStatus, router]);
 
     if (authStatus === AuthStatus.Pending) {
-      return <div>Loading</div>;
+      return <PageLoader />;
     }
 
     if (authStatus === AuthStatus.Authenticated) {
