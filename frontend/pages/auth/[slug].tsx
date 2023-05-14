@@ -4,15 +4,14 @@ import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 
 import { paths } from '@/src/paths';
+import { $authStatus, AuthStatus } from '@/src/shared/session';
+import classes from './auth.module.scss';
 
 import { LoginForm, RegisterForm } from '@/src/features/Auth';
-import classes from './auth.module.scss';
 import { NavLink } from '@/src/ui/atoms/NavLink';
-import { $authStatus, AuthStatus } from '@/src/shared/session';
+import { AnonymousPage } from '@/src/AnonymousPage';
 
-export default function AuthPage(
-  props: InferGetStaticPropsType<typeof getStaticProps>,
-) {
+function AuthPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   const authStatus = useStore($authStatus);
 
@@ -54,6 +53,8 @@ export default function AuthPage(
     </div>
   );
 }
+
+export default AnonymousPage(AuthPage);
 
 export const getStaticPaths: GetStaticPaths = () => {
   return {
