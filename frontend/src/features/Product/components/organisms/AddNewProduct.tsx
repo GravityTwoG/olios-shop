@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { reduceFileSize } from '@/src/lib/reduce-image';
-import { createProduct } from '@/src/api/products';
+import { createProduct } from '@/src/shared/api/products';
 
 import { Button } from '@/src/ui/atoms/Button';
 import { InputField } from '@/src/ui/atoms/InputField';

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { ApiError } from './ApiError';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL } from '../../../config';
 
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

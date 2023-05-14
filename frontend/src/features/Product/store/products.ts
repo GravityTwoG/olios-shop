@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore } from 'effector';
-import { IProduct } from '../../../types/IProduct';
-import { fetchProducts } from '../../../api/products';
+import { IProduct } from '@/src/types/IProduct';
+import { fetchProducts } from '@/src/shared/api/products';
 
 // PAGE SIZE
 const PAGE_SIZE = 24;
@@ -17,7 +17,7 @@ export const setProducts = createEvent<IProduct[]>('set products');
 
 $products.on(setProducts, (_, payload) => payload);
 
-export const fetchProductsFx = createEffect<void, IProduct[]>(async () => {
+export const fetchProductsFx = createEffect<string, IProduct[]>(async () => {
   return fetchProducts({ take: $pageSize.getState(), skip: 0 });
 });
 fetchProductsFx.done.watch(({ result }) => {

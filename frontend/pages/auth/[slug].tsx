@@ -5,34 +5,28 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 
 import { paths } from '@/src/paths';
 
-import {
-  $isAuthorizationChecked,
-  $isAuthorized,
-  LoginForm,
-  RegisterForm,
-} from '@/src/features/Auth';
+import { LoginForm, RegisterForm } from '@/src/features/Auth';
 import classes from './auth.module.scss';
 import { NavLink } from '@/src/ui/atoms/NavLink';
+import { $authStatus, AuthStatus } from '@/src/shared/session';
 
 export default function AuthPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const router = useRouter();
-
-  const isAuthorized = useStore($isAuthorized);
-  const isAuthorizationChecked = useStore($isAuthorizationChecked);
+  const authStatus = useStore($authStatus);
 
   useEffect(() => {
     if (!props.slug) {
       router.replace('/auth/sign-in');
     }
-  }, [props.slug]);
+  }, [props.slug, router]);
 
   useEffect(() => {
-    if (isAuthorized && isAuthorizationChecked) {
+    if (authStatus === AuthStatus.Authenticated) {
       router.replace('/profile');
     }
-  }, [isAuthorized, isAuthorizationChecked]);
+  }, [authStatus, router]);
 
   return (
     <div className={classes.page}>
@@ -61,13 +55,13 @@ export default function AuthPage(
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [{ params: { slug: 'sign-in' } }, { params: { slug: 'sign-up' } }],
     fallback: true,
   };
 };
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getStaticProps: GetStaticProps = (ctx) => {
   return { props: { slug: ctx.params?.slug || null } };
 };

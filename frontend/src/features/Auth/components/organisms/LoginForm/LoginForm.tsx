@@ -1,25 +1,24 @@
 import React, { useState } from 'react';
 import classes from './login-form.module.scss';
 
-import { $loginError, loginFx } from '../../../store';
 import { useStore } from 'effector-react';
 
 import { Button } from '@/src/ui/atoms/Button';
 import { InputField } from '@/src/ui/atoms/InputField';
+import { $loginError, formSubmitted } from './model';
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const error = useStore($loginError);
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    loginFx({
+    formSubmitted({
       email,
       password,
     });
   };
-
-  const error = useStore($loginError);
 
   return (
     <form onSubmit={onSubmit} className={classes.form}>

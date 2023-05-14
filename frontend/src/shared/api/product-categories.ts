@@ -1,4 +1,3 @@
-import { IProduct } from '@/src/features/Product/store';
 import { axiosInstance } from './lib/instance';
 import {
   ListOutputDTO,
@@ -8,7 +7,7 @@ import {
 import {
   IProductCategory,
   ProductCategorySchema,
-} from '../types/IProductCategory';
+} from '@/src/types/IProductCategory';
 
 const ProductCategoryListSchema = createListOutputSchema(ProductCategorySchema);
 
@@ -40,7 +39,5 @@ export const fetchCategories = async (
 };
 
 export const deleteCategory = async (categoryId: number): Promise<void> => {
-  const response = await axiosInstance.delete(`${BASE_ROUTE}/${categoryId}`);
-
-  return response.data;
+  await axiosInstance.delete(`${BASE_ROUTE}/${categoryId}`);
 };

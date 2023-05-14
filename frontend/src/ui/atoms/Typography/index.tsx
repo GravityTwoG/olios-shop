@@ -1,5 +1,4 @@
-export type TypographyProps =
-  {} & React.ButtonHTMLAttributes<HTMLHeadingElement>;
+export type TypographyProps = React.ButtonHTMLAttributes<HTMLHeadingElement>;
 
 export const H1 = (props: TypographyProps) => {
   return (

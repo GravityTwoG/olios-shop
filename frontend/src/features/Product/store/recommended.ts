@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore } from 'effector';
 import { IProduct } from '../../../types/IProduct';
-import { fetchRecommendedProducts } from '../../../api/products';
+import { fetchRecommendedProducts } from '@/src/shared/api/products';
 
 const RECOMMENDED_PRODUCTS_COUNT = 12;
 
