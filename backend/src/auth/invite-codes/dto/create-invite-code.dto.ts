@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EmployeeRole } from '@prisma/client';
+import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsString, MinLength } from 'class-validator';
 
 export class CreateInviteCodeDto {
@@ -23,6 +24,7 @@ export class CreateInviteCodeDto {
   patronymic: string;
 
   @ApiProperty()
+  @Type(() => Date)
   @IsDate()
   birthDate: Date;
 }
