@@ -1,9 +1,13 @@
+import { z } from 'zod';
+
 import { IProduct } from '@/src/features/Product/store';
 import { axiosInstance } from './lib/instance';
 import { PaginationQueryDTO } from './lib/types';
-import { ProductSchema } from '../types/IProduct';
+import { ProductSchema } from '@/src/types/IProduct';
 
 const BASE_ROUTE = '/products';
+
+const ProductListSchema = z.array(ProductSchema);
 
 type CreateProductDTO = {
   name: string;
@@ -45,14 +49,14 @@ export const fetchProducts = async (
 ): Promise<IProduct[]> => {
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
 
-  return response.data.map((product: unknown) => ProductSchema.parse(product));
+  return ProductListSchema.parse(response.data);
 };
 
 export const fetchRecommendedProducts = async (
   query: PaginationQueryDTO & { categoryId: number },
 ): Promise<IProduct[]> => {
-  let { categoryId, ...q } = query;
+  const { categoryId, ...q } = query;
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: q });
 
-  return response.data.map((product: unknown) => ProductSchema.parse(product));
+  return ProductListSchema.parse(response.data);
 };

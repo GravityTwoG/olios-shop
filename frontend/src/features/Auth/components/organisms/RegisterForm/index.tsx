@@ -2,24 +2,23 @@ import React, { useState } from 'react';
 import classes from './register-form.module.scss';
 
 import { useStore } from 'effector-react';
-import { $registerError, registerFx } from '../../../store';
 
 import { Button } from '@/src/ui/atoms/Button';
 import { InputField } from '../../../../../ui/atoms/InputField';
+import { $registerError, formSubmitted } from './model';
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const error = useStore($registerError);
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    registerFx({
+    formSubmitted({
       email,
       password,
     });
   };
-
-  const error = useStore($registerError);
 
   return (
     <form onSubmit={onSubmit} className={classes.form}>

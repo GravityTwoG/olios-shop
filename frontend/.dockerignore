@@ -1,0 +1,11 @@
+node_modules/ # Installed inside container
+.next/        # Existing Next.js builds
+
+.husky/
+.git/
+.gitignore/
+
+*Dockerfile*
+.dockerignore
+
+.eslintcache

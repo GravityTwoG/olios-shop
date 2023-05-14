@@ -36,27 +36,29 @@ export default function ProductsByCategoryPage() {
   const products = useStore($products);
   const [state, setState] = useState({
     category: '',
-    categoryIcon: {},
+    categoryIcon: {} as any,
   });
 
+  const computeCategory = useCallback((categoryUrl: string) => {
+    if (!Object.hasOwn(categories, categoryUrl)) return;
+    const category = categories[categoryUrl as keyof typeof categories];
+
+    setState({
+      category: category.label,
+      categoryIcon: category.icon,
+    });
+  }, []);
+
   useEffect(() => {
-    if (query.slug) {
+    if (query.slug && typeof query.slug === 'string') {
       computeCategory(query.slug);
       //
     }
-  }, [query.slug]);
+  }, [query.slug, computeCategory]);
 
   useEffect(() => {
     fetchProductsFx(state.category);
   }, [state.category]);
-
-  const computeCategory = useCallback((categoryUrl) => {
-    if (!categories[categoryUrl]) return;
-    setState({
-      category: categories[categoryUrl].label,
-      categoryIcon: categories[categoryUrl].icon,
-    });
-  }, []);
 
   return (
     <div className={classes['products']}>

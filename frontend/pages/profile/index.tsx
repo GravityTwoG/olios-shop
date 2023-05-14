@@ -6,13 +6,8 @@ import { useRouter } from 'next/router';
 import { paths } from '@/src/paths';
 import { IUserRole } from '@/src/types/IUser';
 
-import {
-  $isAuthorizationChecked,
-  $isAuthorized,
-  $user,
-  logoutFx,
-  UserCard,
-} from '@/src/features/Auth';
+import { logoutFx, UserCard } from '@/src/features/Auth';
+import { $user, $authStatus, AuthStatus } from '@/src/shared/session';
 
 import Link from 'next/link';
 import { Button } from '@/src/ui/atoms/Button';
@@ -23,19 +18,24 @@ const authPath = '/auth/sign-in';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const isAuthorized = useStore($isAuthorized);
-  const isAuthorizationChecked = useStore($isAuthorizationChecked);
+  const authStatus = useStore($authStatus);
   const user = useStore($user);
 
   useEffect(() => {
-    if (!isAuthorized && isAuthorizationChecked) {
+    if (authStatus === AuthStatus.Anonymous) {
       router.replace(authPath);
     }
-  }, [isAuthorized, isAuthorizationChecked]);
+  }, [authStatus, router]);
 
   return (
     <Container className="py-8">
-      <UserCard user={user} isAuthorizationChecked={isAuthorizationChecked} />
+      <UserCard
+        user={user}
+        isAuthorizationChecked={
+          authStatus === AuthStatus.Anonymous ||
+          authStatus === AuthStatus.Authenticated
+        }
+      />
 
       {user.role === IUserRole.CONTENT_MANAGER && (
         <Flex jcc margin="1rem 0">

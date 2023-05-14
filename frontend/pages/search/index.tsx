@@ -5,7 +5,7 @@ import { Container } from '@/src/ui/atoms/Container';
 import { ProductsGrid } from '@/src/features/Product/components/molecules/productsGrid/ProductsGrid';
 import { IProduct } from '@/src/types/IProduct';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
-import { fetchProducts } from '@/src/api/products';
+import { fetchProducts } from '@/src/shared/api/products';
 
 function SearchPage() {
   const [searchQuery, setSearchQuery] = React.useState('');

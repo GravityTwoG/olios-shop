@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { reduceFileSize } from '@/src/lib/reduce-image';
-import { createCategory } from '@/src/api/product-categories';
+import { createCategory } from '@/src/shared/api/product-categories';
 
 import { Paper } from '@/src/ui/atoms/Paper';
 import { Button } from '@/src/ui/atoms/Button';

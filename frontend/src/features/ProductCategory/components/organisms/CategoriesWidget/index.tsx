@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { IProductCategory } from '@/src/types/IProductCategory';
-import { deleteCategory, fetchCategories } from '@/src/api/product-categories';
+import {
+  deleteCategory,
+  fetchCategories,
+} from '@/src/shared/api/product-categories';
 
 import { Paper } from '@/src/ui/atoms/Paper';
 import { Button } from '@/src/ui/atoms/Button';

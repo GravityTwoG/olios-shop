@@ -64,6 +64,7 @@ nextConfig = {
       pure: true,
     },
   },
+  output: 'standalone',
 };
 
 module.exports = withPlugins([], nextConfig);
