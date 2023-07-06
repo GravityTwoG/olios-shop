@@ -17,6 +17,7 @@
     "noFallthroughCasesInSwitch": false,
     "strict": true,
     "strictPropertyInitialization": false,
+    "strictNullChecks": true,
     "esModuleInterop": true
   }
 }

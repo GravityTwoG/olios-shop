@@ -3,8 +3,8 @@ import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import session from 'express-session';
-import { createClient as createRedisClient } from 'redis';
-import connectRedis from 'connect-redis';
+import { createClient } from 'redis';
+import RedisStore from 'connect-redis';
 
 import { AppModule } from './app.module';
 import { setupSwagger } from './setupSwagger';
@@ -56,10 +56,9 @@ async function bootstrap() {
   const SESSION_SECRET = configService.get('SESSION_SECRET');
   const PORT = configService.get<number>('PORT') || 3000;
 
-  const redisClient = createRedisClient({ url: REDIS_URI, legacyMode: true });
+  const redisClient = createClient({ url: REDIS_URI });
   redisClient.on('error', (err) => console.log('Redis Client Error', err));
   await redisClient.connect();
-  const RedisStore = connectRedis(session);
 
   let sameSite: 'strict' | 'lax' | 'none' = 'strict';
   let secure = true;
