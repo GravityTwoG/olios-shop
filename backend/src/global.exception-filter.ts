@@ -10,7 +10,10 @@ import { HttpAdapterHost } from '@nestjs/core';
 
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-import { DomainException, DomainExceptionCodes } from './domain.exception';
+import {
+  DomainException,
+  DomainExceptionCodes,
+} from './lib/domain/domain.exception';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
