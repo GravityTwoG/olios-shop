@@ -11,6 +11,7 @@ class ProductPage extends React.Component<{
   product: IProduct;
   categoryIcon: string;
   recommendedProducts: IProduct[];
+  inCart: boolean;
 }> {
   quantity = React.createRef<HTMLInputElement>();
 
@@ -19,15 +20,16 @@ class ProductPage extends React.Component<{
   };
 
   renderButton = () => {
-    // if (this.props.inCart) {
-    //   return (
-    //     <Button className="btn btn--black" onClick={this.addToCart}>
-    //       In cart
-    //     </Button>
-    //   );
-    // }
+    if (this.props.inCart) {
+      return (
+        <Button color="secondary" onClick={this.addToCart}>
+          In cart
+        </Button>
+      );
+    }
+
     return (
-      <Button className="btn" onClick={this.addToCart}>
+      <Button color="primary" onClick={this.addToCart}>
         Add to cart
       </Button>
     );

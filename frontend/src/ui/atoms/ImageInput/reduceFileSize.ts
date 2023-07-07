@@ -8,7 +8,11 @@ function polyfillToBlob() {
         type: string,
         quality: number,
       ) {
-        const binStr = atob(this.toDataURL(type, quality).split(',')[1]),
+        const binStr = atob(
+            (this as { toDataURL: (type: string, quality: number) => string })
+              .toDataURL(type, quality)
+              .split(',')[1],
+          ),
           len = binStr.length,
           arr = new Uint8Array(len);
 
@@ -36,7 +40,11 @@ function getExifOrientation(file: File, callback: (n: number) => void) {
   } else if (file.webkitSlice) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    blob = file.webkitSlice(0, 131072);
+    blob = (
+      file as unknown as {
+        webkitSlice: (a: number, b: number) => File | Blob | null;
+      }
+    ).webkitSlice(0, 131072);
   }
 
   if (!blob) return;
@@ -134,58 +142,62 @@ export function reduceFileSize(
   maxWidth: number,
   maxHeight: number,
   quality: number,
-  callback: { (blob: Blob | null): void; (arg0: Blob): void },
 ) {
-  if (file.size <= maxFileSize) {
-    callback(file);
-    return;
-  }
-  polyfillToBlob();
+  return new Promise<Blob>((resolve, reject) => {
+    if (file.size <= maxFileSize) {
+      resolve(file);
+      return;
+    }
 
-  const img = new Image();
+    polyfillToBlob();
 
-  img.onerror = function () {
-    URL.revokeObjectURL(this.src);
-    callback(file);
-  };
-  img.onload = function () {
-    URL.revokeObjectURL((this as any).src);
+    const img = new Image();
 
-    getExifOrientation(file, function (orientation: number) {
-      let w = img.width,
-        h = img.height;
-      const scale =
-        orientation > 4
-          ? Math.min(maxHeight / w, maxWidth / h, 1)
-          : Math.min(maxWidth / w, maxHeight / h, 1);
-      h = Math.round(h * scale);
-      w = Math.round(w * scale);
+    img.onerror = function () {
+      URL.revokeObjectURL(this.src);
+      reject('');
+    };
+    img.onload = function () {
+      URL.revokeObjectURL((this as unknown as { src: string }).src);
 
-      const canvas = imgToCanvasWithOrientation(img, w, h, orientation);
+      getExifOrientation(file, function (orientation: number) {
+        let w = img.width,
+          h = img.height;
+        const scale =
+          orientation > 4
+            ? Math.min(maxHeight / w, maxWidth / h, 1)
+            : Math.min(maxWidth / w, maxHeight / h, 1);
+        h = Math.round(h * scale);
+        w = Math.round(w * scale);
 
-      if (!canvas) {
-        return;
-      }
+        const canvas = imgToCanvasWithOrientation(img, w, h, orientation);
 
-      canvas.toBlob(
-        function (blob) {
-          if (blob) {
-            console.log(
-              'Resized image to ' +
-                w +
-                'x' +
-                h +
-                ', ' +
-                (blob.size >> 10) +
-                'kB',
-            );
-          }
-          callback(blob);
-        },
-        'image/jpeg',
-        quality,
-      );
-    });
-  };
-  img.src = URL.createObjectURL(file);
+        if (!canvas) {
+          return;
+        }
+
+        canvas.toBlob(
+          function (blob) {
+            if (blob) {
+              console.log(
+                'Resized image to ' +
+                  w +
+                  'x' +
+                  h +
+                  ', ' +
+                  (blob.size >> 10) +
+                  'kB',
+              );
+              resolve(blob);
+            } else {
+              reject('');
+            }
+          },
+          'image/jpeg',
+          quality,
+        );
+      });
+    };
+    img.src = URL.createObjectURL(file);
+  });
 }

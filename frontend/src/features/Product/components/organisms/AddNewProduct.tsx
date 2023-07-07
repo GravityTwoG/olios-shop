@@ -1,45 +1,34 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { reduceFileSize } from '@/src/lib/reduce-image';
 import { createProduct } from '@/src/shared/api/products';
 
+import { H2 } from '@/src/ui/atoms/Typography';
 import { Button } from '@/src/ui/atoms/Button';
-import { InputField } from '@/src/ui/atoms/InputField';
-
-const MAX_FILE_SIZE = 1024 * 1024;
+import { ImageInput } from '@/src/ui/atoms/ImageInput';
+import { Field, InputField, TextAreaField } from '@/src/ui/molecules/Field';
+import { CategoriesSelect } from '@/src/shared/components/CategoriesSelect';
 
 export function AddNewProduct() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState(0);
-  const [categoryId, setCategoryId] = useState(0);
+  const [category, setCategory] = useState({ label: '', value: '' });
 
   const [image, setImage] = useState<Blob | null>(null);
   const [imageURL, setImageURL] = useState('');
 
-  const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.persist();
-    if (
-      e.target.files &&
-      e.target.files.length &&
-      e.target.files[0].size <= MAX_FILE_SIZE
-    ) {
-      reduceFileSize(e.target.files[0], 500 * 1024, 1200, 1200, 0.9, (blob) => {
-        if (blob) {
-          setImage(blob);
-          setImageURL(URL.createObjectURL(blob));
-        } else {
-          e.target.value = '';
-        }
-      });
-    }
-  };
-
   const router = useRouter();
 
   const onSubmit = async () => {
-    if (!name || !description || !price || !categoryId || !image || !imageURL) {
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !category.value ||
+      !image ||
+      !imageURL
+    ) {
       return;
     }
 
@@ -48,7 +37,7 @@ export function AddNewProduct() {
         name,
         description,
         price,
-        categoryId,
+        categoryId: Number(category.value),
         images: [image],
       });
       router.replace('/content');
@@ -59,9 +48,9 @@ export function AddNewProduct() {
 
   return (
     <div>
-      <p>Add new product</p>
+      <H2>Add new product</H2>
 
-      <form>
+      <form className="text-center">
         <InputField
           label="Name"
           name="name"
@@ -69,7 +58,7 @@ export function AddNewProduct() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <InputField
+        <TextAreaField
           label="Description"
           name="description"
           placeholder="description"
@@ -83,28 +72,24 @@ export function AddNewProduct() {
           value={price}
           onChange={(e) => setPrice(+e.target.value)}
         />
-        <InputField
-          label="Category"
-          name="categoryId"
-          placeholder="categoryId"
-          value={categoryId}
-          onChange={(e) => setCategoryId(+e.target.value)}
-          type="number"
-        />
+        <Field label="Category">
+          <CategoriesSelect
+            option={category}
+            onChange={(option) => setCategory(option)}
+          />
+        </Field>
 
-        <input
-          type="file"
-          name="file"
-          accept="image/*"
-          size={MAX_FILE_SIZE}
-          title="Загрузить фотографию"
-          aria-label="Загрузить фотографию"
-          onChange={onImageChange}
-        />
+        <div className="m-4">
+          <ImageInput
+            preview={imageURL}
+            onChange={(image) => {
+              setImage(image.raw);
+              setImageURL(image.preview);
+            }}
+          />
+        </div>
 
-        {image && imageURL ? <img src={imageURL} alt={name} /> : null}
-
-        <Button onClick={onSubmit}>Add new category</Button>
+        <Button onClick={onSubmit}>Add new product</Button>
       </form>
     </div>
   );

@@ -10,6 +10,7 @@ import classes from './auth.module.scss';
 import { LoginForm, RegisterForm } from '@/src/features/Auth';
 import { NavLink } from '@/src/ui/atoms/NavLink';
 import { AnonymousPage } from '@/src/AnonymousPage';
+import { Paper } from '@/src/ui/atoms/Paper';
 
 function AuthPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
@@ -29,7 +30,7 @@ function AuthPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
 
   return (
     <div className={classes.page}>
-      <div className={classes['card']}>
+      <Paper className={classes['card']}>
         <nav className={classes['local_nav']}>
           <NavLink
             href={paths.login({})}
@@ -49,7 +50,7 @@ function AuthPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
 
         {props.slug === 'sign-in' && <LoginForm />}
         {props.slug === 'sign-up' && <RegisterForm />}
-      </div>
+      </Paper>
     </div>
   );
 }
