@@ -1,6 +1,9 @@
 const withPlugins = require('next-compose-plugins');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
-nextConfig = {
+const nextConfig = {
   webpack(config) {
     config.module.rules.push({
       test: /\.(eot|woff|woff2|ttf|png|jpg|gif)$/,
@@ -67,4 +70,4 @@ nextConfig = {
   output: 'standalone',
 };
 
-module.exports = withPlugins([], nextConfig);
+module.exports = withPlugins([withBundleAnalyzer], nextConfig);
