@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import classes from './register-form.module.scss';
 
 import { useStore } from 'effector-react';
+import { $registerError, formSubmitted } from './model';
 
 import { Button } from '@/src/ui/atoms/Button';
-import { InputField } from '../../../../../ui/atoms/InputField';
-import { $registerError, formSubmitted } from './model';
+import { InputField } from '@/src/ui/molecules/Field';
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState('');

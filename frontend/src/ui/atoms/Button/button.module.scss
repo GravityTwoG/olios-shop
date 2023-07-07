@@ -1,7 +1,7 @@
 .BaseButton {
   display: inline-block;
   background-color: var(--accent-color);
-  padding: 16px 44px 14px;
+  padding: 15px 44px 13px;
   border-radius: 1.5em;
   border: none;
   outline: none;
@@ -14,7 +14,7 @@
   line-height: 1;
   color: #fff;
   white-space: nowrap;
-  transition: all 0.3s ease-in-out;
+  transition: background-color 0.3s ease;
 
   & > a {
     color: #fff;
@@ -22,13 +22,30 @@
     text-decoration: none;
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--accent-hover-color);
   }
-  &--black {
-    background-color: #555;
+  &:active:not(:disabled) {
+    background-color: var(--accent-color);
   }
-  &--black:hover {
-    background-color: #444;
+
+  &.isLoading {
+    background-color: var(--accent-hover-color);
+  }
+
+  &.ColorSecondary {
+    background-color: var(--secondary-color);
+
+    &:hover:not(:disabled) {
+      background-color: var(--secondary-hover-color);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--secondary-color);
+    }
+
+    &.isLoading {
+      background-color: var(--secondary-hover-color);
+    }
   }
 }

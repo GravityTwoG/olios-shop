@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import classes from './login-form.module.scss';
 
 import { useStore } from 'effector-react';
+import { $isLoading, $loginError, formSubmitted } from './model';
 
 import { Button } from '@/src/ui/atoms/Button';
-import { InputField } from '@/src/ui/atoms/InputField';
-import { $isLoading, $loginError, formSubmitted } from './model';
+import { InputField } from '@/src/ui/molecules/Field';
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');

@@ -13,7 +13,7 @@ export const UserSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   patronymic: z.string(),
-  birthDate: z.string(),
+  birthDate: z.string().nullable(),
 });
 
 export type IUser = z.infer<typeof UserSchema>;

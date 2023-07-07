@@ -61,6 +61,7 @@ export default function ProductPageContainer() {
       product={product}
       categoryIcon={getCategoryIcon(productCategory)}
       recommendedProducts={recommendedProducts}
+      inCart={false}
     />
   );
 }
