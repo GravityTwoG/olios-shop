@@ -1,7 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { InviteCode, Prisma, UserRole } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { DomainException } from 'src/domain.exception';
+import { InviteCode, Prisma, UserRole } from '@prisma/client';
 
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 

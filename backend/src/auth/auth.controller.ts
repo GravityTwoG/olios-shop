@@ -41,9 +41,9 @@ export class AuthController {
 
       if (err) {
         throw err;
-      } else {
-        throw new UnauthorizedException();
       }
+
+      throw new UnauthorizedException();
     }
     return user;
   }
@@ -104,10 +104,9 @@ export class AuthController {
   @ApiCookieAuth()
   @Post('/logout')
   @UseGuards(AuthGuard)
-  async logout(@Req() req: Request, @Res() res: Response) {
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await (req.session as any).destroy();
     await res.clearCookie('connect.sid');
-    res.send({ message: 'Logged out' });
-    res.end();
+    return { message: 'Logged out' };
   }
 }

@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, User, UserRole } from '@prisma/client';
 
-import { DomainException, DomainExceptionCodes } from 'src/domain.exception';
+import { EntityAlreadyUsedException } from 'src/lib/domain/domain.exception';
+import { assertFalsy } from 'src/lib/domain/assertions';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
+
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 
@@ -55,19 +57,7 @@ export class AuthService {
       code: inviteCodeInput,
     });
 
-    if (!inviteCode) {
-      throw new DomainException(
-        DomainExceptionCodes.NOT_FOUND,
-        'Invite-code not found.',
-      );
-    }
-
-    if (inviteCode.isUsed) {
-      throw new DomainException(
-        DomainExceptionCodes.ALREADY_USED,
-        'Invite-code was already used.',
-      );
-    }
+    assertFalsy(inviteCode.isUsed, EntityAlreadyUsedException, 'Invite-code');
 
     return this.prisma.$transaction(async (prisma) => {
       const user = await this.createUserInTransaction(

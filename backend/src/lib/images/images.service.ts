@@ -1,7 +1,11 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import * as crypto from 'crypto';
 
-import { DomainException, DomainExceptionCodes } from '../../domain.exception';
+import {
+  InvalidPayloadException,
+  UnknownException,
+} from '../domain/domain.exception';
+import { assertFalsy, assertTruthy } from '../domain/assertions';
 
 import { InjectMinio, MinioClient } from '../minio';
 import { BucketName, buckets } from './buckets';
@@ -38,12 +42,11 @@ export class ImagesService implements OnModuleInit {
   }
 
   public async upload(file: Express.Multer.File, bucketName: BucketName) {
-    if (!(file.mimetype.includes('jpeg') || file.mimetype.includes('png'))) {
-      throw new DomainException(
-        DomainExceptionCodes.INVALID_PAYLOAD,
-        'Такой тип файла не поддерживается.',
-      );
-    }
+    assertTruthy(
+      file.mimetype.includes('jpeg') || file.mimetype.includes('png'),
+      InvalidPayloadException,
+      `This image type is not supported: ${file.mimetype}`,
+    );
 
     const timestamp = Date.now().toString();
     const hashedFileName = crypto
@@ -69,12 +72,11 @@ export class ImagesService implements OnModuleInit {
       file.size,
       metaData,
       function (err) {
-        if (err) {
-          throw new DomainException(
-            DomainExceptionCodes.UNKNOWN,
-            'Ошибка при сохранения файла: ' + JSON.stringify(err),
-          );
-        }
+        assertFalsy(
+          err,
+          UnknownException,
+          `Error while saving file: ${JSON.stringify(err)}`,
+        );
       },
     );
 
