@@ -11,6 +11,7 @@ import {
   UploadedFile,
   HttpException,
   Patch,
+  Query,
 } from '@nestjs/common';
 import {
   ApiConsumes,
@@ -36,12 +37,24 @@ export class ProductCategoriesController {
     private readonly productCategoriesService: ProductCategoriesService,
   ) {}
 
-  @Get('')
   @ApiResponse({ status: 200, type: ProductCategoryListOutputDTO })
-  async productCategories(): Promise<ProductCategoryListOutputDTO> {
+  @Get('')
+  async productCategories(
+    @Query('take', ParseIntPipe) take: number,
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('name') name: string,
+  ): Promise<ProductCategoryListOutputDTO> {
     const data = await this.productCategoriesService.findAll({
+      take,
+      skip,
       where: {
         parentId: null,
+        OR: [
+          { name: { contains: name, mode: 'insensitive' } },
+          {
+            name: { search: name.split(' ').join(' | '), mode: 'insensitive' },
+          },
+        ],
       },
     });
 
@@ -60,7 +73,6 @@ export class ProductCategoriesController {
     return mapToProductCategoryOutputDTO(category);
   }
 
-  @Post()
   @UseInterceptors(
     FileInterceptor('icon', {
       limits: { fileSize: 1024 * 1024 * 20, files: 1 },
@@ -68,6 +80,7 @@ export class ProductCategoriesController {
   )
   @ApiConsumes('multipart/form-data')
   @ApiCookieAuth()
+  @Post()
   async createProductCategory(
     @Body()
     createProductCategoryDTO: CreateProductCategoryDTO,
@@ -89,8 +102,8 @@ export class ProductCategoriesController {
     return mapToProductCategoryOutputDTO(category);
   }
 
-  @Put('/:id')
   @ApiCookieAuth()
+  @Put('/:id')
   async updateProductCategory(
     @Body() updateProductCategoryDTO: UpdateProductCategoryDTO,
   ): Promise<ProductCategoryOutputDTO> {
@@ -102,7 +115,6 @@ export class ProductCategoriesController {
     return mapToProductCategoryOutputDTO(category);
   }
 
-  @Patch('/:id/icon')
   @UseInterceptors(
     FileInterceptor('icon', {
       limits: { fileSize: 1024 * 1024 * 20, files: 1 },
@@ -110,6 +122,7 @@ export class ProductCategoriesController {
   )
   @ApiCookieAuth()
   @ApiConsumes('multipart/form-data')
+  @Patch('/:id/icon')
   async updateProductCategoryIcon(
     @Param('/:id', ParseIntPipe) id: number,
     @UploadedFile() icon: Express.Multer.File,
@@ -119,8 +132,8 @@ export class ProductCategoriesController {
     return mapToProductCategoryOutputDTO(category);
   }
 
-  @Delete('/:id')
   @ApiCookieAuth()
+  @Delete('/:id')
   removeProductCategory(@Param('id', ParseIntPipe) id: number) {
     return this.productCategoriesService.remove(id);
   }
