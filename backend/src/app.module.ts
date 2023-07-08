@@ -2,7 +2,11 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 
 import { ConfigModule } from '@nestjs/config';
-import { configValidationSchema } from './configuration.schema';
+
+import { validate } from './config/configuration.schema';
+
+import { PrismaModule } from './lib/prisma/prisma.module';
+import { ImagesModule } from './lib/images';
 
 import { AuthModule } from './auth/auth.module';
 
@@ -15,9 +19,6 @@ import { BasketsModule } from './baskets/baskets.module';
 import { ProductsModule } from './products/products.module';
 import { ProductCategoriesModule } from './products/product-categories/product-categories.module';
 
-import { PrismaModule } from './lib/prisma/prisma.module';
-import { ImagesModule } from './lib/images';
-
 import { GlobalExceptionFilter } from './global.exception-filter';
 
 @Module({
@@ -25,7 +26,7 @@ import { GlobalExceptionFilter } from './global.exception-filter';
     ConfigModule.forRoot({
       envFilePath: `.env`,
       cache: true,
-      validationSchema: configValidationSchema,
+      validate: validate,
     }),
     PrismaModule,
     ImagesModule,
