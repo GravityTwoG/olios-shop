@@ -4,7 +4,7 @@ import classes from './login-form.module.scss';
 import { useStore } from 'effector-react';
 import { $isLoading, $loginError, formSubmitted } from './model';
 
-import { Button } from '@/src/ui/atoms/Button';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { InputField } from '@/src/ui/molecules/Field';
 
 export const LoginForm = () => {
@@ -39,9 +39,9 @@ export const LoginForm = () => {
 
       <p className={classes['form__error']}>{error}</p>
 
-      <Button type="submit" isLoading={isLoading}>
+      <CTAButton type="submit" isLoading={isLoading}>
         Sign In
-      </Button>
+      </CTAButton>
     </form>
   );
 };

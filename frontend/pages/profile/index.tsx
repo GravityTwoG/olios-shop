@@ -12,7 +12,7 @@ import {
 import { PrivatePage } from '@/src/features/Auth';
 
 import Link from 'next/link';
-import { Button } from '@/src/ui/atoms/Button';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Flex } from '@/src/ui/atoms/Flex';
 import { Container } from '@/src/ui/atoms/Container';
 
@@ -31,7 +31,7 @@ function ProfilePage() {
       )}
 
       <Flex jcc margin="1rem 0">
-        <Button onClick={() => logoutFx()}>logout</Button>
+        <CTAButton onClick={() => logoutFx()}>logout</CTAButton>
       </Flex>
     </Container>
   );

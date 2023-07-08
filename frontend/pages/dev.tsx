@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Button } from '@/src/ui/atoms/Button';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Container } from '@/src/ui/atoms/Container';
 import { ImageInput } from '@/src/ui/atoms/ImageInput';
 import { AsyncCombobox } from '@/src/ui/atoms/Combobox';
@@ -33,16 +33,16 @@ export default function DevPage() {
         preview={image.preview}
       />
 
-      <Button className="m-1">Button</Button>
-      <Button className="m-1" isLoading>
+      <CTAButton className="m-1">Button</CTAButton>
+      <CTAButton className="m-1" isLoading>
         Loading
-      </Button>
-      <Button className="m-1" color="secondary">
+      </CTAButton>
+      <CTAButton className="m-1" color="secondary">
         Button
-      </Button>
-      <Button className="m-1" color="secondary" isLoading>
+      </CTAButton>
+      <CTAButton className="m-1" color="secondary" isLoading>
         Loading
-      </Button>
+      </CTAButton>
 
       <div>
         <SegmentedControl

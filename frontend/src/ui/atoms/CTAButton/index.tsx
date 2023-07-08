@@ -6,12 +6,12 @@ import { ReactTagProps } from '../../types';
 
 import { Spinner } from '../Spinner';
 
-export type ButtonProps = {
+export type CTAButtonProps = {
   isLoading?: boolean;
   color?: 'primary' | 'secondary';
 } & ReactTagProps<'button'>;
 
-export const Button: React.FC<ButtonProps> = ({
+export const CTAButton: React.FC<CTAButtonProps> = ({
   isLoading,
   type = 'button',
   color = 'primary',
@@ -32,7 +32,7 @@ export const Button: React.FC<ButtonProps> = ({
       </span>
 
       {isLoading && (
-        <Spinner className="absolute h-4/5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 stroke-white" />
+        <Spinner className="absolute h-4/5 w-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 stroke-white" />
       )}
     </button>
   );

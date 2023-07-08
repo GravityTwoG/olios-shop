@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
-import classes from '../Button/button.module.scss';
+import classes from './link.module.scss';
 
 export type StyledLinkProps = {
   href: string;
