@@ -1,5 +1,6 @@
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from 'nestjs-pino';
 
 import session from 'express-session';
 import { createClient } from 'redis';
@@ -14,13 +15,14 @@ const DAY = 24 * HOUR;
 
 export async function setupSessions(app: NestExpressApplication) {
   const configService = app.get<AppConfigService>(ConfigService);
+  const logger = app.get(Logger);
 
   const REDIS_URI = configService.get('REDIS_URI', { infer: true });
   const SESSION_SECRET = configService.get('SESSION_SECRET', { infer: true });
   const ENVIRONMENT = configService.get('ENVIRONMENT', { infer: true });
 
   const redisClient = createClient({ url: REDIS_URI });
-  redisClient.on('error', (err) => console.error('Redis Client Error', err));
+  redisClient.on('error', (err) => logger.error('Redis Client Error: ', err));
   await redisClient.connect();
 
   let sameSite: 'strict' | 'lax' | 'none' = 'strict';

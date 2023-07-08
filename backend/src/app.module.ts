@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 
 import { ConfigModule } from '@nestjs/config';
+import { LoggerModule } from 'nestjs-pino';
 
 import { validate } from './config/configuration.schema';
 
@@ -23,6 +24,26 @@ import { GlobalExceptionFilter } from './global.exception-filter';
 
 @Module({
   imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          targets: [
+            {
+              target: 'pino/file',
+              options: {
+                destination: './app.log',
+              },
+              level: 'info',
+            },
+            {
+              target: 'pino-pretty',
+              options: {},
+              level: 'info',
+            },
+          ],
+        },
+      },
+    }),
     ConfigModule.forRoot({
       envFilePath: `.env`,
       cache: true,
