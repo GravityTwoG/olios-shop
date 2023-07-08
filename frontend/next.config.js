@@ -68,6 +68,7 @@ const nextConfig = {
     },
   },
   output: 'standalone',
+  pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
 };
 
 module.exports = withPlugins([withBundleAnalyzer], nextConfig);
