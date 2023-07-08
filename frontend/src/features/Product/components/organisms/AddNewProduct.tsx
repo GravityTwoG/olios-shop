@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { createProduct } from '@/src/shared/api/products';
 
 import { H2 } from '@/src/ui/atoms/Typography';
-import { Button } from '@/src/ui/atoms/Button';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { ImageInput } from '@/src/ui/atoms/ImageInput';
 import { Field, InputField, TextAreaField } from '@/src/ui/molecules/Field';
 import { CategoriesSelect } from '@/src/shared/components/CategoriesSelect';
@@ -89,7 +89,7 @@ export function AddNewProduct() {
           />
         </div>
 
-        <Button onClick={onSubmit}>Add new product</Button>
+        <CTAButton onClick={onSubmit}>Add new product</CTAButton>
       </form>
     </div>
   );

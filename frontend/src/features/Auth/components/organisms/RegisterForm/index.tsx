@@ -4,7 +4,7 @@ import classes from './register-form.module.scss';
 import { useStore } from 'effector-react';
 import { $registerError, formSubmitted } from './model';
 
-import { Button } from '@/src/ui/atoms/Button';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { InputField } from '@/src/ui/molecules/Field';
 
 export const RegisterForm = () => {
@@ -38,7 +38,7 @@ export const RegisterForm = () => {
 
       <p className={classes['form__error']}>{error}</p>
 
-      <Button type="submit">Sign Up</Button>
+      <CTAButton type="submit">Sign Up</CTAButton>
     </form>
   );
 };

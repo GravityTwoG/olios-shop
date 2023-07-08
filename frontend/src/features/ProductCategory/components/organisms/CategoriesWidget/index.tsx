@@ -6,7 +6,7 @@ import {
 } from '@/src/shared/api/product-categories';
 
 import { Paper } from '@/src/ui/atoms/Paper';
-import { Button } from '@/src/ui/atoms/Button';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { H2 } from '@/src/ui/atoms/Typography';
 
 export const CategoriesWidget = () => {
@@ -54,13 +54,13 @@ const ProductCategoryListItem = ({
       <div>{category.name}</div>
 
       <div className="ml-auto">
-        <Button
+        <CTAButton
           onDoubleClick={() => {
             deleteCategory(category.id);
           }}
         >
           Delete
-        </Button>
+        </CTAButton>
       </div>
     </li>
   );

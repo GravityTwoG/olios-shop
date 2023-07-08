@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from '@/pages/product/product-page.module.sass';
 
-import { Button } from '@/src/ui/atoms/Button';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import Category from '@/src/ui/molecules/Category';
 import { ProductCard } from '../molecules/productCard/ProductCard';
 import { IProduct } from '../../store';
@@ -22,16 +22,16 @@ class ProductPage extends React.Component<{
   renderButton = () => {
     if (this.props.inCart) {
       return (
-        <Button color="secondary" onClick={this.addToCart}>
+        <CTAButton color="secondary" onClick={this.addToCart}>
           In cart
-        </Button>
+        </CTAButton>
       );
     }
 
     return (
-      <Button color="primary" onClick={this.addToCart}>
+      <CTAButton color="primary" onClick={this.addToCart}>
         Add to cart
-      </Button>
+      </CTAButton>
     );
   };
 
