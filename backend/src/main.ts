@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { Logger } from 'nestjs-pino/Logger';
 
 import { AppModule } from './app.module';
 
@@ -12,6 +13,9 @@ import { setupSessions } from './config/setupSessions';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const logger = app.get(Logger);
+  app.useLogger(logger);
+
   const configService = app.get<AppConfigService>(ConfigService);
 
   // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
@@ -37,7 +41,7 @@ async function bootstrap() {
   const PORT = configService.get('PORT', { infer: true });
 
   await app.listen(PORT);
-  Logger.log(`App listening on port: ${PORT}`, 'NestApplication');
+  logger.log(`App listening on port: ${PORT}`, 'NestApplication');
 }
 
 bootstrap();
