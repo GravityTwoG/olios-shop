@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import { AppConfigService } from 'src/config/configuration.schema';
 import { MinioModule } from '../minio';
 
 import { ImagesService } from './images.service';
@@ -10,13 +11,19 @@ import { ImagesService } from './images.service';
     MinioModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: AppConfigService) => {
         return {
-          endPoint: configService.get<string>('MINIO_ENDPOINT')!,
-          port: configService.get<number>('MINIO_PORT')!,
+          endPoint: configService.get('MINIO_ENDPOINT', {
+            infer: true,
+          }),
+          port: configService.get('MINIO_PORT')!,
           useSSL: false,
-          accessKey: configService.get<string>('MINIO_ACCESS_KEY')!,
-          secretKey: configService.get<string>('MINIO_SECRET_KEY')!,
+          accessKey: configService.get('MINIO_ACCESS_KEY', {
+            infer: true,
+          }),
+          secretKey: configService.get('MINIO_SECRET_KEY', {
+            infer: true,
+          }),
         };
       },
     }),
