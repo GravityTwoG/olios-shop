@@ -1,0 +1,47 @@
+.BaseButton {
+  display: inline-block;
+  background-color: var(--accent-color);
+  padding: 7px 10px 6px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &:hover:not(:disabled) {
+    background-color: var(--accent-hover-color);
+  }
+  &:active:not(:disabled) {
+    background-color: var(--accent-color);
+  }
+
+  &.isLoading {
+    background-color: var(--accent-hover-color);
+  }
+
+  &.ColorSecondary {
+    background-color: var(--secondary-color);
+
+    &:hover:not(:disabled) {
+      background-color: var(--secondary-hover-color);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--secondary-color);
+    }
+
+    &.isLoading {
+      background-color: var(--secondary-hover-color);
+    }
+  }
+}
