@@ -9,6 +9,7 @@ import {
   UseGuards,
   ForbiddenException,
   ParseBoolPipe,
+  HttpCode,
 } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
@@ -17,11 +18,14 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
-import { UsersService } from './users.service';
-import { mapUserToDto } from './mapUserToDto';
+import { RequestUser } from 'src/auth/types';
+
 import { UserOutputDto } from './dto/user-output.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import { RequestUser } from 'src/auth/types';
+import { UsersListOutpudDTO } from './dto/users-list-output.dto';
+
+import { UsersService } from './users.service';
+import { mapUserToDto } from './mapUserToDto';
 
 @ApiTags('Users')
 @Controller('/users')
@@ -40,9 +44,9 @@ export class UsersController {
   async users(
     @Query('take') take?: number,
     @Query('skip') skip?: number,
-  ): Promise<UserOutputDto[]> {
-    const users = await this.usersService.getUsers({ take, skip });
-    return users.map(mapUserToDto);
+  ): Promise<UsersListOutpudDTO> {
+    const data = await this.usersService.getUsers({ take, skip });
+    return data;
   }
 
   @Post('/:id')
@@ -63,9 +67,10 @@ export class UsersController {
     return mapUserToDto(user);
   }
 
-  @Post('/blockOrUnblock/:id')
   @Roles('MANAGER')
   @ApiCookieAuth()
+  @HttpCode(200)
+  @Post('/blockOrUnblock/:id')
   async blockOrUnblockUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Query('isActive', ParseBoolPipe) isActive: boolean,

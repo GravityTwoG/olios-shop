@@ -8,6 +8,8 @@ import { CustomerProfilesService } from '../profiles/customers/customer-profiles
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { UsersListOutpudDTO } from './dto/users-list-output.dto';
+import { mapUserToDto } from './mapUserToDto';
 
 @Injectable()
 export class UsersService {
@@ -22,9 +24,10 @@ export class UsersService {
     cursor?: Prisma.UserWhereUniqueInput;
     where?: Prisma.UserWhereInput;
     orderBy?: Prisma.Enumerable<Prisma.UserOrderByWithRelationAndSearchRelevanceInput>;
-  }): Promise<User[]> {
+  }): Promise<UsersListOutpudDTO> {
     const users = await this.prisma.user.findMany(params);
-    return users;
+    const count = await this.prisma.user.count({ where: params.where });
+    return { count, list: users.map(mapUserToDto) };
   }
 
   async getUser(filter: { id: string } | { email: string }): Promise<User> {
