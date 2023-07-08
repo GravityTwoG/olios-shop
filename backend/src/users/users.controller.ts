@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
-import { User } from '@prisma/client';
+import { assertTruthy } from 'src/lib/domain/assertions';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
@@ -21,6 +21,7 @@ import { UsersService } from './users.service';
 import { mapUserToDto } from './mapUserToDto';
 import { UserOutputDto } from './dto/user-output.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { RequestUser } from 'src/auth/types';
 
 @ApiTags('Users')
 @Controller('/users')
@@ -50,11 +51,14 @@ export class UsersController {
   async updateUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: UpdateUserDTO,
-    @CurrentUser() currentUser: User,
+    @CurrentUser() currentUser: RequestUser,
   ): Promise<UserOutputDto> {
-    if (currentUser.id !== id) {
-      throw new ForbiddenException("You cannot change other users' info.");
-    }
+    assertTruthy(
+      currentUser.id === id,
+      ForbiddenException,
+      "You cannot change other users' info.",
+    );
+
     const user = await this.usersService.updateUser(id, data);
     return mapUserToDto(user);
   }
@@ -65,11 +69,14 @@ export class UsersController {
   async blockOrUnblockUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Query('isActive', ParseBoolPipe) isActive: boolean,
-    @CurrentUser() currentUser: User,
+    @CurrentUser() currentUser: RequestUser,
   ): Promise<UserOutputDto> {
-    if (currentUser.id === id) {
-      throw new ForbiddenException('You cannot block/unblock yourself.');
-    }
+    assertTruthy(
+      currentUser.id !== id,
+      ForbiddenException,
+      'You cannot block/unblock yourself.',
+    );
+
     const user = await this.usersService.setUserIsActive(id, isActive);
     return mapUserToDto(user);
   }
