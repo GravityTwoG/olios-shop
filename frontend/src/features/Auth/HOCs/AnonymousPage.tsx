@@ -2,17 +2,17 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useStore } from 'effector-react';
 
-import { $authStatus, AuthStatus } from './shared/session';
-import { paths } from './paths';
+import { AuthStatus, useAuthStatus } from '../../../shared/session';
+import { paths } from '../../../paths';
 
-import { PageLoader } from './ui/atoms/PageLoader';
+import { PageLoader } from '../../../ui/atoms/PageLoader';
 
 export const AnonymousPage = <P extends Record<string, unknown>>(
   Component: React.ComponentType<P>,
 ) => {
   return function Anonymous(props: P) {
     const router = useRouter();
-    const authStatus = useStore($authStatus);
+    const authStatus = useAuthStatus();
 
     useEffect(() => {
       if (authStatus === AuthStatus.Authenticated) {

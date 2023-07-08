@@ -2,11 +2,12 @@ import React from 'react';
 
 import classes from './basket.module.sass';
 import { IProduct } from '@/src/types/IProduct';
+import { paths } from '@/src/paths';
+
+import { PrivatePage } from '@/src/features/Auth';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { PrivatePage } from '@/src/PrivatePage';
-import { paths } from '@/src/paths';
 
 function Basket() {
   const products: (IProduct & { quantity: number })[] = [];
@@ -56,4 +57,4 @@ function Basket() {
   );
 }
 
-export default PrivatePage(Basket);
+export default PrivatePage(Basket, []);
