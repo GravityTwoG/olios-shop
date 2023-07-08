@@ -11,9 +11,10 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { Authenticator } from 'passport';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 import { User } from '@prisma/client';
+import { Request, RequestUser } from './types';
 
 import { UserOutputDto } from 'src/users/dto/user-output.dto';
 import { mapUserToDto } from 'src/users/mapUserToDto';
@@ -51,7 +52,7 @@ export class AuthController {
   @ApiCookieAuth()
   @Get('/me')
   @UseGuards(AuthGuard)
-  async me(@CurrentUser() user: User): Promise<UserOutputDto> {
+  async me(@CurrentUser() user: RequestUser): Promise<UserOutputDto> {
     return mapUserToDto(user);
   }
 
@@ -79,7 +80,7 @@ export class AuthController {
     });
 
     req.user = user;
-    (req.session as any).user = user;
+    req.session.user = user;
     res.send(mapUserToDto(user));
     res.end();
     return mapUserToDto(user);
