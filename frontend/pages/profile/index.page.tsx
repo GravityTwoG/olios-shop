@@ -12,8 +12,8 @@ import {
 import { PrivatePage } from '@/src/features/Auth';
 
 import Link from 'next/link';
-import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Flex } from '@/src/ui/atoms/Flex';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Container } from '@/src/ui/atoms/Container';
 
 function ProfilePage() {
@@ -27,6 +27,12 @@ function ProfilePage() {
       {user.role === IUserRole.CONTENT_MANAGER && (
         <Flex jcc margin="1rem 0">
           <Link href={paths.content({})}>Manage content</Link>
+        </Flex>
+      )}
+
+      {user.role === IUserRole.MANAGER && (
+        <Flex jcc margin="1rem 0">
+          <Link href={paths.users({})}>Manage Users</Link>
         </Flex>
       )}
 
