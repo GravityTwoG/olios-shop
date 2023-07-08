@@ -1,20 +1,24 @@
-import { useStore } from 'effector-react';
-
 import { paths } from '@/src/paths';
 import { IUserRole } from '@/src/types/IUser';
 
 import { UserCard } from '@/src/features/Auth';
-import { $user, $authStatus, AuthStatus, logoutFx } from '@/src/shared/session';
+import {
+  AuthStatus,
+  logoutFx,
+  useAuthStatus,
+  useUser,
+} from '@/src/shared/session';
+
+import { PrivatePage } from '@/src/features/Auth';
 
 import Link from 'next/link';
 import { Button } from '@/src/ui/atoms/Button';
 import { Flex } from '@/src/ui/atoms/Flex';
 import { Container } from '@/src/ui/atoms/Container';
-import { PrivatePage } from '@/src/PrivatePage';
 
 function ProfilePage() {
-  const authStatus = useStore($authStatus);
-  const user = useStore($user);
+  const authStatus = useAuthStatus();
+  const user = useUser();
 
   return (
     <Container className="py-8">
@@ -33,4 +37,4 @@ function ProfilePage() {
   );
 }
 
-export default PrivatePage(ProfilePage);
+export default PrivatePage(ProfilePage, []);

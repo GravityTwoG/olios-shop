@@ -1,20 +1,20 @@
 import { useEffect } from 'react';
-import { useStore } from 'effector-react';
 import { useRouter } from 'next/router';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 
-import { paths } from '@/src/paths';
-import { $authStatus, AuthStatus } from '@/src/shared/session';
 import classes from './auth.module.scss';
+import { paths } from '@/src/paths';
+import { AuthStatus, useAuthStatus } from '@/src/shared/session';
+
+import { AnonymousPage } from '@/src/features/Auth';
 
 import { LoginForm, RegisterForm } from '@/src/features/Auth';
 import { NavLink } from '@/src/ui/atoms/NavLink';
-import { AnonymousPage } from '@/src/AnonymousPage';
 import { Paper } from '@/src/ui/atoms/Paper';
 
 function AuthPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
-  const authStatus = useStore($authStatus);
+  const authStatus = useAuthStatus();
 
   useEffect(() => {
     if (!props.slug) {
