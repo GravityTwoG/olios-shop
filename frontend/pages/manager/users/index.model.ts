@@ -11,13 +11,13 @@ import { IUser } from '@/src/types/IUser';
 
 import { ApiError } from '@/src/shared/api';
 import * as usersApi from '@/src/shared/api/users';
-import { ListOutputDTO } from '@/src/shared/api/lib/types';
+import { ListDTO } from '@/src/shared/api/lib/types';
 
 const PAGE_SIZE = 12;
 
 export const fetchUsersFx = createEffect<
   { pageSize: number; pageNumber: number; searchQuery: string },
-  ListOutputDTO<IUser> & { pageNumber: number },
+  ListDTO<IUser> & { pageNumber: number },
   ApiError
 >(async ({ pageSize, pageNumber, searchQuery }) => {
   const data = await usersApi.fetchUsers({
@@ -86,7 +86,6 @@ $users.on(fetchUsersFx.doneData, (_, { list }) => {
   return list;
 });
 $usersCount.on(fetchUsersFx.doneData, (_, { count }) => {
-  console.log(0);
   return count;
 });
 $pageNumber.on(fetchUsersFx.doneData, (_, { pageNumber }) => pageNumber);

@@ -1,30 +1,59 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+
+import { useUnit } from 'effector-react';
+
 import { IProductCategory } from '@/src/types/IProductCategory';
 import {
+  $categories,
+  $categoriesCount,
+  $isDeleting,
+  $isPending,
+  $pageNumber,
+  $pageSize,
+  $searchQuery,
   deleteCategory,
-  fetchCategories,
-} from '@/src/shared/api/product-categories';
+  loadPage,
+  mounted,
+  searchQueryChanged,
+} from './index.model';
 
+import Image from 'next/image';
 import { Paper } from '@/src/ui/atoms/Paper';
-import { CTAButton } from '@/src/ui/atoms/CTAButton';
+import { Input } from '@/src/ui/atoms/Input';
+import { Button } from '@/src/ui/atoms/Button';
 import { H2 } from '@/src/ui/atoms/Typography';
+import { Paginator } from '@/src/ui/molecules/Paginator';
 
 export const CategoriesWidget = () => {
-  const [categories, setCategories] = useState<IProductCategory[]>([]);
-  const [allCategoriesCount, setAllCategoriesCount] = useState(0);
+  const [
+    categories,
+    categoriesCount,
+    pageSize,
+    pageNumber,
+    searchQuery,
+    isPending,
+  ] = useUnit([
+    $categories,
+    $categoriesCount,
+    $pageSize,
+    $pageNumber,
+    $searchQuery,
+    $isPending,
+  ]);
 
   useEffect(() => {
-    fetchCategories({ take: 24, skip: 0 })
-      .then((data) => {
-        setCategories(data.list);
-        setAllCategoriesCount(data.count);
-      })
-      .catch((error) => console.log(error));
+    mounted();
   }, []);
 
   return (
     <Paper>
-      <H2>All categories</H2>
+      <H2>Product Categories</H2>
+
+      <Input
+        value={searchQuery}
+        onChange={(e) => searchQueryChanged(e.target.value)}
+        className="mt-3"
+      />
 
       <ul>
         {categories.map((category) => (
@@ -32,7 +61,16 @@ export const CategoriesWidget = () => {
         ))}
       </ul>
 
-      <div className="text-center">{allCategoriesCount}</div>
+      {categories.length === 0 && (
+        <p className="text-center m-8">No categories</p>
+      )}
+
+      <Paginator
+        pageSize={pageSize}
+        currentPage={pageNumber}
+        count={categoriesCount}
+        onPageSelect={loadPage}
+      />
     </Paper>
   );
 };
@@ -44,23 +82,27 @@ type ProductCategoryListItemProps = {
 const ProductCategoryListItem = ({
   category,
 }: ProductCategoryListItemProps) => {
+  const isDeleting = useUnit($isDeleting);
+
   return (
     <li className="flex items-center py-4 gap-2">
-      <img
+      <Image
         src={category.iconUrl}
         alt={category.name}
-        style={{ width: '60px', height: '60px' }}
+        width={60}
+        height={60}
       />
       <div>{category.name}</div>
 
       <div className="ml-auto">
-        <CTAButton
+        <Button
           onDoubleClick={() => {
             deleteCategory(category.id);
           }}
+          isLoading={isDeleting}
         >
           Delete
-        </CTAButton>
+        </Button>
       </div>
     </li>
   );

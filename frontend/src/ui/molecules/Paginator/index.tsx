@@ -14,7 +14,7 @@ export const Paginator = (props: PaginatorProps) => {
   const scope = props.scope || 3;
 
   const firstPage = 0;
-  const lastPage = pagesCount - 1;
+  const lastPage = Math.max(pagesCount - 1, 0);
 
   const pages = [];
   for (

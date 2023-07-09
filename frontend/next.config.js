@@ -69,6 +69,13 @@ const nextConfig = {
   },
   output: 'standalone',
   pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'localhost',
+      },
+    ],
+  },
 };
 
 module.exports = withPlugins([withBundleAnalyzer], nextConfig);

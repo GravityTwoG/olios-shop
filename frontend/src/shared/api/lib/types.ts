@@ -5,15 +5,23 @@ export type PaginationQueryDTO = {
   skip: number;
 };
 
-export type ListOutputDTO<T> = {
+export type ListDTO<T> = {
   count: number;
 
   list: T[];
 };
 
-export function createListOutputSchema<T>(schema: z.ZodType<T>) {
+export function createResponseSchema<T>(schema: z.ZodType<T>) {
   return z.object({
-    count: z.number(),
-    list: z.array(schema),
+    data: schema,
   });
+}
+
+export function createListResponseSchema<T>(schema: z.ZodType<T>) {
+  return createResponseSchema(
+    z.object({
+      count: z.number(),
+      list: z.array(schema),
+    }),
+  );
 }

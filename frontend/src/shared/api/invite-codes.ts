@@ -1,11 +1,17 @@
-import { InviteCodeSchema } from '@/src/types/IInviteCode';
-import { axiosInstance } from './lib/instance';
-import { PaginationQueryDTO, createListOutputSchema } from './lib/types';
+import { IInviteCode, InviteCodeSchema } from '@/src/types/IInviteCode';
 import { IEmployeeRole } from '@/src/types/IUser';
+import {
+  axiosInstance,
+  ListDTO,
+  PaginationQueryDTO,
+  createListResponseSchema,
+  createResponseSchema,
+} from './lib';
 
 const BASE_ROUTE = '/auth/invite-codes';
 
-const InviteCodesListSchema = createListOutputSchema(InviteCodeSchema);
+const InviteCodeResponseSchema = createResponseSchema(InviteCodeSchema);
+const InviteCodesListSchema = createListResponseSchema(InviteCodeSchema);
 
 export type CreateInviteCodeDTO = {
   firstName: string;
@@ -15,18 +21,20 @@ export type CreateInviteCodeDTO = {
   birthDate: string;
 };
 
-export const createInviteCode = async (payload: CreateInviteCodeDTO) => {
+export const createInviteCode = async (
+  payload: CreateInviteCodeDTO,
+): Promise<IInviteCode> => {
   const response = await axiosInstance.post(`${BASE_ROUTE}`, payload);
 
-  return InviteCodeSchema.parse(response.data);
+  return InviteCodeResponseSchema.parse(response.data).data;
 };
 
 export const fetchInviteCodes = async (
   query: PaginationQueryDTO & { searchQuery?: string },
-) => {
+): Promise<ListDTO<IInviteCode>> => {
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
 
-  return InviteCodesListSchema.parse(response.data);
+  return InviteCodesListSchema.parse(response.data).data;
 };
 
 export const deleteInviteCode = async (query: { id: string }) => {

@@ -7,6 +7,10 @@ export const Form = (props: FormProps) => {
   return (
     <form
       {...props}
+      onSubmit={(e) => {
+        e.preventDefault();
+        props.onSubmit && props.onSubmit(e);
+      }}
       className={clsx(props.className, 'd-flex items-stretch flex-col')}
     />
   );

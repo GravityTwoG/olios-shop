@@ -11,13 +11,13 @@ import { IInviteCode } from '@/src/types/IInviteCode';
 
 import { ApiError } from '@/src/shared/api';
 import * as inviteCodesApi from '@/src/shared/api/invite-codes';
-import { ListOutputDTO } from '@/src/shared/api/lib/types';
+import { ListDTO } from '@/src/shared/api/lib/types';
 
 const PAGE_SIZE = 12;
 
 export const fetchInviteCodesFx = createEffect<
   { pageSize: number; pageNumber: number; searchQuery: string },
-  ListOutputDTO<IInviteCode> & { pageNumber: number },
+  ListDTO<IInviteCode> & { pageNumber: number },
   ApiError
 >(async ({ pageSize, pageNumber, searchQuery }) => {
   const data = await inviteCodesApi.fetchInviteCodes({

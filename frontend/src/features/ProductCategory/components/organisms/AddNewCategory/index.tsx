@@ -1,59 +1,50 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useUnit } from 'effector-react';
 
-import { createCategory } from '@/src/shared/api/product-categories';
+import {
+  $icon,
+  $isPending,
+  $name,
+  formSubmitted,
+  iconChanged,
+  nameChanged,
+} from './index.model';
 
 import { Paper } from '@/src/ui/atoms/Paper';
-import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { H2 } from '@/src/ui/atoms/Typography';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { ImageInput } from '@/src/ui/atoms/ImageInput';
+import { Form } from '@/src/ui/molecules/Form';
 import { InputField } from '@/src/ui/molecules/Field';
 
 export function AddNewCategory() {
-  const [name, setName] = useState('');
-  const [image, setImage] = useState<Blob | null>(null);
-  const [imageURL, setImageURL] = useState('');
-
-  const router = useRouter();
-
-  const onSubmit = async () => {
-    if (!name || !image || !imageURL) {
-      return;
-    }
-
-    try {
-      await createCategory(name, image);
-      router.replace('/content');
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const [name, icon, isPending] = useUnit([$name, $icon, $isPending]);
 
   return (
     <Paper>
       <H2>Add new category</H2>
 
-      <form className="text-center">
+      <Form className="text-center" onSubmit={() => formSubmitted()}>
         <InputField
           label="Name"
           name="name"
           placeholder="name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => nameChanged(e.target.value)}
         />
 
         <div className="m-4">
           <ImageInput
-            preview={imageURL}
+            preview={icon.preview}
             onChange={(image) => {
-              setImage(image.raw);
-              setImageURL(image.preview);
+              iconChanged(image);
             }}
           />
         </div>
 
-        <CTAButton onClick={onSubmit}>Add new category</CTAButton>
-      </form>
+        <CTAButton type="submit" isLoading={isPending}>
+          Add new category
+        </CTAButton>
+      </Form>
     </Paper>
   );
 }
