@@ -9,11 +9,13 @@ import {
   $isPending,
   $pageNumber,
   $pageSize,
+  $searchQuery,
   $users,
   $usersCount,
   blockUser,
   loadPage,
   pageMounted,
+  searchQueryChanged,
   unblockUser,
 } from './index.model';
 
@@ -28,6 +30,7 @@ import { Button } from '@/src/ui/atoms/Button';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
 import { ErrorText } from '@/src/ui/atoms/ErrorText';
+import { Input } from '@/src/ui/atoms/Input';
 
 const headers = [
   {
@@ -48,6 +51,7 @@ export function UsersPage() {
     isBlockingOrUnblocking,
     pageSize,
     pageNumber,
+    searchQuery,
   ] = useUnit([
     $users,
     $usersCount,
@@ -56,6 +60,7 @@ export function UsersPage() {
     $isBlockingOrUnblocking,
     $pageSize,
     $pageNumber,
+    $searchQuery,
   ]);
   const currentUserId = useUser().id;
 
@@ -76,6 +81,11 @@ export function UsersPage() {
             <ErrorText>Error: {error}</ErrorText>
           </div>
         )}
+
+        <Input
+          value={searchQuery}
+          onChange={(e) => searchQueryChanged(e.target.value)}
+        />
 
         <Table
           isLoading={isPenging}
