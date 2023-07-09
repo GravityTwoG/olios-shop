@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { User, CustomerProfile, Prisma } from '@prisma/client';
 
 import { BasketsService } from 'src/baskets/baskets.service';
+import { BaseListDTO } from 'src/common/dto/base-list.dto';
 
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
@@ -13,13 +14,9 @@ export class CustomerProfilesService {
     private readonly basketsService: BasketsService,
   ) {}
 
-  async createProfile(user: User): Promise<CustomerProfile> {
-    return this.createProfileInTransaction(user, this.prisma);
-  }
-
-  async createProfileInTransaction(
+  async createProfile(
     user: User,
-    prisma: Prisma.TransactionClient,
+    prisma: Prisma.TransactionClient = this.prisma,
   ): Promise<CustomerProfile> {
     const profile = await prisma.customerProfile.create({
       data: {
@@ -39,7 +36,18 @@ export class CustomerProfilesService {
     return profile;
   }
 
-  async findAll(): Promise<CustomerProfile[]> {
-    return this.prisma.customerProfile.findMany();
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.CustomerProfileWhereUniqueInput;
+    where?: Prisma.CustomerProfileWhereInput;
+    orderBy?: Prisma.Enumerable<Prisma.CustomerProfileOrderByWithRelationAndSearchRelevanceInput>;
+  }): Promise<BaseListDTO<CustomerProfile>> {
+    const list = await this.prisma.customerProfile.findMany(params);
+    const count = await this.prisma.customerProfile.count({
+      where: params.where,
+    });
+
+    return { count, list };
   }
 }

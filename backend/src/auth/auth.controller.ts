@@ -12,19 +12,21 @@ import {
 import { ApiBody, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { Authenticator } from 'passport';
 import { Response } from 'express';
+import { plainToInstance } from 'class-transformer';
 
 import { User } from '@prisma/client';
-import { Request, RequestUser } from './types';
 
-import { UserOutputDto } from 'src/users/dto/user-output.dto';
 import { mapUserToDto } from 'src/users/mapUserToDto';
+import { UserResponseDTO } from 'src/users/dto/users-response.dto';
 
 import { AuthService } from './auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { Request, RequestUser } from './types';
+
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterCustomerDto } from './dto/register-customer.dto';
 import { RegisterEmployeeDto } from './dto/register-employee.dto';
-import { CurrentUser } from './decorators/current-user.decorator';
 
 @ApiTags('Auth')
 @Controller('/auth')
@@ -52,16 +54,16 @@ export class AuthController {
   @ApiCookieAuth()
   @Get('/me')
   @UseGuards(AuthGuard)
-  async me(@CurrentUser() user: RequestUser): Promise<UserOutputDto> {
-    return mapUserToDto(user);
+  async me(@CurrentUser() user: RequestUser): Promise<UserResponseDTO> {
+    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
   }
 
   @Post('/login')
   @ApiBody({ type: LoginUserDto })
   async login(
     @Req() req: Request,
-    @Res() res: Response,
-  ): Promise<UserOutputDto> {
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<UserResponseDTO> {
     const user = await new Promise<User>((resolve, reject) => {
       this.passport.authenticate(
         'local',
@@ -81,25 +83,23 @@ export class AuthController {
 
     req.user = user;
     req.session.user = user;
-    res.send(mapUserToDto(user));
-    res.end();
-    return mapUserToDto(user);
+    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
   }
 
   @Post('/register-customer')
   async registerCustomer(
     @Body() registerUserDto: RegisterCustomerDto,
-  ): Promise<UserOutputDto> {
+  ): Promise<UserResponseDTO> {
     const user = await this.authService.registerCustomer(registerUserDto);
-    return mapUserToDto(user);
+    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
   }
 
   @Post('/register-employee')
   async registerEmployee(
     @Body() registerEmployeeDto: RegisterEmployeeDto,
-  ): Promise<UserOutputDto> {
+  ): Promise<UserResponseDTO> {
     const user = await this.authService.registerEmployee(registerEmployeeDto);
-    return mapUserToDto(user);
+    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
   }
 
   @ApiCookieAuth()

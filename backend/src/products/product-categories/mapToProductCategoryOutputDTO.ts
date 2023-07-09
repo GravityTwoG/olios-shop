@@ -1,9 +1,9 @@
 import { ProductCategory } from '@prisma/client';
-import { ProductCategoryOutputDTO } from './dto/product-category-output.dto';
+import { ProductCategoryDTO } from './dto/product-category.dto';
 
 export function mapToProductCategoryOutputDTO(
   category: ProductCategory,
-): ProductCategoryOutputDTO {
+): ProductCategoryDTO {
   return {
     id: category.id,
     name: category.name,

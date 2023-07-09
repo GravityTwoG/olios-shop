@@ -119,7 +119,7 @@ export class AuthService {
     } = registerUserDto;
     const { salt, hash } = hashPassword(password);
 
-    return this.usersService.createUserInTransaction(
+    return this.usersService.createUser(
       {
         role,
         email,

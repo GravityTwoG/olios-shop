@@ -14,8 +14,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
-
-import { Product } from '@prisma/client';
+import { plainToInstance } from 'class-transformer';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 
@@ -23,10 +22,13 @@ import { ProductsService } from './products.service';
 
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
+import {
+  ProductResponseDTO,
+  ProductsListResponseDTO,
+} from './dto/products-response.dto';
+import { GetProductsDTO } from './dto/get-products.dto';
 
 import { mapProductEntityToProductType as mapProductEntityToProduct } from './mapProductEntityToProduct';
-
-import { PaginationQueryDTO } from 'src/common/dto/pagination-query-dto';
 
 @ApiTags('Products')
 @Controller('/products')
@@ -36,16 +38,25 @@ export class ProductsController {
   @Get()
   async findAll(
     @Query()
-    query: PaginationQueryDTO,
-  ): Promise<Product[]> {
-    const products = await this.productsService.findAll(query);
-    return products.map(mapProductEntityToProduct);
+    query: GetProductsDTO,
+  ): Promise<ProductsListResponseDTO> {
+    const data = await this.productsService.findAll(query);
+    return plainToInstance(ProductsListResponseDTO, {
+      data: {
+        count: data.count,
+        list: data.list.map(mapProductEntityToProduct),
+      },
+    });
   }
 
   @Get('/:id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Product> {
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ProductResponseDTO> {
     const product = await this.productsService.findOne(id);
-    return mapProductEntityToProduct(product);
+    return plainToInstance(ProductResponseDTO, {
+      data: mapProductEntityToProduct(product),
+    });
   }
 
   @Post()
@@ -58,7 +69,7 @@ export class ProductsController {
     createProductInput: CreateProductDTO,
     @UploadedFiles()
     images: Express.Multer.File[],
-  ): Promise<Product> {
+  ): Promise<ProductResponseDTO> {
     const acceptableType = /image\/(jpeg|png)/;
     const maxFileSizeInBytes = 1024 * 1024 * 20;
     if (!images) {
@@ -84,30 +95,35 @@ export class ProductsController {
       createProductInput,
       images,
     );
-    return mapProductEntityToProduct(product);
+    return plainToInstance(ProductResponseDTO, {
+      data: mapProductEntityToProduct(product),
+    });
   }
 
-  @Put('/:id')
-  @Roles('CONTENT_MANAGER')
-  @UseInterceptors(FilesInterceptor('images'))
   @ApiConsumes('multipart/form-data')
   @ApiCookieAuth()
-  updateProduct(
+  @UseInterceptors(FilesInterceptor('images'))
+  @Roles('CONTENT_MANAGER')
+  @Put('/:id')
+  async updateProduct(
     @Body() updateProductInput: UpdateProductDTO,
     @UploadedFiles()
     images: Express.Multer.File[],
-  ) {
-    return this.productsService.update(
+  ): Promise<ProductResponseDTO> {
+    const product = await this.productsService.update(
       updateProductInput.id,
       updateProductInput,
       images,
     );
+    return plainToInstance(ProductResponseDTO, {
+      data: mapProductEntityToProduct(product),
+    });
   }
 
   @Delete('/:id')
   @Roles('CONTENT_MANAGER')
   @ApiCookieAuth()
-  removeProduct(@Param('id', ParseIntPipe) id: number) {
-    return this.productsService.remove(id);
+  async removeProduct(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.productsService.remove(id);
   }
 }

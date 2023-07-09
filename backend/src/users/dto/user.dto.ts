@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsString } from 'class-validator';
 
-export class UserOutputDto {
+export class UserDTO {
   @ApiProperty()
   @IsString()
   id: string;

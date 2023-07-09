@@ -20,15 +20,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { plainToInstance } from 'class-transformer';
 
 import { ProductCategoriesService } from './product-categories.service';
 
 import { CreateProductCategoryDTO } from './dto/create-product-category.dto';
 import { UpdateProductCategoryDTO } from './dto/update-product-category.dto';
-import { ProductCategoryOutputDTO } from './dto/product-category-output.dto';
+import {
+  ProductCategoryResponseDTO,
+  ProductCategoryListOutputDTO,
+} from './dto/product-categories-response.dto';
 
 import { mapToProductCategoryOutputDTO } from './mapToProductCategoryOutputDTO';
-import { ProductCategoryListOutputDTO } from './dto/product-category-list-output.dto';
 
 @ApiTags('Product categories')
 @Controller('product-categories')
@@ -58,19 +61,23 @@ export class ProductCategoriesController {
       },
     });
 
-    return {
-      count: data.count,
-      list: data.list.map(mapToProductCategoryOutputDTO),
-    };
+    return plainToInstance(ProductCategoryListOutputDTO, {
+      data: {
+        count: data.count,
+        list: data.list.map(mapToProductCategoryOutputDTO),
+      },
+    });
   }
 
   @Get('/:id')
   async category(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<ProductCategoryOutputDTO> {
+  ): Promise<ProductCategoryResponseDTO> {
     const category = await this.productCategoriesService.findOne(id);
 
-    return mapToProductCategoryOutputDTO(category);
+    return plainToInstance(ProductCategoryResponseDTO, {
+      data: mapToProductCategoryOutputDTO(category),
+    });
   }
 
   @UseInterceptors(
@@ -85,7 +92,7 @@ export class ProductCategoriesController {
     @Body()
     createProductCategoryDTO: CreateProductCategoryDTO,
     @UploadedFile() icon: Express.Multer.File,
-  ): Promise<ProductCategoryOutputDTO> {
+  ): Promise<ProductCategoryResponseDTO> {
     const acceptableType = /image\/(jpeg|png)/;
     if (!acceptableType.test(icon.mimetype)) {
       throw new HttpException(
@@ -99,20 +106,24 @@ export class ProductCategoriesController {
       icon,
     );
 
-    return mapToProductCategoryOutputDTO(category);
+    return plainToInstance(ProductCategoryResponseDTO, {
+      data: mapToProductCategoryOutputDTO(category),
+    });
   }
 
   @ApiCookieAuth()
   @Put('/:id')
   async updateProductCategory(
     @Body() updateProductCategoryDTO: UpdateProductCategoryDTO,
-  ): Promise<ProductCategoryOutputDTO> {
+  ): Promise<ProductCategoryResponseDTO> {
     const category = await this.productCategoriesService.update(
       updateProductCategoryDTO.id,
       updateProductCategoryDTO,
     );
 
-    return mapToProductCategoryOutputDTO(category);
+    return plainToInstance(ProductCategoryResponseDTO, {
+      data: mapToProductCategoryOutputDTO(category),
+    });
   }
 
   @UseInterceptors(
@@ -126,15 +137,19 @@ export class ProductCategoriesController {
   async updateProductCategoryIcon(
     @Param('/:id', ParseIntPipe) id: number,
     @UploadedFile() icon: Express.Multer.File,
-  ): Promise<ProductCategoryOutputDTO> {
+  ): Promise<ProductCategoryResponseDTO> {
     const category = await this.productCategoriesService.updateIcon(id, icon);
 
-    return mapToProductCategoryOutputDTO(category);
+    return plainToInstance(ProductCategoryResponseDTO, {
+      data: mapToProductCategoryOutputDTO(category),
+    });
   }
 
   @ApiCookieAuth()
   @Delete('/:id')
-  removeProductCategory(@Param('id', ParseIntPipe) id: number) {
-    return this.productCategoriesService.remove(id);
+  async removeProductCategory(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<void> {
+    await this.productCategoriesService.remove(id);
   }
 }
