@@ -1,2 +1,6 @@
-.env
-docker-volumes/
+.env*
+docker-volumes
+docker-compose*
+*Dockerfile*
+*.log
+*.png
