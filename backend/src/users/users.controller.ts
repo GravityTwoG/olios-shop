@@ -10,9 +10,9 @@ import {
   ForbiddenException,
   ParseBoolPipe,
   HttpCode,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { plainToInstance } from 'class-transformer';
 
 import { assertTruthy } from 'src/lib/domain/assertions';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -21,12 +21,15 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 import { RequestUser } from 'src/auth/types';
 
-import { UserOutputDto } from './dto/user-output.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import { UsersListOutpudDTO } from './dto/users-list-output.dto';
+import {
+  UserResponseDTO,
+  UsersListResponseDTO,
+} from './dto/users-response.dto';
 
 import { UsersService } from './users.service';
 import { mapUserToDto } from './mapUserToDto';
+import { GetUsersDTO } from './dto/get-users.dto';
 
 @ApiTags('Users')
 @Controller('/users')
@@ -36,24 +39,21 @@ export class UsersController {
   @Get('/:id')
   async user(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Promise<UserOutputDto> {
+  ): Promise<UserResponseDTO> {
     const user = await this.usersService.getUser({ id });
-    return mapUserToDto(user);
+    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
   }
 
   @Get()
-  async users(
-    @Query('take', ParseIntPipe) take?: number,
-    @Query('skip', ParseIntPipe) skip?: number,
-    @Query('searchQuery') searchQuery?: string,
-  ): Promise<UsersListOutpudDTO> {
+  async users(@Query() query: GetUsersDTO): Promise<UsersListResponseDTO> {
     const params: Parameters<typeof this.usersService.getUsers>[0] = {
-      take,
-      skip,
+      take: query.take,
+      skip: query.skip,
     };
 
-    if (searchQuery) {
-      const query = searchQuery.split(' ').join(' | ');
+    if (query.searchQuery) {
+      const searchQuery = query.searchQuery;
+      const formatted = searchQuery.split(' ').join(' | ');
       params.where = {
         OR: [
           { firstName: { contains: searchQuery, mode: 'insensitive' } },
@@ -62,19 +62,21 @@ export class UsersController {
           { email: { contains: searchQuery, mode: 'insensitive' } },
           {
             firstName: {
-              search: query,
+              search: formatted,
               mode: 'insensitive',
             },
           },
-          { lastName: { search: query, mode: 'insensitive' } },
-          { patronymic: { search: query, mode: 'insensitive' } },
-          { email: { search: query, mode: 'insensitive' } },
+          { lastName: { search: formatted, mode: 'insensitive' } },
+          { patronymic: { search: formatted, mode: 'insensitive' } },
+          { email: { search: formatted, mode: 'insensitive' } },
         ],
       };
     }
 
     const data = await this.usersService.getUsers(params);
-    return data;
+    return plainToInstance(UsersListResponseDTO, {
+      data: { count: data.count, list: data.list.map(mapUserToDto) },
+    });
   }
 
   @Post('/:id')
@@ -84,7 +86,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: UpdateUserDTO,
     @CurrentUser() currentUser: RequestUser,
-  ): Promise<UserOutputDto> {
+  ): Promise<UserResponseDTO> {
     assertTruthy(
       currentUser.id === id,
       ForbiddenException,
@@ -92,18 +94,18 @@ export class UsersController {
     );
 
     const user = await this.usersService.updateUser(id, data);
-    return mapUserToDto(user);
+    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
   }
 
-  @Roles('MANAGER')
   @ApiCookieAuth()
   @HttpCode(200)
+  @Roles('MANAGER')
   @Post('/blockOrUnblock/:id')
   async blockOrUnblockUser(
     @Param('id', ParseUUIDPipe) id: string,
     @Query('isActive', ParseBoolPipe) isActive: boolean,
     @CurrentUser() currentUser: RequestUser,
-  ): Promise<UserOutputDto> {
+  ): Promise<UserResponseDTO> {
     assertTruthy(
       currentUser.id !== id,
       ForbiddenException,
@@ -111,6 +113,6 @@ export class UsersController {
     );
 
     const user = await this.usersService.setUserIsActive(id, isActive);
-    return mapUserToDto(user);
+    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
   }
 }

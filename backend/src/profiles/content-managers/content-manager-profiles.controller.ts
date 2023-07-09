@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
-import { ContentManagerProfilesService } from './content-manager-profiles.service';
-import { CreateContentManagerDto } from './dto/create-content-manager.dto';
-import { UpdateContentManagerDto } from './dto/update-content-manager.dto';
 import { ApiTags } from '@nestjs/swagger';
+
+import { ContentManagerProfilesService } from './content-manager-profiles.service';
+
+import { UpdateContentManagerDto } from './dto/update-content-manager.dto';
+import { GetContentManagerProfilesDTO } from './dto/get-content-manager-profiles.dto';
 
 @ApiTags('Content Managers')
 @Controller('content-managers')
@@ -19,13 +22,8 @@ export class ContentManagerProfilesController {
     private readonly contentManagersService: ContentManagerProfilesService,
   ) {}
 
-  @Post()
-  create(@Body() createContentManagerDto: CreateContentManagerDto) {
-    return this.contentManagersService.create(createContentManagerDto);
-  }
-
   @Get()
-  findAll() {
+  findAll(@Query() query: GetContentManagerProfilesDTO) {
     return this.contentManagersService.findAll();
   }
 
@@ -40,10 +38,5 @@ export class ContentManagerProfilesController {
     @Body() updateContentManagerDto: UpdateContentManagerDto,
   ) {
     return this.contentManagersService.update(+id, updateContentManagerDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.contentManagersService.remove(+id);
   }
 }

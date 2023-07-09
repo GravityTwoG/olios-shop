@@ -1,6 +1,9 @@
+import { ProductDTO } from './dto/product.dto';
 import { ProductEntity } from './products.service';
 
-export function mapProductEntityToProductType(product: ProductEntity): any {
+export function mapProductEntityToProductType(
+  product: ProductEntity,
+): ProductDTO {
   const returnValue = {
     id: product.id,
     categoryId: product.categoryId,

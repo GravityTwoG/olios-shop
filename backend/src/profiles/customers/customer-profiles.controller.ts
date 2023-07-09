@@ -1,10 +1,16 @@
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
+import { plainToInstance } from 'class-transformer';
 
-import { CustomerProfile } from '@prisma/client';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 import { CustomerProfilesService } from './customer-profiles.service';
-import { Roles } from 'src/auth/decorators/roles.decorator';
+
+import {
+  CustomerProfileResponseDTO,
+  CustomerProfilesListResponseDTO,
+} from './dto/customer-profiles-response.dto';
+import { GetCustomerProfilesDTO } from './dto/get-customer-profiles.dto';
 
 @ApiTags('Customer profiles')
 @Controller('customer-profiles')
@@ -15,16 +21,20 @@ export class CustomerProfilesController {
 
   @Get('/:id')
   @ApiCookieAuth()
-  customerProfile(
+  async customerProfile(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<CustomerProfile> {
-    return this.customerProfilesService.find(id);
+  ): Promise<CustomerProfileResponseDTO> {
+    const data = await this.customerProfilesService.find(id);
+    return plainToInstance(CustomerProfileResponseDTO, { data });
   }
 
-  @Get()
-  @Roles('MANAGER')
   @ApiCookieAuth()
-  customerProfiles(): Promise<CustomerProfile[]> {
-    return this.customerProfilesService.findAll();
+  @Roles('MANAGER')
+  @Get()
+  async customerProfiles(
+    @Query() query: GetCustomerProfilesDTO,
+  ): Promise<CustomerProfilesListResponseDTO> {
+    const data = await this.customerProfilesService.findAll(query);
+    return plainToInstance(CustomerProfilesListResponseDTO, { data });
   }
 }

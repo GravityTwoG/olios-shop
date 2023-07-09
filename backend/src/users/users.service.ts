@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma, User, UserRole } from '@prisma/client';
 
 import { PrismaService } from 'src/lib/prisma/prisma.service';
-
-import { Prisma, User, UserRole } from '@prisma/client';
+import { BaseListDTO } from 'src/common/dto/base-list.dto';
 
 import { CustomerProfilesService } from '../profiles/customers/customer-profiles.service';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import { UsersListOutpudDTO } from './dto/users-list-output.dto';
-import { mapUserToDto } from './mapUserToDto';
 
 @Injectable()
 export class UsersService {
@@ -24,10 +22,10 @@ export class UsersService {
     cursor?: Prisma.UserWhereUniqueInput;
     where?: Prisma.UserWhereInput;
     orderBy?: Prisma.Enumerable<Prisma.UserOrderByWithRelationAndSearchRelevanceInput>;
-  }): Promise<UsersListOutpudDTO> {
+  }): Promise<BaseListDTO<User>> {
     const users = await this.prisma.user.findMany(params);
     const count = await this.prisma.user.count({ where: params.where });
-    return { count, list: users.map(mapUserToDto) };
+    return { count, list: users };
   }
 
   async getUser(filter: { id: string } | { email: string }): Promise<User> {
@@ -45,7 +43,7 @@ export class UsersService {
   }
 
   //
-  async createUserInTransaction(
+  async createUser(
     createUserDto: CreateUserDto,
     prisma: Prisma.TransactionClient,
   ): Promise<User> {
@@ -74,10 +72,7 @@ export class UsersService {
 
     if (user.role == UserRole.CUSTOMER) {
       // create customer profile
-      await this.customerProfilesService.createProfileInTransaction(
-        user,
-        prisma,
-      );
+      await this.customerProfilesService.createProfile(user, prisma);
     }
 
     return user;

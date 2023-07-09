@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
-import { Product, ProductCategory, ProductImage } from '@prisma/client';
+import { Prisma, Product, ProductCategory, ProductImage } from '@prisma/client';
 import { ImagesService } from 'src/lib/images';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
-import { PaginationQueryDTO } from 'src/common/dto/pagination-query-dto';
+import { ListQueryDTO } from 'src/common/dto/list-query-dto';
 
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
-
-type ProductsFilter = PaginationQueryDTO;
+import { BaseListDTO } from 'src/common/dto/base-list.dto';
 
 const includes = {
   productCategory: true,
@@ -28,8 +27,20 @@ export class ProductsService {
     private readonly imagesService: ImagesService,
   ) {}
 
-  async findAll(filter: ProductsFilter): Promise<ProductEntity[]> {
-    return this.prisma.product.findMany({ ...filter, include: includes });
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ProductWhereUniqueInput;
+    where?: Prisma.ProductWhereInput;
+    orderBy?: Prisma.Enumerable<Prisma.ProductOrderByWithRelationAndSearchRelevanceInput>;
+  }): Promise<BaseListDTO<ProductEntity>> {
+    const list = await this.prisma.product.findMany({
+      ...params,
+      include: includes,
+    });
+    const count = await this.prisma.product.count({ where: params.where });
+
+    return { count, list };
   }
 
   async findOne(id: number): Promise<ProductEntity> {

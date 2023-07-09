@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreateContentManagerDto } from './dto/create-content-manager.dto';
 import { UpdateContentManagerDto } from './dto/update-content-manager.dto';
+import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 @Injectable()
 export class ContentManagerProfilesService {
-  create(createContentManagerDto: CreateContentManagerDto) {
+  constructor(private readonly prisma: PrismaService) {}
+
+  create() {
     return 'This action adds a new contentManager';
   }
 

@@ -1,7 +1,7 @@
 import { User } from '@prisma/client';
-import { UserOutputDto } from './dto/user-output.dto';
+import { UserDTO } from './dto/user.dto';
 
-export function mapUserToDto(user: Omit<User, 'password'>): UserOutputDto {
+export function mapUserToDto(user: Omit<User, 'password'>): UserDTO {
   return {
     id: user.id,
     email: user.email,

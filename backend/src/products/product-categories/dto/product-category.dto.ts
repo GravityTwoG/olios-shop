@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 import { IsNullable } from 'src/common/validators/IsNullable';
 
-export class ProductCategoryOutputDTO {
+export class ProductCategoryDTO {
   @IsNumber()
   @ApiProperty()
   id: number;
