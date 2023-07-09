@@ -5,6 +5,7 @@ import { InviteCode, Prisma, UserRole } from '@prisma/client';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 import { CreateInviteCodeDto } from './dto/create-invite-code.dto';
+import { InviteCodesListOutputDTO } from './dto/invite-codes-list.dto';
 
 @Injectable()
 export class InviteCodesService implements OnModuleInit {
@@ -45,15 +46,20 @@ export class InviteCodesService implements OnModuleInit {
     cursor?: Prisma.InviteCodeWhereUniqueInput;
     where?: Prisma.InviteCodeWhereInput;
     orderBy?: Prisma.Enumerable<Prisma.InviteCodeOrderByWithRelationAndSearchRelevanceInput>;
-  }): Promise<InviteCode[]> {
+  }): Promise<InviteCodesListOutputDTO> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.inviteCode.findMany({
+
+    const list = await this.prisma.inviteCode.findMany({
       skip,
       take,
       cursor,
       where,
       orderBy,
     });
+    const count = await this.prisma.inviteCode.count({
+      where,
+    });
+    return { list, count };
   }
 
   async updateInviteCode(params: {
