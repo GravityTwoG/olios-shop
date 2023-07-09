@@ -14,6 +14,7 @@ export const UserSchema = z.object({
   lastName: z.string(),
   patronymic: z.string(),
   birthDate: z.string().nullable(),
+  isActive: z.boolean(),
 });
 
 export type IUser = z.infer<typeof UserSchema>;

@@ -15,6 +15,7 @@ const defaultUser: IUser = {
   patronymic: '',
   role: IUserRole.CUSTOMER,
   birthDate: '',
+  isActive: true,
 };
 
 export enum AuthStatus {
