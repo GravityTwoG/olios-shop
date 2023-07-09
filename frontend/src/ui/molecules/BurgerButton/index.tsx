@@ -2,8 +2,8 @@ import React from 'react';
 import classes from './burger-button.module.scss';
 
 export type BurgerButtonProps = {
-    isOpened: boolean;
-} & React.HTMLAttributes<HTMLButtonElement>
+  isOpened: boolean;
+} & React.HTMLAttributes<HTMLButtonElement>;
 
 export function BurgerButton(props: BurgerButtonProps) {
   return (

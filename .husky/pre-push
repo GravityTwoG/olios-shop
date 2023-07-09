@@ -3,3 +3,6 @@
 
 cd ./backend
 yarn build
+
+cd ../frontend
+yarn build

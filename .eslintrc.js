@@ -1,30 +1,14 @@
 module.exports = {
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    project: 'tsconfig.json', // tells parser relative path of tsconfig.json
-    tsconfigRootDir: __dirname,
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 12,
-    exclude: '*.jsx',
-  },
-  // all plugins (eslint-plugin-xxx) go here:
-  plugins: [
-    '@typescript-eslint/eslint-plugin',
-    '@next/eslint-plugin-next', // https://github.com/vercel/next.js/blob/canary/packages/eslint-plugin-next/lib/index.js
-  ],
   // all configs (eslint-config-xxx) go here:
   extends: [
     'eslint:recommended',
-    'plugin:prettier/recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking', // contains rules that specifically require type information
     'plugin:@next/next/recommended',
     'next',
     'next/core-web-vitals',
+    'prettier',
   ],
   root: true,
   env: {
@@ -37,6 +21,23 @@ module.exports = {
       version: 'detect',
     },
   },
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: 'tsconfig.json', // tells parser relative path of tsconfig.json
+    tsconfigRootDir: __dirname,
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 12,
+    sourceType: 'module',
+    exclude: '*.jsx',
+  },
+
+  // all plugins (eslint-plugin-xxx) go here:
+  plugins: [
+    '@typescript-eslint',
+    '@next/eslint-plugin-next', // https://github.com/vercel/next.js/blob/canary/packages/eslint-plugin-next/lib/index.js
+  ],
 
   rules: {
     'react/no-children-prop': 'off',
