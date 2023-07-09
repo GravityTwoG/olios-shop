@@ -5,7 +5,7 @@ import {
   createStore,
   sample,
 } from 'effector';
-import { reset } from 'patronum';
+import { debounce, reset } from 'patronum';
 
 import { IUser } from '@/src/types/IUser';
 
@@ -16,13 +16,14 @@ import { ListOutputDTO } from '@/src/shared/api/lib/types';
 const PAGE_SIZE = 12;
 
 export const fetchUsersFx = createEffect<
-  { pageSize: number; pageNumber: number },
+  { pageSize: number; pageNumber: number; searchQuery: string },
   ListOutputDTO<IUser> & { pageNumber: number },
   ApiError
->(async ({ pageSize, pageNumber }) => {
+>(async ({ pageSize, pageNumber, searchQuery }) => {
   const data = await usersApi.fetchUsers({
     take: pageSize,
     skip: pageSize * pageNumber,
+    searchQuery: searchQuery,
   });
 
   return { ...data, pageNumber };
@@ -30,13 +31,18 @@ export const fetchUsersFx = createEffect<
 
 export const pageMounted = createEvent('Page mounted');
 export const loadPage = createEvent<number>('Load another page');
+export const searchQueryChanged = createEvent<string>('Search query changed');
+const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
 
 export const $users = createStore<IUser[]>([]);
 export const $usersCount = createStore(0);
 export const $isPending = createStore(false);
 export const $pageSize = createStore(PAGE_SIZE);
 export const $pageNumber = createStore(0);
+export const $searchQuery = createStore('');
 export const $error = createStore('');
+
+$searchQuery.on(searchQueryChanged, (_, newQuery) => newQuery);
 
 reset({
   clock: pageMounted,
@@ -44,15 +50,33 @@ reset({
 });
 
 sample({
+  source: combine({
+    pageSize: $pageSize,
+    pageNumber: 0,
+    searchQuery: $searchQuery,
+  }),
   clock: pageMounted,
-  source: combine({ pageSize: $pageSize, pageNumber: 0 }),
   target: fetchUsersFx,
 });
 
 sample({
+  source: { pageSize: $pageSize, searchQuery: $searchQuery },
   clock: loadPage,
-  source: $pageSize,
-  fn: (pageSize, pageNumber) => ({ pageSize, pageNumber }),
+  fn: ({ pageSize, searchQuery }, pageNumber) => ({
+    pageSize,
+    pageNumber,
+    searchQuery,
+  }),
+  target: fetchUsersFx,
+});
+
+sample({
+  source: {
+    pageSize: $pageSize,
+    pageNumber: $pageNumber,
+    searchQuery: $searchQuery,
+  },
+  clock: searchTriggered,
   target: fetchUsersFx,
 });
 
@@ -97,7 +121,11 @@ $isBlockingOrUnblocking.on(blockUserFx.finally, () => false);
 $isBlockingOrUnblocking.on(unblockUserFx.finally, () => false);
 
 sample({
+  source: {
+    pageSize: $pageSize,
+    pageNumber: $pageNumber,
+    searchQuery: $searchQuery,
+  },
   clock: [blockUserFx.done, unblockUserFx.done],
-  source: { pageSize: $pageSize, pageNumber: $pageNumber },
   target: fetchUsersFx,
 });

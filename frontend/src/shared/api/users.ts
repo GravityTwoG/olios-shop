@@ -6,7 +6,9 @@ const BASE_ROUTE = '/users';
 
 const UsersListSchema = createListOutputSchema(UserSchema);
 
-export const fetchUsers = async (query: PaginationQueryDTO) => {
+export const fetchUsers = async (
+  query: PaginationQueryDTO & { searchQuery?: string },
+) => {
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
 
   return UsersListSchema.parse(response.data);
