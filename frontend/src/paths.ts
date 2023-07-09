@@ -6,7 +6,8 @@ const search = path('/search');
 const about = path('/about');
 
 const login = path('/auth/sign-in');
-const register = path('/auth/sign-up');
+const registerCustomer = path('/auth/sign-up');
+const registerEmployee = path('/auth/sign-up-employee');
 
 const profile = path('/profile');
 
@@ -26,7 +27,8 @@ export const paths = {
   about,
 
   login,
-  register,
+  registerCustomer,
+  registerEmployee,
   profile,
 
   products,

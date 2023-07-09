@@ -9,6 +9,7 @@
 .card {
   max-width: 100%;
   width: 320px;
+  text-align: center;
 }
 
 .local_nav {
@@ -50,6 +51,19 @@
 
     &:hover {
       background-color: var(--accent-hover-color);
+    }
+  }
+}
+
+.local_nav_item_min {
+  margin-top: 0.5rem;
+  display: inline-block;
+
+  &.active {
+    color: var(--accent-color);
+
+    &:hover {
+      color: var(--accent-hover-color);
     }
   }
 }

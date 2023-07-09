@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 
 import classes from './auth.module.scss';
 import { paths } from '@/src/paths';
@@ -8,19 +7,13 @@ import { AuthStatus, useAuthStatus } from '@/src/shared/session';
 
 import { AnonymousPage } from '@/src/features/Auth';
 
-import { LoginForm, RegisterForm } from '@/src/features/Auth';
-import { NavLink } from '@/src/ui/atoms/NavLink';
 import { Paper } from '@/src/ui/atoms/Paper';
+import { NavLink } from '@/src/ui/atoms/NavLink';
+import { RegisterEmployeeForm } from '@/src/features/Auth';
 
-function AuthPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+function SignUpPageEmployee() {
   const router = useRouter();
   const authStatus = useAuthStatus();
-
-  useEffect(() => {
-    if (!props.slug) {
-      router.replace('/auth/sign-in');
-    }
-  }, [props.slug, router]);
 
   useEffect(() => {
     if (authStatus === AuthStatus.Authenticated) {
@@ -40,7 +33,7 @@ function AuthPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
             Sign In
           </NavLink>
           <NavLink
-            href={paths.register({})}
+            href={paths.registerCustomer({})}
             className={classes['local_nav__item']}
             activeClassName={classes['active']}
           >
@@ -48,22 +41,10 @@ function AuthPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
           </NavLink>
         </nav>
 
-        {props.slug === 'sign-in' && <LoginForm />}
-        {props.slug === 'sign-up' && <RegisterForm />}
+        <RegisterEmployeeForm />
       </Paper>
     </div>
   );
 }
 
-export default AnonymousPage(AuthPage);
-
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: [{ params: { slug: 'sign-in' } }, { params: { slug: 'sign-up' } }],
-    fallback: true,
-  };
-};
-
-export const getStaticProps: GetStaticProps = (ctx) => {
-  return { props: { slug: ctx.params?.slug || null } };
-};
+export default AnonymousPage(SignUpPageEmployee);
