@@ -1,6 +1,7 @@
 import { ForwardedRef, ReactNode, forwardRef } from 'react';
 import clsx from 'clsx';
 import classes from './segmented-control.module.scss';
+import { ReactElement } from 'react';
 
 export type SegmentNameType = string | boolean | number;
 
@@ -20,10 +21,10 @@ export type SegmentedControlProps<T extends SegmentNameType> = {
 
 export type SegmentedControlComponent = <T extends SegmentNameType>(
   props: SegmentedControlProps<T> & { ref?: ForwardedRef<HTMLInputElement> },
-) => ReactNode;
+) => ReactElement | null;
 
 export const SegmentedControl: SegmentedControlComponent = forwardRef(
-  (props, ref) => {
+  (props, ref): ReactElement => {
     return (
       <div className={clsx(classes.SegmentedControl, props.className)}>
         <FakeInput
@@ -54,7 +55,7 @@ export const SegmentedControl: SegmentedControlComponent = forwardRef(
       </div>
     );
   },
-);
+) as SegmentedControlComponent;
 
 const FakeInput = forwardRef<
   HTMLInputElement,
