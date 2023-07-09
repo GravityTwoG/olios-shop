@@ -1,15 +1,22 @@
-import { axiosInstance } from './lib/instance';
-import {
-  ListOutputDTO,
-  PaginationQueryDTO,
-  createListOutputSchema,
-} from './lib/types';
 import {
   IProductCategory,
   ProductCategorySchema,
 } from '@/src/types/IProductCategory';
 
-const ProductCategoryListSchema = createListOutputSchema(ProductCategorySchema);
+import {
+  axiosInstance,
+  ListDTO,
+  PaginationQueryDTO,
+  createListResponseSchema,
+  createResponseSchema,
+} from './lib';
+
+const ProductCategoryResponseSchema = createResponseSchema(
+  ProductCategorySchema,
+);
+const ProductCategoryListSchema = createListResponseSchema(
+  ProductCategorySchema,
+);
 
 const BASE_ROUTE = '/product-categories';
 
@@ -27,15 +34,15 @@ export const createCategory = async (
     },
   });
 
-  return ProductCategorySchema.parse(response.data);
+  return ProductCategoryResponseSchema.parse(response.data).data;
 };
 
 export const fetchCategories = async (
   query: PaginationQueryDTO & { name?: string },
-): Promise<ListOutputDTO<IProductCategory>> => {
+): Promise<ListDTO<IProductCategory>> => {
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
 
-  return ProductCategoryListSchema.parse(response.data);
+  return ProductCategoryListSchema.parse(response.data).data;
 };
 
 export const deleteCategory = async (categoryId: number): Promise<void> => {

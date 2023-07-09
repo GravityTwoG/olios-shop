@@ -16,7 +16,7 @@ export const fetchRecommendedProductsFx = createEffect<number, IProduct[]>(
       take: RECOMMENDED_PRODUCTS_COUNT,
       skip: 0,
       categoryId,
-    });
+    }).then((r) => r.list);
   },
 );
 fetchRecommendedProductsFx.done.watch(({ result }) => {

@@ -14,7 +14,7 @@ function SearchPage() {
   const loadResults = async () => {
     try {
       const p = await fetchProducts({ take: 24, skip: 0 });
-      setResults(p);
+      setResults(p.list);
       setSearchQuery(searchQuery);
     } catch (error) {
       console.error(error);

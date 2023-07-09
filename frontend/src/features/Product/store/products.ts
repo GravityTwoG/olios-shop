@@ -18,7 +18,9 @@ export const setProducts = createEvent<IProduct[]>('set products');
 $products.on(setProducts, (_, payload) => payload);
 
 export const fetchProductsFx = createEffect<string, IProduct[]>(async () => {
-  return fetchProducts({ take: $pageSize.getState(), skip: 0 });
+  return fetchProducts({ take: $pageSize.getState(), skip: 0 }).then(
+    (r) => r.list,
+  );
 });
 fetchProductsFx.done.watch(({ result }) => {
   setProducts(result);

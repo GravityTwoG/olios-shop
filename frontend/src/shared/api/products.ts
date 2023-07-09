@@ -1,13 +1,17 @@
-import { z } from 'zod';
-
 import { IProduct } from '@/src/features/Product/store';
-import { axiosInstance } from './lib/instance';
-import { PaginationQueryDTO } from './lib/types';
 import { ProductSchema } from '@/src/types/IProduct';
+import {
+  axiosInstance,
+  ListDTO,
+  PaginationQueryDTO,
+  createListResponseSchema,
+  createResponseSchema,
+} from './lib';
 
 const BASE_ROUTE = '/products';
 
-const ProductListSchema = z.array(ProductSchema);
+const ProductResponseSchema = createResponseSchema(ProductSchema);
+const ProductListSchema = createListResponseSchema(ProductSchema);
 
 type CreateProductDTO = {
   name: string;
@@ -36,27 +40,27 @@ export const createProduct = async (
     },
   });
 
-  return ProductSchema.parse(response.data);
+  return ProductResponseSchema.parse(response.data).data;
 };
 
 export const fetchProduct = async (productId: number): Promise<IProduct> => {
   const response = await axiosInstance.get(`${BASE_ROUTE}/${productId}`);
-  return ProductSchema.parse(response.data);
+  return ProductResponseSchema.parse(response.data).data;
 };
 
 export const fetchProducts = async (
   query: PaginationQueryDTO,
-): Promise<IProduct[]> => {
+): Promise<ListDTO<IProduct>> => {
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
 
-  return ProductListSchema.parse(response.data);
+  return ProductListSchema.parse(response.data).data;
 };
 
 export const fetchRecommendedProducts = async (
   query: PaginationQueryDTO & { categoryId: number },
-): Promise<IProduct[]> => {
+): Promise<ListDTO<IProduct>> => {
   const { categoryId, ...q } = query;
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: q });
 
-  return ProductListSchema.parse(response.data);
+  return ProductListSchema.parse(response.data).data;
 };

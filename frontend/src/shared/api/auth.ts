@@ -1,7 +1,9 @@
 import { createEffect } from 'effector';
-import { axiosInstance } from './lib/instance';
-import { IUser, UserSchema } from '@/src/types/IUser';
-import { ApiError } from './lib/ApiError';
+
+import { IUser } from '@/src/types/IUser';
+import { axiosInstance, ApiError } from './lib';
+
+import { UserResponseSchema } from './users';
 
 const BASE_ROUTE = '/auth';
 
@@ -27,7 +29,7 @@ export const loginFx = createEffect<ILoginCredentials, IUser, ApiError>(
       ...credentials,
     });
 
-    return UserSchema.parse(res.data);
+    return UserResponseSchema.parse(res.data).data;
   },
 );
 
@@ -37,7 +39,7 @@ export const registerFx = createEffect<IRegisterCredentials, IUser, ApiError>(
       ...credentials,
     });
 
-    return UserSchema.parse(res.data);
+    return UserResponseSchema.parse(res.data).data;
   },
 );
 
@@ -50,14 +52,14 @@ export const registerEmployeeFx = createEffect<
     ...credentials,
   });
 
-  return UserSchema.parse(res.data);
+  return UserResponseSchema.parse(res.data).data;
 });
 
 export const fetchSessionFx = createEffect<void, IUser, ApiError>(
   async (): Promise<IUser> => {
     const res = await axiosInstance.get(`${BASE_ROUTE}/me`);
 
-    return UserSchema.parse(res.data);
+    return UserResponseSchema.parse(res.data).data;
   },
 );
 
