@@ -3,43 +3,47 @@ import { attach, createEvent, createStore, sample } from 'effector';
 import * as authApi from '@/src/shared/api/auth';
 import { fetchSessionFx } from '@/src/shared/session';
 
-const registerFx = attach({ effect: authApi.registerFx });
+const registerEmployeeFx = attach({ effect: authApi.registerEmployeeFx });
 
 export const $email = createStore('');
 export const $password = createStore('');
+export const $inviteCode = createStore('');
 export const $error = createStore('');
 export const $isPending = createStore(false);
 
 export const emailChanged = createEvent<string>('Email changed');
 export const passwordChanged = createEvent<string>('Password changed');
+export const inviteCodeChanged = createEvent<string>('Invite code changed');
 export const formSubmitted = createEvent('Register form submitted');
 
 $email.on(emailChanged, (_, value) => value);
 $password.on(passwordChanged, (_, value) => value);
+$inviteCode.on(inviteCodeChanged, (_, value) => value);
 
 sample({
   source: {
     email: $email,
     password: $password,
+    inviteCode: $inviteCode,
   },
   clock: formSubmitted,
-  target: registerFx,
+  target: registerEmployeeFx,
 });
 
-$error.on(registerFx, () => '');
+$error.on(registerEmployeeFx, () => '');
 
-$isPending.on(registerFx, () => true);
+$isPending.on(registerEmployeeFx, () => true);
 
-$isPending.on(registerFx.finally, () => false);
+$isPending.on(registerEmployeeFx.finally, () => false);
 
-$error.on(registerFx.failData, (_, err) => err.message);
+$error.on(registerEmployeeFx.failData, (_, err) => err.message);
 
 sample({
   source: {
     email: $email,
     password: $password,
   },
-  clock: registerFx.done,
+  clock: registerEmployeeFx.done,
   target: authApi.loginFx,
 });
 

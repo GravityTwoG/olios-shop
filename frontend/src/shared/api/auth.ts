@@ -1,6 +1,7 @@
 import { createEffect } from 'effector';
 import { axiosInstance } from './lib/instance';
 import { IUser, UserSchema } from '@/src/types/IUser';
+import { ApiError } from './lib/ApiError';
 
 const BASE_ROUTE = '/auth';
 
@@ -14,7 +15,13 @@ export type IRegisterCredentials = {
   password: string;
 };
 
-export const loginFx = createEffect<ILoginCredentials, IUser>(
+export type IRegisterEmployeeCredentials = {
+  email: string;
+  password: string;
+  inviteCode: string;
+};
+
+export const loginFx = createEffect<ILoginCredentials, IUser, ApiError>(
   async (credentials): Promise<IUser> => {
     const res = await axiosInstance.post(`${BASE_ROUTE}/login`, {
       ...credentials,
@@ -24,7 +31,7 @@ export const loginFx = createEffect<ILoginCredentials, IUser>(
   },
 );
 
-export const registerFx = createEffect<IRegisterCredentials, IUser>(
+export const registerFx = createEffect<IRegisterCredentials, IUser, ApiError>(
   async (credentials): Promise<IUser> => {
     const res = await axiosInstance.post(`${BASE_ROUTE}/register-customer`, {
       ...credentials,
@@ -34,7 +41,19 @@ export const registerFx = createEffect<IRegisterCredentials, IUser>(
   },
 );
 
-export const fetchSessionFx = createEffect<void, IUser>(
+export const registerEmployeeFx = createEffect<
+  IRegisterEmployeeCredentials,
+  IUser,
+  ApiError
+>(async (credentials): Promise<IUser> => {
+  const res = await axiosInstance.post(`${BASE_ROUTE}/register-employee`, {
+    ...credentials,
+  });
+
+  return UserSchema.parse(res.data);
+});
+
+export const fetchSessionFx = createEffect<void, IUser, ApiError>(
   async (): Promise<IUser> => {
     const res = await axiosInstance.get(`${BASE_ROUTE}/me`);
 
@@ -42,6 +61,8 @@ export const fetchSessionFx = createEffect<void, IUser>(
   },
 );
 
-export const logoutFx = createEffect<void, void>(async (): Promise<void> => {
-  await axiosInstance.post(`${BASE_ROUTE}/logout`);
-});
+export const logoutFx = createEffect<void, void, ApiError>(
+  async (): Promise<void> => {
+    await axiosInstance.post(`${BASE_ROUTE}/logout`);
+  },
+);
