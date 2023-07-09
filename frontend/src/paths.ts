@@ -19,6 +19,8 @@ const contentCategories = content.path('/categories');
 const contentProducts = content.path('/products');
 
 const users = path('/manager/users');
+const inviteCodes = path('/manager/invite-codes');
+const inviteCodesCreate = path('/manager/invite-codes/create');
 
 export const paths = {
   home,
@@ -39,4 +41,6 @@ export const paths = {
   contentProducts,
 
   users,
+  inviteCodes,
+  inviteCodesCreate,
 };

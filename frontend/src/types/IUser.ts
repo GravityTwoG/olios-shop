@@ -6,6 +6,11 @@ export enum IUserRole {
   MANAGER = 'MANAGER',
 }
 
+export enum IEmployeeRole {
+  CONTENT_MANAGER = 'CONTENT_MANAGER',
+  MANAGER = 'MANAGER',
+}
+
 export const UserSchema = z.object({
   id: z.string(),
   email: z.string(),
