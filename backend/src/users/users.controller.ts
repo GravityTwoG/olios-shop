@@ -10,6 +10,7 @@ import {
   ForbiddenException,
   ParseBoolPipe,
   HttpCode,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
@@ -42,10 +43,37 @@ export class UsersController {
 
   @Get()
   async users(
-    @Query('take') take?: number,
-    @Query('skip') skip?: number,
+    @Query('take', ParseIntPipe) take?: number,
+    @Query('skip', ParseIntPipe) skip?: number,
+    @Query('searchQuery') searchQuery?: string,
   ): Promise<UsersListOutpudDTO> {
-    const data = await this.usersService.getUsers({ take, skip });
+    const params: Parameters<typeof this.usersService.getUsers>[0] = {
+      take,
+      skip,
+    };
+
+    if (searchQuery) {
+      const query = searchQuery.split(' ').join(' | ');
+      params.where = {
+        OR: [
+          { firstName: { contains: searchQuery, mode: 'insensitive' } },
+          { lastName: { contains: searchQuery, mode: 'insensitive' } },
+          { patronymic: { contains: searchQuery, mode: 'insensitive' } },
+          { email: { contains: searchQuery, mode: 'insensitive' } },
+          {
+            firstName: {
+              search: query,
+              mode: 'insensitive',
+            },
+          },
+          { lastName: { search: query, mode: 'insensitive' } },
+          { patronymic: { search: query, mode: 'insensitive' } },
+          { email: { search: query, mode: 'insensitive' } },
+        ],
+      };
+    }
+
+    const data = await this.usersService.getUsers(params);
     return data;
   }
 
