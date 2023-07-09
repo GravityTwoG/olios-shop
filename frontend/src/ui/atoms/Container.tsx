@@ -1,18 +1,14 @@
 import { ReactNode } from 'react';
+import { ReactTagProps } from '../types';
+import clsx from 'clsx';
 
-export type ContainerProps = {
-  children: ReactNode;
-  className?: string;
-};
+export type ContainerProps = ReactTagProps<'div'>;
 
 export const Container = (props: ContainerProps) => {
   return (
     <div
-      className={
-        'max-w-4xl m-auto px-3 ' + (props.className ? props.className : '')
-      }
-    >
-      {props.children}
-    </div>
+      {...props}
+      className={clsx(props.className, 'max-w-4xl m-auto px-3 ')}
+    />
   );
 };

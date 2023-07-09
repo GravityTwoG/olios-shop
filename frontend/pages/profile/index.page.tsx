@@ -35,6 +35,11 @@ function ProfilePage() {
           <Link href={paths.users({})}>Manage Users</Link>
         </Flex>
       )}
+      {user.role === IUserRole.MANAGER && (
+        <Flex jcc margin="1rem 0">
+          <Link href={paths.inviteCodes({})}>Manage Invite Codes</Link>
+        </Flex>
+      )}
 
       <Flex jcc margin="1rem 0">
         <CTAButton onClick={() => logoutFx()}>logout</CTAButton>
