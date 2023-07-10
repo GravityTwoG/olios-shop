@@ -35,6 +35,9 @@ export class EnvironmentVariables {
   @IsString()
   MINIO_SECRET_KEY: string;
 
+  @IsString()
+  FILE_STORAGE_URL: string;
+
   @IsEnum(Environment)
   ENVIRONMENT: Environment;
 }
