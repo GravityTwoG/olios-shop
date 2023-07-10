@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 
 import { IUserRole } from '@/src/types/IUser';
+import { paths } from '@/src/paths';
 
 import { useUnit } from 'effector-react';
 import {
-  $error,
   $inviteCodes,
   $inviteCodesCount,
   $isDeleting,
@@ -21,17 +21,15 @@ import {
 import { PrivatePage } from '@/src/features/Auth';
 
 import Head from 'next/head';
+import Link from 'next/link';
 import { Paper } from '@/src/ui/atoms/Paper';
 import { Input } from '@/src/ui/atoms/Input';
 import { Button } from '@/src/ui/atoms/Button';
 import { H1 } from '@/src/ui/atoms/Typography';
-import { ErrorText } from '@/src/ui/atoms/ErrorText';
 import { Container } from '@/src/ui/atoms/Container';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
 import { Flex } from '@/src/ui/atoms/Flex';
-import Link from 'next/link';
-import { paths } from '@/src/paths';
 
 const headers = [
   { key: 'name', node: 'Name' },
@@ -51,8 +49,7 @@ export function InviteCodesPage() {
   const [
     inviteCodes,
     inviteCodesCount,
-    isPenging,
-    error,
+    isPending,
     pageSize,
     pageNumber,
     searchQuery,
@@ -61,7 +58,6 @@ export function InviteCodesPage() {
     $inviteCodes,
     $inviteCodesCount,
     $isPending,
-    $error,
     $pageSize,
     $pageNumber,
     $searchQuery,
@@ -84,19 +80,13 @@ export function InviteCodesPage() {
       </Flex>
 
       <Paper>
-        {error && (
-          <div>
-            <ErrorText>Error: {error}</ErrorText>
-          </div>
-        )}
-
         <Input
           value={searchQuery}
           onChange={(e) => searchQueryChanged(e.target.value)}
         />
 
         <Table
-          isLoading={isPenging}
+          isLoading={isPending}
           header={headers}
           data={inviteCodes.map((invite) => ({
             key: invite.id,

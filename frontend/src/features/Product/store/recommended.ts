@@ -1,6 +1,8 @@
 import { createEffect, createEvent, createStore } from 'effector';
-import { IProduct } from '../../../types/IProduct';
+
+import { toast } from '@/src/shared/toasts';
 import { fetchRecommendedProducts } from '@/src/shared/api/products';
+import { IProduct } from '@/src/types/IProduct';
 
 const RECOMMENDED_PRODUCTS_COUNT = 12;
 
@@ -19,11 +21,14 @@ export const fetchRecommendedProductsFx = createEffect<number, IProduct[]>(
     }).then((r) => r.list);
   },
 );
-fetchRecommendedProductsFx.done.watch(({ result }) => {
-  setRecommendedProducts(result);
-});
-fetchRecommendedProductsFx.fail.watch(({ error, params }) => {
-  console.log(error, params);
-});
+
+$recommendedProducts.on(
+  fetchRecommendedProductsFx.doneData,
+  (_, result) => result,
+);
+
+fetchRecommendedProductsFx.failData.watch((error) =>
+  toast.error(error.message),
+);
 
 $recommendedProducts.on(setRecommendedProducts, (_, payload) => payload);

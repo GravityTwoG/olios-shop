@@ -46,8 +46,7 @@ export function UsersPage() {
   const [
     users,
     usersCount,
-    isPenging,
-    error,
+    isPending,
     isBlockingOrUnblocking,
     pageSize,
     pageNumber,
@@ -56,7 +55,6 @@ export function UsersPage() {
     $users,
     $usersCount,
     $isPending,
-    $error,
     $isBlockingOrUnblocking,
     $pageSize,
     $pageNumber,
@@ -76,19 +74,13 @@ export function UsersPage() {
       <H1>Users</H1>
 
       <Paper>
-        {error && (
-          <div>
-            <ErrorText>Error: {error}</ErrorText>
-          </div>
-        )}
-
         <Input
           value={searchQuery}
           onChange={(e) => searchQueryChanged(e.target.value)}
         />
 
         <Table
-          isLoading={isPenging}
+          isLoading={isPending}
           header={headers}
           data={users.map((user) => ({
             key: user.id,

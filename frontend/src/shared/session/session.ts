@@ -3,10 +3,6 @@ import { createStore, attach } from 'effector';
 import { IUser, IUserRole } from '@/src/types/IUser';
 import * as authApi from '@/src/shared/api/auth';
 
-export const fetchSessionFx = attach({ effect: authApi.fetchSessionFx });
-
-export const logoutFx = attach({ effect: authApi.logoutFx });
-
 const defaultUser: IUser = {
   id: '',
   email: '',
@@ -25,6 +21,10 @@ export enum AuthStatus {
   Authenticated = 'Authenticated',
 }
 
+export const fetchSessionFx = attach({ effect: authApi.fetchSessionFx });
+
+export const logoutFx = attach({ effect: authApi.logoutFx });
+
 export const $user = createStore<IUser>(defaultUser);
 export const $authStatus = createStore<AuthStatus>(AuthStatus.Initial);
 
@@ -40,7 +40,7 @@ $user.on(fetchSessionFx.fail, () => defaultUser);
 $authStatus.on(fetchSessionFx.fail, () => AuthStatus.Anonymous);
 
 $authStatus.on(logoutFx.done, () => AuthStatus.Anonymous);
-$authStatus.on(logoutFx.failData, (_, error) => {
-  AuthStatus.Anonymous;
-  console.log(error);
+
+logoutFx.failData.watch((error) => {
+  console.error(error);
 });

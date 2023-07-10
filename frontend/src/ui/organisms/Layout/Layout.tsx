@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import classes from './layout.module.scss';
 
-import Sidebar from '../Sidebar/Sidebar';
+import { AppToaster } from '@/src/shared/toasts';
 import { BurgerButton } from '../../molecules/BurgerButton';
+import Sidebar from '../Sidebar/Sidebar';
 import { Menu } from '../Menu';
 
-export function Layout({ children }) {
+export type LayoutProps = {
+  children: ReactNode;
+};
+
+export function Layout({ children }: LayoutProps) {
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
   const toggleMenu = () => {
@@ -24,6 +29,7 @@ export function Layout({ children }) {
       </div>
 
       <Menu isOpened={isMenuOpened} />
+      <AppToaster />
     </div>
   );
 }
