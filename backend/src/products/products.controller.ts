@@ -19,6 +19,7 @@ import { plainToInstance } from 'class-transformer';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 
 import { ProductsService } from './products.service';
+import { ProductMapper } from './product.mapper';
 
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
@@ -28,12 +29,13 @@ import {
 } from './dto/products-response.dto';
 import { GetProductsDTO } from './dto/get-products.dto';
 
-import { mapProductEntityToProductType as mapProductEntityToProduct } from './mapProductEntityToProduct';
-
 @ApiTags('Products')
 @Controller('/products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly mapper: ProductMapper,
+  ) {}
 
   @Get()
   async findAll(
@@ -44,7 +46,7 @@ export class ProductsController {
     return plainToInstance(ProductsListResponseDTO, {
       data: {
         count: data.count,
-        list: data.list.map(mapProductEntityToProduct),
+        list: data.list.map(this.mapper.mapToProductDTO),
       },
     });
   }
@@ -55,7 +57,7 @@ export class ProductsController {
   ): Promise<ProductResponseDTO> {
     const product = await this.productsService.findOne(id);
     return plainToInstance(ProductResponseDTO, {
-      data: mapProductEntityToProduct(product),
+      data: this.mapper.mapToProductDTO(product),
     });
   }
 
@@ -96,7 +98,7 @@ export class ProductsController {
       images,
     );
     return plainToInstance(ProductResponseDTO, {
-      data: mapProductEntityToProduct(product),
+      data: this.mapper.mapToProductDTO(product),
     });
   }
 
@@ -116,7 +118,7 @@ export class ProductsController {
       images,
     );
     return plainToInstance(ProductResponseDTO, {
-      data: mapProductEntityToProduct(product),
+      data: this.mapper.mapToProductDTO(product),
     });
   }
 

@@ -23,6 +23,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { plainToInstance } from 'class-transformer';
 
 import { ProductCategoriesService } from './product-categories.service';
+import { ProductCategoryMapper } from './product-category.mapper';
 
 import { CreateProductCategoryDTO } from './dto/create-product-category.dto';
 import { UpdateProductCategoryDTO } from './dto/update-product-category.dto';
@@ -31,13 +32,12 @@ import {
   ProductCategoryListOutputDTO,
 } from './dto/product-categories-response.dto';
 
-import { mapToProductCategoryOutputDTO } from './mapToProductCategoryOutputDTO';
-
 @ApiTags('Product categories')
 @Controller('product-categories')
 export class ProductCategoriesController {
   constructor(
     private readonly productCategoriesService: ProductCategoriesService,
+    private readonly mapper: ProductCategoryMapper,
   ) {}
 
   @ApiResponse({ status: 200, type: ProductCategoryListOutputDTO })
@@ -64,7 +64,7 @@ export class ProductCategoriesController {
     return plainToInstance(ProductCategoryListOutputDTO, {
       data: {
         count: data.count,
-        list: data.list.map(mapToProductCategoryOutputDTO),
+        list: data.list.map(this.mapper.mapToProductCategoryDTO),
       },
     });
   }
@@ -76,7 +76,7 @@ export class ProductCategoriesController {
     const category = await this.productCategoriesService.findOne(id);
 
     return plainToInstance(ProductCategoryResponseDTO, {
-      data: mapToProductCategoryOutputDTO(category),
+      data: this.mapper.mapToProductCategoryDTO(category),
     });
   }
 
@@ -107,7 +107,7 @@ export class ProductCategoriesController {
     );
 
     return plainToInstance(ProductCategoryResponseDTO, {
-      data: mapToProductCategoryOutputDTO(category),
+      data: this.mapper.mapToProductCategoryDTO(category),
     });
   }
 
@@ -122,7 +122,7 @@ export class ProductCategoriesController {
     );
 
     return plainToInstance(ProductCategoryResponseDTO, {
-      data: mapToProductCategoryOutputDTO(category),
+      data: this.mapper.mapToProductCategoryDTO(category),
     });
   }
 
@@ -141,7 +141,7 @@ export class ProductCategoriesController {
     const category = await this.productCategoriesService.updateIcon(id, icon);
 
     return plainToInstance(ProductCategoryResponseDTO, {
-      data: mapToProductCategoryOutputDTO(category),
+      data: this.mapper.mapToProductCategoryDTO(category),
     });
   }
 
