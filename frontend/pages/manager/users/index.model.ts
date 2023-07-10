@@ -1,10 +1,4 @@
-import {
-  combine,
-  createEffect,
-  createEvent,
-  createStore,
-  sample,
-} from 'effector';
+import { createEffect, createEvent, createStore, sample } from 'effector';
 import { debounce, reset } from 'patronum';
 
 import { IUser } from '@/src/types/IUser';
@@ -12,6 +6,7 @@ import { IUser } from '@/src/types/IUser';
 import { ApiError } from '@/src/shared/api';
 import * as usersApi from '@/src/shared/api/users';
 import { ListDTO } from '@/src/shared/api/lib/types';
+import { toast } from '@/src/shared/toasts';
 
 const PAGE_SIZE = 12;
 
@@ -40,7 +35,6 @@ export const $isPending = createStore(false);
 export const $pageSize = createStore(PAGE_SIZE);
 export const $pageNumber = createStore(0);
 export const $searchQuery = createStore('');
-export const $error = createStore('');
 
 $searchQuery.on(searchQueryChanged, (_, newQuery) => newQuery);
 
@@ -50,33 +44,23 @@ reset({
 });
 
 sample({
-  source: combine({
-    pageSize: $pageSize,
-    pageNumber: 0,
-    searchQuery: $searchQuery,
-  }),
-  clock: pageMounted,
-  target: fetchUsersFx,
-});
-
-sample({
-  source: { pageSize: $pageSize, searchQuery: $searchQuery },
-  clock: loadPage,
-  fn: ({ pageSize, searchQuery }, pageNumber) => ({
-    pageSize,
-    pageNumber,
-    searchQuery,
-  }),
-  target: fetchUsersFx,
-});
-
-sample({
+  clock: [pageMounted, searchTriggered],
   source: {
     pageSize: $pageSize,
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  clock: searchTriggered,
+  target: fetchUsersFx,
+});
+
+sample({
+  clock: loadPage,
+  source: { pageSize: $pageSize, searchQuery: $searchQuery },
+  fn: ({ pageSize, searchQuery }, pageNumber) => ({
+    pageSize,
+    pageNumber,
+    searchQuery,
+  }),
   target: fetchUsersFx,
 });
 
@@ -90,9 +74,7 @@ $usersCount.on(fetchUsersFx.doneData, (_, { count }) => {
 });
 $pageNumber.on(fetchUsersFx.doneData, (_, { pageNumber }) => pageNumber);
 
-$error.on(fetchUsersFx.failData, (_, error) => {
-  return error.message;
-});
+fetchUsersFx.failData.watch((error) => toast.error(error.message));
 
 $isPending.on(fetchUsersFx.finally, () => false);
 

@@ -4,7 +4,7 @@ export const AppToaster = () => (
   <Toaster
     position="top-center"
     toastOptions={{
-      duration: 3000000,
+      duration: 3000,
       style: {
         minWidth: '120px',
         padding: '8px 12px',

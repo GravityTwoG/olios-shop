@@ -9,7 +9,6 @@ import { BurgerButton } from '../../molecules/BurgerButton';
 
 import HomeIcon from './img/Home.svg';
 import BasketIcon from './img/Basket.svg';
-import SearchIcon from './img/Search.svg';
 import AboutIcon from './img/About.svg';
 import ProfileIcon from './img/Profile.svg';
 
@@ -70,13 +69,6 @@ function MainNavigation() {
         activeClassName={classes.NavItemActive}
       >
         <BasketIcon />
-      </NavLink>
-      <NavLink
-        href={paths.search({})}
-        className={classes.NavItem}
-        activeClassName={classes.NavItemActive}
-      >
-        <SearchIcon />
       </NavLink>
     </nav>
   );

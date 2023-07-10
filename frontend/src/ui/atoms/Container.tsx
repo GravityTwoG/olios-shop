@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { ReactTagProps } from '../types';
 import clsx from 'clsx';
 
@@ -8,7 +7,7 @@ export const Container = (props: ContainerProps) => {
   return (
     <div
       {...props}
-      className={clsx(props.className, 'max-w-4xl m-auto px-3 ')}
+      className={clsx(props.className, 'max-w-7xl m-auto px-3 ')}
     />
   );
 };

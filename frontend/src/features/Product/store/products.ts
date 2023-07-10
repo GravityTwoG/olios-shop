@@ -1,33 +1,4 @@
-import { createEffect, createEvent, createStore } from 'effector';
-import { IProduct } from '@/src/types/IProduct';
-import { fetchProducts } from '@/src/shared/api/products';
-
-// PAGE SIZE
-const PAGE_SIZE = 24;
-export const $pageSize = createStore<number>(PAGE_SIZE);
-
-export const setPageSize = createEvent<number>('set page size');
-
-$pageSize.on(setPageSize, (_, payload) => payload);
-
-// PRODUCTS
-export const $products = createStore<IProduct[]>([]);
-
-export const setProducts = createEvent<IProduct[]>('set products');
-
-$products.on(setProducts, (_, payload) => payload);
-
-export const fetchProductsFx = createEffect<string, IProduct[]>(async () => {
-  return fetchProducts({ take: $pageSize.getState(), skip: 0 }).then(
-    (r) => r.list,
-  );
-});
-fetchProductsFx.done.watch(({ result }) => {
-  setProducts(result);
-});
-fetchProductsFx.fail.watch(({ error, params }) => {
-  console.log(error, params);
-});
+import { createEvent, createStore } from 'effector';
 
 // PRODUCTS CATEGORY
 export const $productsCategory = createStore<string>('');
