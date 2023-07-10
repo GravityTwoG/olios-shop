@@ -23,14 +23,14 @@ import { useUser } from '@/src/shared/session';
 import { PrivatePage } from '@/src/features/Auth';
 
 import Head from 'next/head';
-import { H1 } from '@/src/ui/atoms/Typography';
-import { Container } from '@/src/ui/atoms/Container';
+import { Input } from '@/src/ui/atoms/Input';
 import { Paper } from '@/src/ui/atoms/Paper';
 import { Button } from '@/src/ui/atoms/Button';
+import { H1 } from '@/src/ui/atoms/Typography';
+import { Container } from '@/src/ui/atoms/Container';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
-import { ErrorText } from '@/src/ui/atoms/ErrorText';
-import { Input } from '@/src/ui/atoms/Input';
+import { NoResults } from '@/src/ui/atoms/NoResults';
 
 const headers = [
   {
@@ -106,6 +106,7 @@ export function UsersPage() {
               </div>,
             ],
           }))}
+          emptyComponent={<NoResults>No Results</NoResults>}
         />
 
         <Paginator

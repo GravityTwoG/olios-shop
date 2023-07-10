@@ -10,7 +10,7 @@ import {
 } from '@/src/ui/atoms/Combobox';
 
 export type CategoriesSelectProps = Pick<
-  AsyncComboboxProps,
+  AsyncComboboxProps<string>,
   'option' | 'onChange'
 >;
 
@@ -50,7 +50,7 @@ const loadOptions = async (inputValue: string) => {
   }
 };
 
-type Callback = (res: ComboboxOption[]) => void;
+type Callback = (res: ComboboxOption<string>[]) => void;
 
 const loadOptionsDebounced = debounce(
   (inputValue: string, cb: Callback) => loadOptions(inputValue).then(cb),

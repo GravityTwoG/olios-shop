@@ -1,28 +1,24 @@
 import classes from './combobox.module.scss';
+import { themeFactory } from './theme';
+import { ComboboxOption } from './types';
 
-import { Theme } from 'react-select';
 import AsyncSelect from 'react-select/async';
 
-export type LoadOptionsCallback = (res: ComboboxOption[]) => void;
+export type LoadOptionsCallback<T> = (res: ComboboxOption<T>[]) => void;
 
-export type ComboboxOption = {
-  value: string;
-  label: string;
-};
+export type AsyncComboboxProps<T> = {
+  option: ComboboxOption<T>;
+  options: ComboboxOption<T>[];
 
-export type AsyncComboboxProps = {
-  option: ComboboxOption;
-  options: ComboboxOption[];
-
-  onChange?: (option: ComboboxOption) => void;
+  onChange?: (option: ComboboxOption<T>) => void;
   loadOptions:
-    | ((inputValue: string) => Promise<ComboboxOption[]>)
-    | ((inputValue: string, cb: LoadOptionsCallback) => void);
+    | ((inputValue: string) => Promise<ComboboxOption<T>[]>)
+    | ((inputValue: string, cb: LoadOptionsCallback<T>) => void);
 
   placeholder?: string;
 };
 
-export const AsyncCombobox = (props: AsyncComboboxProps) => {
+export const AsyncCombobox = function <T>(props: AsyncComboboxProps<T>) {
   return (
     <div className={classes.Combobox}>
       <AsyncSelect
@@ -42,15 +38,3 @@ export const AsyncCombobox = (props: AsyncComboboxProps) => {
     </div>
   );
 };
-
-function themeFactory(theme: Theme) {
-  return {
-    ...theme,
-    borderRadius: 16,
-    colors: {
-      ...theme.colors,
-      primary: 'var(--accent-color)',
-      primary25: 'var(--deco-color)',
-    },
-  };
-}
