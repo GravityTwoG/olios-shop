@@ -14,7 +14,7 @@ import AboutIcon from './img/About.svg';
 import ProfileIcon from './img/Profile.svg';
 
 export type SidebarProps = {
-  className: string;
+  className?: string;
   onBurgerMenuClick: () => void;
   burgerMenuOpened: boolean;
 };

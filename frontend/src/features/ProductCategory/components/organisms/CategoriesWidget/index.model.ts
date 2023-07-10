@@ -1,6 +1,8 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { debounce, reset } from 'patronum';
 
+import { toast } from '@/src/shared/toasts';
+
 import { IProductCategory } from '@/src/types/IProductCategory';
 import * as categoriesApi from '@/src/shared/api/product-categories';
 import { ApiError, ListDTO } from '@/src/shared/api/lib';
@@ -72,7 +74,7 @@ $categoriesCount.on(fetchCategoriesFx.doneData, (_, { count }) => {
 });
 $pageNumber.on(fetchCategoriesFx.doneData, (_, { pageNumber }) => pageNumber);
 
-fetchCategoriesFx.failData.watch((e) => console.error(e));
+fetchCategoriesFx.failData.watch((e) => toast.error(e.message));
 
 $isPending.on(fetchCategoriesFx.finally, () => false);
 
@@ -94,7 +96,7 @@ sample({
 
 $isDeleting.on(deleteCategoryFx, () => true);
 
-deleteCategoryFx.failData.watch((e) => console.error(e));
+deleteCategoryFx.failData.watch((e) => toast.error(e.message));
 
 $isDeleting.on(deleteCategoryFx.finally, () => false);
 

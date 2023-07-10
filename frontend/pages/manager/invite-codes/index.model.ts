@@ -86,7 +86,6 @@ $inviteCodes.on(fetchInviteCodesFx.doneData, (_, { list }) => {
   return list;
 });
 $inviteCodesCount.on(fetchInviteCodesFx.doneData, (_, { count }) => {
-  console.log(0);
   return count;
 });
 $pageNumber.on(fetchInviteCodesFx.doneData, (_, { pageNumber }) => pageNumber);
