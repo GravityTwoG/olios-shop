@@ -32,8 +32,17 @@
   & .showAll {
     text-decoration: none;
     text-transform: uppercase;
-    color: #0023ff;
     font-size: 18px;
+    color: #c1c1c1;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #0023ff;
+
+      &::after {
+        background-color: #0023ff;
+      }
+    }
   }
   & .showAll::after {
     content: '';
@@ -41,7 +50,8 @@
     margin: 12px auto 0;
     width: 50%;
     height: 2px;
-    background-color: #0023ff;
+    background-color: #c1c1c1;
+    transition: background-color 0.3s ease;
   }
 }
 

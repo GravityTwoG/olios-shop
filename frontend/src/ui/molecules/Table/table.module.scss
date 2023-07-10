@@ -1,6 +1,7 @@
 .TableWrapper {
   overflow: auto;
   position: relative;
+  text-align: center;
 }
 
 .Preloader {
@@ -25,6 +26,7 @@
 
 .Table {
   width: 100%;
+  text-align: left;
 
   --row-hover-color: rgba(39, 39, 42, 0.08);
   --border-color: #8c9a9eab;

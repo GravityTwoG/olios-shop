@@ -11,10 +11,10 @@ import {
 
 import { PrivatePage } from '@/src/features/Auth';
 
-import Link from 'next/link';
 import { Flex } from '@/src/ui/atoms/Flex';
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Container } from '@/src/ui/atoms/Container';
+import { AppLink } from '@/src/ui/atoms/AppLink';
 
 function ProfilePage() {
   const authStatus = useAuthStatus();
@@ -26,18 +26,18 @@ function ProfilePage() {
 
       {user.role === IUserRole.CONTENT_MANAGER && (
         <Flex jcc margin="1rem 0">
-          <Link href={paths.content({})}>Manage content</Link>
+          <AppLink href={paths.content({})}>Manage content</AppLink>
         </Flex>
       )}
 
       {user.role === IUserRole.MANAGER && (
         <Flex jcc margin="1rem 0">
-          <Link href={paths.users({})}>Manage Users</Link>
+          <AppLink href={paths.users({})}>Manage Users</AppLink>
         </Flex>
       )}
       {user.role === IUserRole.MANAGER && (
         <Flex jcc margin="1rem 0">
-          <Link href={paths.inviteCodes({})}>Manage Invite Codes</Link>
+          <AppLink href={paths.inviteCodes({})}>Manage Invite Codes</AppLink>
         </Flex>
       )}
 

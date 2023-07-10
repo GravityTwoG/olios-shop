@@ -8,6 +8,7 @@ export type TableProps = {
   data: { key: string; cols: ReactNode[] }[];
   isLoading?: boolean;
   className?: string;
+  emptyComponent?: ReactNode;
 };
 
 export const Table = (props: TableProps) => {
@@ -39,6 +40,10 @@ export const Table = (props: TableProps) => {
           ))}
         </tbody>
       </table>
+
+      {props.emptyComponent && props.data.length === 0 && !props.isLoading ? (
+        <div>{props.emptyComponent}</div>
+      ) : null}
 
       <div className={classes.Preloader} data-is-visible={props.isLoading}>
         <Spinner />

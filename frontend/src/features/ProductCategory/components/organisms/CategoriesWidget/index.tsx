@@ -23,6 +23,8 @@ import { Input } from '@/src/ui/atoms/Input';
 import { Button } from '@/src/ui/atoms/Button';
 import { H2 } from '@/src/ui/atoms/Typography';
 import { Paginator } from '@/src/ui/molecules/Paginator';
+import { NoResults } from '@/src/ui/atoms/NoResults';
+import { Preloader } from '@/src/ui/molecules/Preloader';
 
 export const CategoriesWidget = () => {
   const [
@@ -48,22 +50,21 @@ export const CategoriesWidget = () => {
   return (
     <Paper>
       <H2>Product Categories</H2>
-
       <Input
         value={searchQuery}
         onChange={(e) => searchQueryChanged(e.target.value)}
         className="mt-3"
       />
 
-      <ul>
-        {categories.map((category) => (
-          <ProductCategoryListItem key={category.id} category={category} />
-        ))}
-      </ul>
+      <Preloader isLoading={isPending}>
+        <ul>
+          {categories.map((category) => (
+            <ProductCategoryListItem key={category.id} category={category} />
+          ))}
+        </ul>
 
-      {categories.length === 0 && (
-        <p className="text-center m-8">No categories</p>
-      )}
+        {categories.length === 0 && <NoResults>No Categories</NoResults>}
+      </Preloader>
 
       <Paginator
         pageSize={pageSize}

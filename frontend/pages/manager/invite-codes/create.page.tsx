@@ -6,7 +6,7 @@ import { Container } from '@/src/ui/atoms/Container';
 import Head from 'next/head';
 import { H1 } from '@/src/ui/atoms/Typography';
 import { Form, FormError } from '@/src/ui/molecules/Form';
-import { InputField } from '@/src/ui/molecules/Field';
+import { Field, InputField } from '@/src/ui/molecules/Field';
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { useUnit } from 'effector-react';
 import {
@@ -28,6 +28,7 @@ import {
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { paths } from '@/src/paths';
+import { RoleSelect } from '@/src/shared/components/RoleSelect';
 
 const CreateInviteCodePage = () => {
   const [firstName, lastName, patronymic, role, birthDate, isPending, error] =
@@ -77,15 +78,13 @@ const CreateInviteCodePage = () => {
           value={patronymic}
           onChange={(e) => patronymicChanged(e.target.value)}
         />
-        <InputField
-          label="Role"
-          placeholder="Role"
-          value={role}
-          onChange={(e) => roleChanged(e.target.value as any)}
-        />
+        <Field label="Role">
+          <RoleSelect role={role} onChange={(r) => roleChanged(r)} />
+        </Field>
         <InputField
           label="Birth Date"
           placeholder="Birth Date"
+          type="date"
           value={birthDate}
           onChange={(e) => birthDateChanged(e.target.value)}
         />

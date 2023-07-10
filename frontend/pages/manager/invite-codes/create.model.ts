@@ -16,7 +16,7 @@ export const $firstName = createStore('');
 export const $lastName = createStore('');
 export const $patronymic = createStore('');
 export const $role = createStore<IEmployeeRole>(IEmployeeRole.CONTENT_MANAGER);
-export const $birthDate = createStore('');
+export const $birthDate = createStore('2000-01-01');
 export const $error = createStore('');
 export const $isPending = createStore(false);
 

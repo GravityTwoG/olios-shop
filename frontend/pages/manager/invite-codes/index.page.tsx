@@ -21,15 +21,16 @@ import {
 import { PrivatePage } from '@/src/features/Auth';
 
 import Head from 'next/head';
-import Link from 'next/link';
 import { Paper } from '@/src/ui/atoms/Paper';
 import { Input } from '@/src/ui/atoms/Input';
 import { Button } from '@/src/ui/atoms/Button';
+import { Flex } from '@/src/ui/atoms/Flex';
 import { H1 } from '@/src/ui/atoms/Typography';
+import { NoResults } from '@/src/ui/atoms/NoResults';
 import { Container } from '@/src/ui/atoms/Container';
+import { AppLink } from '@/src/ui/atoms/AppLink';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
-import { Flex } from '@/src/ui/atoms/Flex';
 
 const headers = [
   { key: 'name', node: 'Name' },
@@ -76,7 +77,9 @@ export function InviteCodesPage() {
       <H1>Invite Codes</H1>
 
       <Flex jcc margin="1rem 0">
-        <Link href={paths.inviteCodesCreate({})}>Create Invite Codes</Link>
+        <AppLink href={paths.inviteCodesCreate({})}>
+          Create Invite Codes
+        </AppLink>
       </Flex>
 
       <Paper>
@@ -111,6 +114,7 @@ export function InviteCodesPage() {
               </div>,
             ],
           }))}
+          emptyComponent={<NoResults>No Invite codes</NoResults>}
         />
 
         <Paginator
