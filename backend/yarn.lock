@@ -463,7 +463,7 @@
     jest-util "^29.6.1"
     slash "^3.0.0"
 
-"@jest/core@^29.6.0", "@jest/core@^29.6.1":
+"@jest/core@^29.6.1":
   version "29.6.1"
   resolved "https://registry.yarnpkg.com/@jest/core/-/core-29.6.1.tgz#fac0d9ddf320490c93356ba201451825231e95f6"
   integrity sha512-CcowHypRSm5oYQ1obz1wfvkjZZ2qoQlrKKvlfPwh5jUXVU12TWr2qMeH8chLMuTFzHh5a1g2yaqlqDICbr+ukQ==
@@ -631,7 +631,7 @@
     slash "^3.0.0"
     write-file-atomic "^4.0.2"
 
-"@jest/types@^29.6.0", "@jest/types@^29.6.1":
+"@jest/types@^29.6.1":
   version "29.6.1"
   resolved "https://registry.yarnpkg.com/@jest/types/-/types-29.6.1.tgz#ae79080278acff0a6af5eb49d063385aaa897bf2"
   integrity sha512-tPKQNMPuXgvdOn2/Lg9HNfUvjYVGolt04Hp03f5hAk878uwOLikN+JzeLY0HcVgKgFl9Hs3EIqpu3WX27XNhnw==
@@ -706,10 +706,10 @@
   resolved "https://registry.yarnpkg.com/@lukeed/csprng/-/csprng-1.1.0.tgz#1e3e4bd05c1cc7a0b2ddbd8a03f39f6e4b5e6cfe"
   integrity sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==
 
-"@nestjs/cli@10.1.0":
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-10.1.0.tgz#f06405c0b8966b7c89b6e5df016212856463d2da"
-  integrity sha512-R/n+cFIvK3YbFSU9t7NFyBgXJRDK1biCZgz1VqYdpZj4JmIj8RmllA9Fp3YZUg98D8K7T4HoIuVFUAkEFSSLTg==
+"@nestjs/cli@10.1.7":
+  version "10.1.7"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-10.1.7.tgz#8f708086acedb3a8287969d7fc02b8b593157ba1"
+  integrity sha512-YybaBuZpVhdT/ouVNnVUdpoPiuZ108GhY5eMuQJmMpA8FWLvLhyho0cSL36JCmqguyoQUMjZ+BeqaOAUgBRVuA==
   dependencies:
     "@angular-devkit/core" "16.1.3"
     "@angular-devkit/schematics" "16.1.3"
@@ -3427,7 +3427,7 @@ jest-circus@^29.6.1:
     slash "^3.0.0"
     stack-utils "^2.0.3"
 
-jest-cli@^29.6.0:
+jest-cli@^29.6.1:
   version "29.6.1"
   resolved "https://registry.yarnpkg.com/jest-cli/-/jest-cli-29.6.1.tgz#99d9afa7449538221c71f358f0fdd3e9c6e89f72"
   integrity sha512-607dSgTA4ODIN6go9w6xY3EYkyPFGicx51a69H7yfvt7lN53xNswEVLovq+E77VsTRi5fWprLH0yl4DJgE8Ing==
@@ -3751,15 +3751,15 @@ jest-worker@^29.6.1:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jest@29.6.0:
-  version "29.6.0"
-  resolved "https://registry.yarnpkg.com/jest/-/jest-29.6.0.tgz#dbc8136e6d933177487e2427187e07ebf9db8ce4"
-  integrity sha512-do1J9gGrQ68E4UfMz/4OM71p9qCqQxu32N/9ZfeYFSSlx0uUOuxeyZxtJZNaUTW12ZA11ERhmBjBhy1Ho96R4g==
+jest@29.6.1:
+  version "29.6.1"
+  resolved "https://registry.yarnpkg.com/jest/-/jest-29.6.1.tgz#74be1cb719c3abe439f2d94aeb18e6540a5b02ad"
+  integrity sha512-Nirw5B4nn69rVUZtemCQhwxOBhm0nsp3hmtF4rzCeWD7BkjAXRIji7xWQfnTNbz9g0aVsBX6aZK3n+23LM6uDw==
   dependencies:
-    "@jest/core" "^29.6.0"
-    "@jest/types" "^29.6.0"
+    "@jest/core" "^29.6.1"
+    "@jest/types" "^29.6.1"
     import-local "^3.0.2"
-    jest-cli "^29.6.0"
+    jest-cli "^29.6.1"
 
 joycon@^3.1.1:
   version "3.1.1"
