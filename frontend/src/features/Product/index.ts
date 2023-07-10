@@ -1,10 +1,6 @@
 export {
-  $products,
-  fetchProductsFx,
   $productsCategory,
   setCategory,
-  $pageSize,
-  setPageSize,
   $product,
   $recommendedProducts,
   fetchProductFx,

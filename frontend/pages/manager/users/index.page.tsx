@@ -4,7 +4,6 @@ import { IUserRole } from '@/src/types/IUser';
 
 import { useUnit } from 'effector-react';
 import {
-  $error,
   $isBlockingOrUnblocking,
   $isPending,
   $pageNumber,

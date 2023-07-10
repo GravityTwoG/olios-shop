@@ -70,7 +70,7 @@ class ProductPage extends React.Component<{
               <Category
                 name={this.props.product.categoryName}
                 href={
-                  paths.products({}) +
+                  paths.home({}) +
                   '?categoryId=' +
                   this.props.product.categoryId
                 }

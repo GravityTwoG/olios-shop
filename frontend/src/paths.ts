@@ -11,7 +11,6 @@ const registerEmployee = path('/auth/sign-up-employee');
 
 const profile = path('/profile');
 
-const products = path('/products');
 const product = path('/product/:id');
 
 const content = path('/content');
@@ -33,7 +32,6 @@ export const paths = {
   registerEmployee,
   profile,
 
-  products,
   product,
 
   content,
