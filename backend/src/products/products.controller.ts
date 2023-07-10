@@ -42,7 +42,25 @@ export class ProductsController {
     @Query()
     query: GetProductsDTO,
   ): Promise<ProductsListResponseDTO> {
-    const data = await this.productsService.findAll(query);
+    const params: Parameters<typeof this.productsService.findAll>[0] = {
+      take: query.take,
+      skip: query.skip,
+    };
+
+    if (query.searchQuery) {
+      const searchQuery = query.searchQuery;
+      const formatted = searchQuery.split(' ').join(' | ');
+      params.where = {
+        OR: [
+          { name: { contains: searchQuery, mode: 'insensitive' } },
+          { name: { search: formatted, mode: 'insensitive' } },
+          { description: { contains: searchQuery, mode: 'insensitive' } },
+          { description: { search: formatted, mode: 'insensitive' } },
+        ],
+      };
+    }
+
+    const data = await this.productsService.findAll(params);
     return plainToInstance(ProductsListResponseDTO, {
       data: {
         count: data.count,
