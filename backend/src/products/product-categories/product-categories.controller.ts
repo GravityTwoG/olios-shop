@@ -31,6 +31,7 @@ import {
   ProductCategoryResponseDTO,
   ProductCategoryListOutputDTO,
 } from './dto/product-categories-response.dto';
+import { GetProductCategoriesDTO } from './dto/get-product-categories.dto';
 
 @ApiTags('Product categories')
 @Controller('product-categories')
@@ -43,23 +44,29 @@ export class ProductCategoriesController {
   @ApiResponse({ status: 200, type: ProductCategoryListOutputDTO })
   @Get('')
   async productCategories(
-    @Query('take', ParseIntPipe) take: number,
-    @Query('skip', ParseIntPipe) skip: number,
-    @Query('name') name: string,
+    @Query() query: GetProductCategoriesDTO,
   ): Promise<ProductCategoryListOutputDTO> {
-    const data = await this.productCategoriesService.findAll({
-      take,
-      skip,
-      where: {
-        parentId: null,
+    const params: Parameters<typeof this.productCategoriesService.findAll>[0] =
+      {
+        take: query.take,
+        skip: query.skip,
+      };
+
+    if (query.name) {
+      params.where = {
         OR: [
-          { name: { contains: name, mode: 'insensitive' } },
+          { name: { contains: query.name, mode: 'insensitive' } },
           {
-            name: { search: name.split(' ').join(' | '), mode: 'insensitive' },
+            name: {
+              search: query.name.split(' ').join(' | '),
+              mode: 'insensitive',
+            },
           },
         ],
-      },
-    });
+      };
+    }
+
+    const data = await this.productCategoriesService.findAll(params);
 
     return plainToInstance(ProductCategoryListOutputDTO, {
       data: {
