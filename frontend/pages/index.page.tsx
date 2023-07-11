@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import classes from './products.module.scss';
+import classes from './index.module.scss';
 
 import Head from 'next/head';
-import { Form } from '@/src/ui/molecules/Form';
 import { ProductsGrid } from '@/src/features/Product/components/molecules/productsGrid/ProductsGrid';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 import { useUnit } from 'effector-react';

@@ -4841,6 +4841,11 @@ yarn@^1.22.19:
   resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.19.tgz#4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
   integrity sha512-/0V5q0WbslqnwP91tirOvldvYISzaqhClxzyUKXYxs07yUILIs5jx/k6CFe8bvKSkds5w+eiOqta39Wk3WxdcQ==
 
+yet-another-react-lightbox@^3.11.3:
+  version "3.11.3"
+  resolved "https://registry.yarnpkg.com/yet-another-react-lightbox/-/yet-another-react-lightbox-3.11.3.tgz#24f4b177e045720941d97eab60bbf614b43252c5"
+  integrity sha512-/Wb6QPXeg51XJIfFp+mwQlvoz+WJsSSZbBDRJopB6hL8SQWpqPKHxQcc3zpNmhgZWKtMZn6/XR1D6GrY/zPCWw==
+
 yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"

@@ -4,7 +4,7 @@ import { Input, InputProps } from '../../atoms/Input';
 import { Field } from '../Field';
 
 export type InputFieldProps = {
-  label?: string;
+  label: string;
 } & InputProps;
 
 export const InputField = ({ label, ...props }: InputFieldProps) => {

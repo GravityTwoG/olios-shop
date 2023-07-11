@@ -28,6 +28,7 @@
     "sass": "^1.62.1",
     "url-loader": "^4.1.1",
     "yarn": "^1.22.19",
+    "yet-another-react-lightbox": "^3.11.3",
     "zod": "^3.21.4"
   },
   "devDependencies": {

@@ -1,16 +1,17 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
+import clsx from 'clsx';
+
 import classes from './field.module.scss';
 
-export type FieldProps = {
-  label?: string;
-  children: ReactNode;
-};
+import { ReactTagProps } from '../../types';
 
-export const Field = ({ label, ...props }: FieldProps) => {
+export type FieldProps = ReactTagProps<'label'> & { label: string };
+
+export const Field = ({ label, children, ...props }: FieldProps) => {
   return (
-    <label className={classes.label}>
+    <label {...props} className={clsx(props.className, classes.label)}>
       {label && <p className={classes['label__title']}>{label}</p>}
-      {props.children}
+      {children}
     </label>
   );
 };
