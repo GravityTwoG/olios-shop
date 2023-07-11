@@ -1,0 +1,22 @@
+.yarl__root {
+  --yarl__color_backdrop: #fff;
+
+  --yarl__color_button: #222;
+  --yarl__color_button_active: #777;
+  --yarl__color_button_disabled: var(--deco-color);
+  --yarl__navigation_button_padding: 0px;
+  --yarl__button_margin: 0px 4px;
+  --yarl__button_filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.4));
+}
+
+.yarl__button > svg {
+  transition: color 0.2s ease;
+}
+
+.yarl__navigation_next,
+.yarl__navigation_prev {
+  & > svg {
+    width: 44px;
+    height: 44px;
+  }
+}

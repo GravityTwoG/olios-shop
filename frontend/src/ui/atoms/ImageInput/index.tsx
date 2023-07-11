@@ -6,9 +6,11 @@ import UploadIcon from './upload-icon.svg';
 import { reduceFileSize } from './reduceFileSize';
 import Image from 'next/image';
 
+export type Image = { raw: Blob | null; preview: string };
+
 export type ImageInputProps = {
   preview: string;
-  onChange: (img: { raw: Blob | null; preview: string }) => void;
+  onChange: (img: Image) => void;
   maxFileSizeInBytes?: number;
   className?: string;
 };

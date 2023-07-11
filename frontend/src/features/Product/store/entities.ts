@@ -9,4 +9,5 @@ export const emptyProduct: IProduct = {
   realPrice: 9999,
   oldPrice: 19999,
   thumbUrl: 'https://via.placeholder.com/200',
+  images: [],
 };

@@ -13,7 +13,7 @@ const BASE_ROUTE = '/products';
 const ProductResponseSchema = createResponseSchema(ProductSchema);
 const ProductListSchema = createListResponseSchema(ProductSchema);
 
-type CreateProductDTO = {
+export type CreateProductDTO = {
   name: string;
   description: string;
   price: number;
@@ -63,4 +63,8 @@ export const fetchRecommendedProducts = async (
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: q });
 
   return ProductListSchema.parse(response.data).data;
+};
+
+export const deleteProduct = async (productId: number): Promise<void> => {
+  await axiosInstance.delete(`${BASE_ROUTE}/${productId}`);
 };
