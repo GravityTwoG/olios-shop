@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { Image, ImageInput } from '../../atoms/ImageInput';
 
 export type MultipleImagesInput = {
   images: { preview: string; raw: Blob }[];
   onChange: (images: { preview: string; raw: Blob }[]) => void;
+  id?: string;
 };
 
 export const MultipleImagesInput = (props: MultipleImagesInput) => {
@@ -28,6 +28,7 @@ export const MultipleImagesInput = (props: MultipleImagesInput) => {
             props.onChange([...props.images, image]);
           }
         }}
+        id={props.id}
       />
     </div>
   );

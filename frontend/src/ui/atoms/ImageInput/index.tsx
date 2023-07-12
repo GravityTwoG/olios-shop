@@ -13,6 +13,7 @@ export type ImageInputProps = {
   onChange: (img: Image) => void;
   maxFileSizeInBytes?: number;
   className?: string;
+  id?: string;
 };
 
 const MegaByte = 1024 * 1024;
@@ -43,7 +44,8 @@ export const ImageInput = ({
     props.onChange({ raw: null, preview: '' });
   };
 
-  const id = useId();
+  const internalId = useId();
+  const id = props.id || internalId;
   return (
     <div
       className={clsx(classes.ImageInput, props.className)}

@@ -11,7 +11,7 @@ import {
 
 export type CategoriesSelectProps = Pick<
   AsyncComboboxProps<string>,
-  'option' | 'onChange'
+  'option' | 'onChange' | 'id'
 >;
 
 export const CategoriesSelect = (props: CategoriesSelectProps) => {
@@ -29,6 +29,7 @@ export const CategoriesSelect = (props: CategoriesSelectProps) => {
       loadOptions={loadOptionsDebounced}
       option={props.option}
       onChange={props.onChange}
+      id={props.id}
     />
   );
 };

@@ -11,6 +11,7 @@ export type ComboboxProps<T> = {
   onChange?: (option: ComboboxOption<T>) => void;
 
   placeholder?: string;
+  id?: string;
 };
 
 export const Combobox = function <T>(props: ComboboxProps<T>) {

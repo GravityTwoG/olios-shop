@@ -25,7 +25,7 @@ import {
   patronymicChanged,
   roleChanged,
 } from './create.model';
-import { useEffect } from 'react';
+import { useEffect, useId } from 'react';
 import { useRouter } from 'next/router';
 import { paths } from '@/src/paths';
 import { RoleSelect } from '@/src/shared/components/RoleSelect';
@@ -46,6 +46,8 @@ const CreateInviteCodePage = () => {
   useEffect(() => {
     return inviteCodeCreated.watch(() => router.push(paths.inviteCodes({})));
   }, [router]);
+
+  const rolesId = useId();
 
   return (
     <Container className="py-8">
@@ -78,8 +80,12 @@ const CreateInviteCodePage = () => {
           value={patronymic}
           onChange={(e) => patronymicChanged(e.target.value)}
         />
-        <Field label="Role">
-          <RoleSelect role={role} onChange={(r) => roleChanged(r)} />
+        <Field label="Role" htmlFor={rolesId}>
+          <RoleSelect
+            role={role}
+            onChange={(r) => roleChanged(r)}
+            id={rolesId}
+          />
         </Field>
         <InputField
           label="Birth Date"

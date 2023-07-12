@@ -16,6 +16,7 @@ export type AsyncComboboxProps<T> = {
     | ((inputValue: string, cb: LoadOptionsCallback<T>) => void);
 
   placeholder?: string;
+  id?: string;
 };
 
 export const AsyncCombobox = function <T>(props: AsyncComboboxProps<T>) {
@@ -31,6 +32,7 @@ export const AsyncCombobox = function <T>(props: AsyncComboboxProps<T>) {
           }
         }}
         placeholder={props.placeholder}
+        id={props.id}
         cacheOptions
         menuPlacement="auto"
         theme={themeFactory}

@@ -1,12 +1,14 @@
-.label {
+.Field {
   width: 100%;
   display: block;
 
   cursor: pointer;
 }
 
-.label__title {
+.label {
   font-size: 18px;
   line-height: 32px;
   text-align: center;
+
+  cursor: pointer;
 }
