@@ -62,27 +62,25 @@ export class ProductCategoriesService {
   async update(
     id: number,
     updateProductCategoryInput: UpdateProductCategoryDTO,
+    icon?: Express.Multer.File,
   ) {
     const { name } = updateProductCategoryInput;
-    const category = await this.prisma.productCategory.update({
+
+    if (icon) {
+      const result = await this.imagesService.upload(
+        icon,
+        'product-categories',
+      );
+      return this.prisma.productCategory.update({
+        where: { id },
+        data: { name, iconUrl: result.path, iconObjectName: result.objectName },
+      });
+    }
+
+    return this.prisma.productCategory.update({
       where: { id },
       data: { name },
     });
-
-    return category;
-  }
-
-  async updateIcon(id: number, icon: Express.Multer.File) {
-    const result = await this.imagesService.upload(icon, 'product-categories');
-    const category = await this.prisma.productCategory.update({
-      where: { id },
-      data: {
-        iconUrl: result.path,
-        iconObjectName: result.objectName,
-      },
-    });
-
-    return category;
   }
 
   async remove(id: number) {
