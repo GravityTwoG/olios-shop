@@ -43,7 +43,7 @@ export class ImagesService implements OnModuleInit {
 
   public async upload(file: Express.Multer.File, bucketName: BucketName) {
     assertTruthy(
-      file.mimetype.includes('jpeg') || file.mimetype.includes('png'),
+      file.mimetype.match(/image\/*/),
       InvalidPayloadException,
       `This image type is not supported: ${file.mimetype}`,
     );
