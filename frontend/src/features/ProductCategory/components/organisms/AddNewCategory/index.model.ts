@@ -1,4 +1,5 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
+import { reset } from 'patronum';
 
 import { ApiError } from '@/src/shared/api';
 import { createCategory } from '@/src/shared/api/product-categories';
@@ -27,6 +28,11 @@ export const categoryCreated = createCategoryFx.done;
 
 $name.on(nameChanged, (_, newValue) => newValue);
 $icon.on(iconChanged, (_, newValue) => newValue);
+
+reset({
+  clock: categoryCreated,
+  target: [$name, $icon],
+});
 
 sample({
   source: {

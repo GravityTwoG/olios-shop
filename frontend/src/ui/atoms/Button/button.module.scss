@@ -44,4 +44,20 @@
       background-color: var(--secondary-hover-color);
     }
   }
+
+  &.ColorDanger {
+    background-color: #b91c1c;
+
+    &:hover:not(:disabled) {
+      background-color: #7f1d1d;
+    }
+
+    &:active:not(:disabled) {
+      background-color: #b91c1c;
+    }
+
+    &.isLoading {
+      background-color: #7f1d1d;
+    }
+  }
 }

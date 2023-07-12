@@ -19,13 +19,22 @@ type Renderable = JSX.Element | string | null;
 type ToastId = string;
 
 export const toast = {
-  loading: (message: Renderable, toastId?: ToastId) =>
+  loading: (message: Renderable, toastId?: ToastId): ToastId =>
     toastlib.loading(() => message, { id: toastId }),
 
-  error: (message: Renderable, toastId?: ToastId) =>
+  error: (message: Renderable, toastId?: ToastId): ToastId =>
     toastlib.error(() => message, { id: toastId }),
 
-  success: (message: Renderable, toastId?: ToastId) =>
+  unknownError: (error: unknown, toastId?: ToastId): ToastId => {
+    if (error instanceof Error) {
+      return toastlib.error(error.message, { id: toastId });
+    }
+
+    console.error('Unexpected error:', error);
+    return toastlib.error('Unexpected error', { id: toastId });
+  },
+
+  success: (message: Renderable, toastId?: ToastId): ToastId =>
     toastlib.success(() => message, { id: toastId }),
 
   promise: function <T>(
