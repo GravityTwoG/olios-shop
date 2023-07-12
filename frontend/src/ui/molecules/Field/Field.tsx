@@ -9,9 +9,11 @@ export type FieldProps = ReactTagProps<'label'> & { label: string };
 
 export const Field = ({ label, children, ...props }: FieldProps) => {
   return (
-    <label {...props} className={clsx(props.className, classes.label)}>
-      {label && <p className={classes['label__title']}>{label}</p>}
+    <div className={clsx(props.className, classes.Field)}>
+      <label {...props} className={classes.label}>
+        {label}
+      </label>
       {children}
-    </label>
+    </div>
   );
 };

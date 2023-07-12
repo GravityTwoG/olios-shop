@@ -6,6 +6,7 @@ import { useState } from 'react';
 export type RoleSelectProps = {
   role: IEmployeeRole;
   onChange: (role: IEmployeeRole) => void;
+  id?: string;
 };
 
 const options = [
@@ -24,6 +25,7 @@ export const RoleSelect = (props: RoleSelectProps) => {
         setOption(o);
         props.onChange(o.value);
       }}
+      id={props.id}
     />
   );
 };

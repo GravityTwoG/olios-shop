@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { useUnit } from 'effector-react';
 
 import {
@@ -36,6 +37,9 @@ export default function ProductsManagementPage() {
     $isPending,
   ]);
 
+  const imagesId = useId();
+  const categoriesId = useId();
+
   return (
     <Container className="py-8">
       <H1>Manage products</H1>
@@ -64,17 +68,19 @@ export default function ProductsManagementPage() {
             value={price}
             onChange={(e) => priceChanged(+e.target.value)}
           />
-          <Field label="Category">
+          <Field label="Category" htmlFor={categoriesId}>
             <CategoriesSelect
               option={category}
               onChange={(option) => categoryChanged(option)}
+              id={categoriesId}
             />
           </Field>
 
-          <Field label="Images" className="mb-4">
+          <Field label="Images" htmlFor={imagesId} className="mb-4">
             <MultipleImagesInput
               images={images}
               onChange={(newImages) => imagesChanged(newImages)}
+              id={imagesId}
             />
           </Field>
 
