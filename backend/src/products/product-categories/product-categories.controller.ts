@@ -10,7 +10,6 @@ import {
   UseInterceptors,
   UploadedFile,
   HttpException,
-  Patch,
   Query,
 } from '@nestjs/common';
 import {
@@ -118,21 +117,6 @@ export class ProductCategoriesController {
     });
   }
 
-  @ApiCookieAuth()
-  @Put('/:id')
-  async updateProductCategory(
-    @Body() updateProductCategoryDTO: UpdateProductCategoryDTO,
-  ): Promise<ProductCategoryResponseDTO> {
-    const category = await this.productCategoriesService.update(
-      updateProductCategoryDTO.id,
-      updateProductCategoryDTO,
-    );
-
-    return plainToInstance(ProductCategoryResponseDTO, {
-      data: this.mapper.mapToProductCategoryDTO(category),
-    });
-  }
-
   @UseInterceptors(
     FileInterceptor('icon', {
       limits: { fileSize: 1024 * 1024 * 20, files: 1 },
@@ -140,12 +124,16 @@ export class ProductCategoriesController {
   )
   @ApiCookieAuth()
   @ApiConsumes('multipart/form-data')
-  @Patch('/:id/icon')
+  @Put('')
   async updateProductCategoryIcon(
-    @Param('/:id', ParseIntPipe) id: number,
-    @UploadedFile() icon: Express.Multer.File,
+    @Body() updateProductCategoryDTO: UpdateProductCategoryDTO,
+    @UploadedFile() icon?: Express.Multer.File,
   ): Promise<ProductCategoryResponseDTO> {
-    const category = await this.productCategoriesService.updateIcon(id, icon);
+    const category = await this.productCategoriesService.update(
+      updateProductCategoryDTO.id,
+      updateProductCategoryDTO,
+      icon,
+    );
 
     return plainToInstance(ProductCategoryResponseDTO, {
       data: this.mapper.mapToProductCategoryDTO(category),
