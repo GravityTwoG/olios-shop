@@ -8,7 +8,6 @@ import {
   ParseIntPipe,
   Param,
   UseInterceptors,
-  UploadedFiles,
   HttpException,
   Query,
 } from '@nestjs/common';
@@ -28,6 +27,7 @@ import {
   ProductsListResponseDTO,
 } from './dto/products-response.dto';
 import { GetProductsDTO } from './dto/get-products.dto';
+import { UploadedImageFiles } from 'src/common/decorators/uploaded-image-files.decorator';
 
 @ApiTags('Products')
 @Controller('/products')
@@ -87,22 +87,15 @@ export class ProductsController {
   async createProduct(
     @Body()
     createProductInput: CreateProductDTO,
-    @UploadedFiles()
+    @UploadedImageFiles()
     images: Express.Multer.File[],
   ): Promise<ProductResponseDTO> {
-    const acceptableType = /image\/(jpeg|png)/;
     const maxFileSizeInBytes = 1024 * 1024 * 20;
     if (!images) {
       throw new HttpException('No images provided', 400);
     }
 
     for (const image of images) {
-      if (!acceptableType.test(image.mimetype)) {
-        throw new HttpException(
-          `Unacceptable mime type: ${image.mimetype}`,
-          422,
-        );
-      }
       if (image.size > maxFileSizeInBytes) {
         throw new HttpException(
           `Max size of file in bytes: ${maxFileSizeInBytes}`,
@@ -127,7 +120,7 @@ export class ProductsController {
   @Put('/:id')
   async updateProduct(
     @Body() updateProductInput: UpdateProductDTO,
-    @UploadedFiles()
+    @UploadedImageFiles()
     images: Express.Multer.File[],
   ): Promise<ProductResponseDTO> {
     const product = await this.productsService.update(

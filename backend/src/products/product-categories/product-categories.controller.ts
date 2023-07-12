@@ -8,8 +8,6 @@ import {
   Param,
   ParseIntPipe,
   UseInterceptors,
-  UploadedFile,
-  HttpException,
   Query,
 } from '@nestjs/common';
 import {
@@ -31,6 +29,7 @@ import {
   ProductCategoryListOutputDTO,
 } from './dto/product-categories-response.dto';
 import { GetProductCategoriesDTO } from './dto/get-product-categories.dto';
+import { UploadedImageFile } from 'src/common/decorators/uploaded-image-file.decorator';
 
 @ApiTags('Product categories')
 @Controller('product-categories')
@@ -97,16 +96,9 @@ export class ProductCategoriesController {
   async createProductCategory(
     @Body()
     createProductCategoryDTO: CreateProductCategoryDTO,
-    @UploadedFile() icon: Express.Multer.File,
+    @UploadedImageFile()
+    icon: Express.Multer.File,
   ): Promise<ProductCategoryResponseDTO> {
-    const acceptableType = /image\/(jpeg|png)/;
-    if (!acceptableType.test(icon.mimetype)) {
-      throw new HttpException(
-        `Такой тип файла не поддерживается: ${icon.mimetype}`,
-        422,
-      );
-    }
-
     const category = await this.productCategoriesService.create(
       createProductCategoryDTO,
       icon,
@@ -127,7 +119,8 @@ export class ProductCategoriesController {
   @Put('')
   async updateProductCategoryIcon(
     @Body() updateProductCategoryDTO: UpdateProductCategoryDTO,
-    @UploadedFile() icon?: Express.Multer.File,
+    @UploadedImageFile()
+    icon?: Express.Multer.File,
   ): Promise<ProductCategoryResponseDTO> {
     const category = await this.productCategoriesService.update(
       updateProductCategoryDTO.id,
