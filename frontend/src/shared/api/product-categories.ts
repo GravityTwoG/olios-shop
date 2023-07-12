@@ -45,6 +45,31 @@ export const fetchCategories = async (
   return ProductCategoryListSchema.parse(response.data).data;
 };
 
+export type UpdateCategoryDTO = {
+  id: number;
+} & Partial<{ name: string; categoryIcon: Blob }>;
+
+export const updateCategory = async (
+  category: UpdateCategoryDTO,
+): Promise<IProductCategory> => {
+  const formData = new FormData();
+  formData.append('id', category.id.toString());
+  if (category.name) {
+    formData.append('name', category.name);
+  }
+  if (category.categoryIcon) {
+    formData.append('icon', category.categoryIcon);
+  }
+
+  const response = await axiosInstance.put(`${BASE_ROUTE}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return ProductCategoryResponseSchema.parse(response.data).data;
+};
+
 export const deleteCategory = async (categoryId: number): Promise<void> => {
   await axiosInstance.delete(`${BASE_ROUTE}/${categoryId}`);
 };

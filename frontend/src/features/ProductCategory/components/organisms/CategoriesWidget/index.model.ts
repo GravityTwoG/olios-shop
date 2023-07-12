@@ -7,6 +7,10 @@ import { IProductCategory } from '@/src/types/IProductCategory';
 import * as categoriesApi from '@/src/shared/api/product-categories';
 import { ApiError, ListDTO } from '@/src/shared/api/lib';
 import { categoryCreated } from '../AddNewCategory/index.model';
+import {
+  categoryDeleted,
+  categoryUpdated,
+} from './ProductCategoryItem/index.model';
 
 const fetchCategoriesFx = createEffect<
   {
@@ -50,7 +54,13 @@ sample({
     pageNumber: $pageNumber,
     name: $searchQuery,
   },
-  clock: [mounted, searchTriggered, categoryCreated],
+  clock: [
+    mounted,
+    searchTriggered,
+    categoryCreated,
+    categoryUpdated,
+    categoryDeleted,
+  ],
   target: fetchCategoriesFx,
 });
 
@@ -77,35 +87,3 @@ $pageNumber.on(fetchCategoriesFx.doneData, (_, { pageNumber }) => pageNumber);
 fetchCategoriesFx.failData.watch((e) => toast.error(e.message));
 
 $isPending.on(fetchCategoriesFx.finally, () => false);
-
-//
-const deleteCategoryFx = createEffect<number, void, ApiError>(
-  (categoryId: number) => {
-    return categoriesApi.deleteCategory(categoryId);
-  },
-);
-
-export const $isDeleting = createStore(false);
-
-export const deleteCategory = createEvent<number>('Delete category');
-
-sample({
-  clock: deleteCategory,
-  target: deleteCategoryFx,
-});
-
-$isDeleting.on(deleteCategoryFx, () => true);
-
-deleteCategoryFx.failData.watch((e) => toast.error(e.message));
-
-$isDeleting.on(deleteCategoryFx.finally, () => false);
-
-sample({
-  source: {
-    pageSize: $pageSize,
-    pageNumber: $pageNumber,
-    name: $searchQuery,
-  },
-  clock: deleteCategoryFx.done,
-  target: fetchCategoriesFx,
-});

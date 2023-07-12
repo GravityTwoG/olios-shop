@@ -6,9 +6,15 @@ import { ReactTagProps } from '../../types';
 
 import { Spinner } from '../Spinner';
 
+const colorMap = {
+  primary: undefined,
+  secondary: classes.ColorSecondary,
+  danger: classes.ColorDanger,
+};
+
 export type ButtonProps = {
   isLoading?: boolean;
-  color?: 'primary' | 'secondary';
+  color?: 'primary' | 'secondary' | 'danger';
 } & ReactTagProps<'button'>;
 
 export const Button: React.FC<ButtonProps> = ({
@@ -21,10 +27,15 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       {...props}
       type={type}
-      className={clsx(classes.BaseButton, 'relative', props.className, {
-        [classes.ColorSecondary]: color === 'secondary',
-        [classes.isLoading]: isLoading,
-      })}
+      className={clsx(
+        classes.BaseButton,
+        'relative',
+        props.className,
+        colorMap[color],
+        {
+          [classes.isLoading]: isLoading,
+        },
+      )}
       disabled={props.disabled || isLoading}
     >
       <span className={clsx('-z-10', isLoading ? 'opacity-0' : 'opacity-100')}>
