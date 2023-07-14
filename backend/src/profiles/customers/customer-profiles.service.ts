@@ -24,7 +24,7 @@ export class CustomerProfilesService {
       },
     });
     // create basket for customer
-    await this.basketsService.createBasketInTransaction(profile.id, prisma);
+    await this.basketsService.createBasket(profile.id, prisma);
 
     return profile;
   }

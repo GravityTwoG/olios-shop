@@ -16,6 +16,7 @@ import { ApiConsumes, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UploadedImageFiles } from 'src/common/decorators/uploaded-image-files.decorator';
 
 import { ProductsService } from './products.service';
 import { ProductMapper } from './product.mapper';
@@ -27,7 +28,7 @@ import {
   ProductsListResponseDTO,
 } from './dto/products-response.dto';
 import { GetProductsDTO } from './dto/get-products.dto';
-import { UploadedImageFiles } from 'src/common/decorators/uploaded-image-files.decorator';
+import { GetRecommendedProductsDTO } from './dto/get-recommended-products.dto';
 
 @ApiTags('Products')
 @Controller('/products')
@@ -61,6 +62,40 @@ export class ProductsController {
     }
 
     const data = await this.productsService.findAll(params);
+    return plainToInstance(ProductsListResponseDTO, {
+      data: {
+        count: data.count,
+        list: data.list.map(this.mapper.mapToProductDTO),
+      },
+    });
+  }
+
+  @Get('/recommended')
+  async recommended(
+    @Query()
+    query: GetRecommendedProductsDTO,
+  ): Promise<ProductsListResponseDTO> {
+    const params: Parameters<typeof this.productsService.getRecommended>[0] = {
+      take: query.take,
+      skip: query.skip,
+      where: { categoryId: query.productId },
+    };
+
+    if (query.searchQuery && params.where) {
+      const searchQuery = query.searchQuery;
+      const formatted = searchQuery.split(' ').join(' | ');
+      params.where.OR = [
+        { name: { contains: searchQuery, mode: 'insensitive' } },
+        { name: { search: formatted, mode: 'insensitive' } },
+        { description: { contains: searchQuery, mode: 'insensitive' } },
+        { description: { search: formatted, mode: 'insensitive' } },
+      ];
+    }
+
+    const data = await this.productsService.getRecommended(
+      params,
+      query.productId,
+    );
     return plainToInstance(ProductsListResponseDTO, {
       data: {
         count: data.count,
