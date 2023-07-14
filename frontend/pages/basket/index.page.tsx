@@ -1,57 +1,73 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import classes from './basket.module.scss';
 
-import classes from './basket.module.sass';
-import { IProduct } from '@/src/types/IProduct';
+import { useUnit } from 'effector-react';
+import { $cart, $isCartPending, pageMounted, removeFromCart } from './model';
+
 import { paths } from '@/src/paths';
 
 import { PrivatePage } from '@/src/features/Auth';
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { Preloader } from '@/src/ui/molecules/Preloader';
 
 function Basket() {
-  const products: (IProduct & { quantity: number })[] = [];
+  const [cart, isCartPending] = useUnit([$cart, $isCartPending]);
 
-  const renderProducts = () => {
-    if (products) {
-      return products.map((product) => {
-        return (
-          <div className={classes['basket-item']} key={product.id}>
-            <Image
-              src={product.thumbUrl}
-              alt={product.name}
-              className={classes['basket-item__img']}
-            />
-            <div className="basket-item__inner">
-              <Link
-                href={paths.product({ id: product.id.toString() })}
-                className={classes['basket-item__name']}
-              >
-                {product.name}
-              </Link>
-              <div className={classes['basket-item__quantity']}>
-                Qty: {product.quantity}
-              </div>
-              <div className={classes['basket-item__price']}>
-                {product.realPrice}
-              </div>
-              <button
-                className={classes['basket-item__delete']}
-                onClick={() => {
-                  // props.deleteItem(product.productId);
-                }}
-              />
-            </div>
-          </div>
-        );
-      });
-    }
-  };
+  useEffect(() => {
+    pageMounted();
+  }, []);
 
   return (
     <div className={classes['basket-page']}>
       <div className={classes['basket-page__title']}>Basket</div>
-      <div className={classes['basket']}>{renderProducts()}</div>
+      <Preloader isLoading={isCartPending}>
+        <ul>
+          {cart.items.map((item) => {
+            return (
+              <li className={classes['basket-item']} key={item.id}>
+                <Link
+                  href={paths.product({ id: item.productId.toString() })}
+                  className={classes['basket-item-thumb']}
+                >
+                  <Image
+                    src={item.thumbUrl}
+                    alt={item.productName}
+                    width={150}
+                    height={150}
+                    className={classes['basket-item__img']}
+                  />
+                </Link>
+
+                <div className={classes['basket-item__inner']}>
+                  <Link
+                    href={paths.product({ id: item.productId.toString() })}
+                    className={classes['basket-item__name']}
+                  >
+                    {item.productName}
+                  </Link>
+                  <div className={classes['basket-item__quantity']}>
+                    Qty: {item.quantity}
+                  </div>
+                  <div className={classes['basket-item__price']}>
+                    {item.realPrice}
+                  </div>
+                  <button
+                    className={classes['basket-item__delete']}
+                    title="Remove from cart"
+                    aria-label="Remove from cart"
+                    onClick={() => {
+                      removeFromCart(item.id);
+                    }}
+                  />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </Preloader>
+
       <div className={classes['order']} />
     </div>
   );
