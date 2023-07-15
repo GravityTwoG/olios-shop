@@ -4,6 +4,7 @@ import { ICartItem } from '@/src/types/ICart';
 import { toast } from '@/src/shared/toasts';
 import * as cartApi from '@/src/shared/api/cart';
 
+// Effects
 const fetchCartFx = createEffect(() => {
   return cartApi.fetchCart();
 });
@@ -12,6 +13,11 @@ const removeFromCartFx = createEffect<string, ICartItem>(async (cartItemId) => {
   return cartApi.removeFromCart(cartItemId);
 });
 
+// Events
+export const pageMounted = createEvent('Cart page mounted');
+export const removeFromCart = createEvent<string>('Remove from cart');
+
+// Stores
 export const $cart = createStore<{ id: string; items: ICartItem[] }>({
   id: '',
   items: [],
@@ -19,9 +25,6 @@ export const $cart = createStore<{ id: string; items: ICartItem[] }>({
 
 export const $isCartPending = createStore(false);
 export const $isRemoving = createStore(false);
-
-export const pageMounted = createEvent('Cart page mounted');
-export const removeFromCart = createEvent<string>('Remove from cart');
 
 sample({
   clock: [pageMounted, removeFromCartFx.done],

@@ -7,6 +7,7 @@ import { toast } from '@/src/shared/toasts';
 import * as productsApi from '@/src/shared/api/products';
 import * as cartApi from '@/src/shared/api/cart';
 
+// Effects
 const fetchProductFx = createEffect<number, IProduct>(async (productId) => {
   return productsApi.fetchProduct(productId);
 });
@@ -38,6 +39,13 @@ const fetchRecommendedProductsFx = createEffect<number, IProduct[]>(
   },
 );
 
+// Events
+export const pageMounted = createEvent<number>('Product page mounted');
+export const amountInCartChanged = createEvent<number>('Add to cart');
+export const addToCart = createEvent('Add to cart');
+export const removeFromCart = createEvent('Remove from cart');
+
+// Stores
 export const $product = createStore<IProduct>({
   id: 0,
   name: 'Product name',
@@ -69,11 +77,6 @@ export const $recommendedProducts = createStore<IProduct[]>([]);
 
 export const $areRecommendedProductsPending = createStore(false);
 
-export const pageMounted = createEvent<number>('Product page mounted');
-export const amountInCartChanged = createEvent<number>('Add to cart');
-export const addToCart = createEvent('Add to cart');
-export const removeFromCart = createEvent('Remove from cart');
-
 reset({
   clock: pageMounted,
   target: [$product, $isProductPending, $recommendedProducts],
@@ -84,7 +87,7 @@ sample({
   target: [fetchProductFx, checkIsInCartFx, fetchRecommendedProductsFx],
 });
 
-//
+// Fetch product
 $isProductPending.on(fetchProductFx, () => true);
 
 $product.on(fetchProductFx.doneData, (_, product) => product);
@@ -93,7 +96,7 @@ fetchProductFx.failData.watch((error) => toast.error(error.message));
 
 $isProductPending.on(fetchProductFx.finally, () => false);
 
-//
+// Fetch recommended products
 $areRecommendedProductsPending.on(fetchRecommendedProductsFx, () => true);
 
 $recommendedProducts.on(
@@ -110,6 +113,7 @@ $areRecommendedProductsPending.on(
   () => false,
 );
 
+// Check if product is in cart, Add to Cart, Remove from Cart
 sample({
   clock: addToCart,
   source: {

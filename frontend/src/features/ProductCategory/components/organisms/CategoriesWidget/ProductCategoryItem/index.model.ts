@@ -4,6 +4,7 @@ import * as categoriesApi from '@/src/shared/api/product-categories';
 import { toast } from '@/src/shared/toasts';
 import { ApiError } from '@/src/shared/api';
 
+// Effects
 export const updateCategoryFx = createEffect<
   categoriesApi.UpdateCategoryDTO,
   void,
@@ -18,11 +19,13 @@ const deleteCategoryFx = createEffect<number, void, ApiError>(
   },
 );
 
-export const $isDeleting = createStore(false);
-
+// Events
 export const deleteCategory = createEvent<number>('Delete category');
 export const categoryUpdated = updateCategoryFx.done;
 export const categoryDeleted = deleteCategoryFx.done;
+
+// Stores
+export const $isDeleting = createStore(false);
 
 sample({
   clock: deleteCategory,

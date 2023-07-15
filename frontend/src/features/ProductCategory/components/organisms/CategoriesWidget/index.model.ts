@@ -12,6 +12,7 @@ import {
   categoryUpdated,
 } from './ProductCategoryItem/index.model';
 
+// Effects
 const fetchCategoriesFx = createEffect<
   {
     pageSize: number;
@@ -29,17 +30,19 @@ const fetchCategoriesFx = createEffect<
   return { ...result, pageNumber };
 });
 
+// Events
+export const mounted = createEvent('Mounted');
+export const loadPage = createEvent<number>('Load page');
+export const searchQueryChanged = createEvent<string>('Search query changed');
+const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
+
+// Stores
 export const $categories = createStore<IProductCategory[]>([]);
 export const $categoriesCount = createStore(0);
 export const $searchQuery = createStore('');
 export const $pageSize = createStore(12);
 export const $pageNumber = createStore(0);
 export const $isPending = createStore(false);
-
-export const mounted = createEvent('Mounted');
-export const loadPage = createEvent<number>('Load page');
-export const searchQueryChanged = createEvent<string>('Search query changed');
-const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
 
 $searchQuery.on(searchQueryChanged, (_, newQuery) => newQuery);
 
@@ -49,11 +52,6 @@ reset({
 });
 
 sample({
-  source: {
-    pageSize: $pageSize,
-    pageNumber: $pageNumber,
-    name: $searchQuery,
-  },
   clock: [
     mounted,
     searchTriggered,
@@ -61,15 +59,20 @@ sample({
     categoryUpdated,
     categoryDeleted,
   ],
+  source: {
+    pageSize: $pageSize,
+    pageNumber: $pageNumber,
+    name: $searchQuery,
+  },
   target: fetchCategoriesFx,
 });
 
 sample({
+  clock: loadPage,
   source: {
     pageSize: $pageSize,
     name: $searchQuery,
   },
-  clock: loadPage,
   fn: ({ pageSize, name }, pageNumber) => ({ pageSize, pageNumber, name }),
   target: fetchCategoriesFx,
 });

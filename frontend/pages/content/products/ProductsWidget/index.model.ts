@@ -8,6 +8,7 @@ import { ApiError, ListDTO } from '@/src/shared/api/lib';
 import { IProduct } from '@/src/types/IProduct';
 import { productCreated } from '../index.model';
 
+// Effects
 const fetchProductsFx = createEffect<
   {
     pageSize: number;
@@ -25,17 +26,19 @@ const fetchProductsFx = createEffect<
   return { ...result, pageNumber };
 });
 
+// Events
+export const mounted = createEvent('Mounted');
+export const loadPage = createEvent<number>('Load page');
+export const searchQueryChanged = createEvent<string>('Search query changed');
+const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
+
+// Stores
 export const $products = createStore<IProduct[]>([]);
 export const $productsCount = createStore(0);
 export const $searchQuery = createStore('');
 export const $pageSize = createStore(12);
 export const $pageNumber = createStore(0);
 export const $isPending = createStore(false);
-
-export const mounted = createEvent('Mounted');
-export const loadPage = createEvent<number>('Load page');
-export const searchQueryChanged = createEvent<string>('Search query changed');
-const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
 
 $searchQuery.on(searchQueryChanged, (_, newQuery) => newQuery);
 
@@ -45,21 +48,21 @@ reset({
 });
 
 sample({
+  clock: [mounted, searchTriggered, productCreated],
   source: {
     pageSize: $pageSize,
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  clock: [mounted, searchTriggered, productCreated],
   target: fetchProductsFx,
 });
 
 sample({
+  clock: loadPage,
   source: {
     pageSize: $pageSize,
     searchQuery: $searchQuery,
   },
-  clock: loadPage,
   fn: ({ pageSize, searchQuery }, pageNumber) => ({
     pageSize,
     pageNumber,
