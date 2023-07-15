@@ -1,49 +1,60 @@
 import React from 'react';
+import clsx from 'clsx';
 import classes from './menu.module.scss';
 
-import { NavLink } from '../../atoms/NavLink';
-import Category from '../../molecules/Category';
+import useSWR from 'swr';
+
+import { IProductCategory } from '@/src/types/IProductCategory';
+import { ApiError } from '@/src/shared/api';
+import { ListDTO } from '@/src/shared/api/lib';
+import { fetchCategories } from '@/src/shared/api/product-categories';
+import { toast } from '@/src/shared/toasts';
+
 import { paths } from '@/src/paths';
 
-function Categories() {
-  return (
-    <div className={classes.categories}>
-      <Category name="Living room" href={paths.home({}) + '?categoryId=' + 1}>
-        <img src="/category-icons/Living-room.png" alt="" />
-      </Category>
-      <Category name="Office" href={paths.home({}) + '?categoryId=' + 2}>
-        <img src="/category-icons/Office.png" alt="" />
-      </Category>
-      <Category name="For kids" href={paths.home({}) + '?categoryId=' + 3}>
-        <img src="/category-icons/For-kids.png" alt="" />
-      </Category>
-      <Category name="Kitchen" href={paths.home({}) + '?categoryId=' + 4}>
-        <img src="/category-icons/Kitchen.png" alt="" />
-      </Category>
-      <Category name="Accessories" href={paths.home({}) + '?categoryId=' + 5}>
-        <img src="/category-icons/Accessories.png" alt="" />
-      </Category>
-    </div>
-  );
-}
+import { NavLink } from '../../atoms/NavLink';
+import { ProductCategoryLink } from '@/src/shared/components/ProductCategoryLink';
+
+const fetchCategoriesSWR = () => fetchCategories({ take: 8, skip: 0 });
 
 export type MenuProps = {
   isOpened: boolean;
   className?: string;
+  onClose: () => void;
 };
 
 export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
   (props, ref) => {
+    const { data } = useSWR<ListDTO<IProductCategory>, ApiError>(
+      '/api/product-categories',
+      fetchCategoriesSWR,
+      {
+        onError: (e) => {
+          toast.error(e.message);
+        },
+      },
+    );
+
+    const categories = data ? data.list : [];
+
     return (
       <div
         ref={ref}
-        className={
-          props.isOpened
-            ? `${classes.Menu} ${classes['Menu--active']} ${props.className}`
-            : `${classes.Menu} ${props.className}`
-        }
+        className={clsx(
+          classes.Menu,
+          props.className,
+          props.isOpened && classes['Menu--active'],
+        )}
       >
-        <Categories />
+        <div className={classes.categories}>
+          {categories.map((category) => (
+            <ProductCategoryLink
+              key={category.id}
+              categoryId={category.id}
+              onClick={props.onClose}
+            />
+          ))}
+        </div>
 
         <NavLink href={paths.home({})} className={classes.showAll}>
           Show All Categories

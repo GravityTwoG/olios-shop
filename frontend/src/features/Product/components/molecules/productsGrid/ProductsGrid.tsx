@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import classes from './products-grid.module.sass';
+import classes from './products-grid.module.scss';
 
 type ProductsGridProps = {
   children: ReactNode;

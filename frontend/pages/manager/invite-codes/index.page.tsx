@@ -31,6 +31,7 @@ import { Container } from '@/src/ui/atoms/Container';
 import { AppLink } from '@/src/ui/atoms/AppLink';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
+import { RoleBadge } from '@/src/shared/components/RoleBadge';
 
 const headers = [
   { key: 'name', node: 'Name' },
@@ -96,7 +97,7 @@ export function InviteCodesPage() {
             cols: [
               `${invite.firstName} ${invite.lastName} ${invite.patronymic}`,
               invite.birthDate,
-              invite.role,
+              <RoleBadge key="role" role={invite.role} />,
               invite.code,
               <div
                 key="action"

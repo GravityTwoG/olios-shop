@@ -1,0 +1,38 @@
+$gray: #c1c1c1;
+
+.category {
+  padding: 5px 8px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 18px;
+  color: $gray;
+  text-align: center;
+  transition: color 0.2s;
+  &:hover {
+    color: var(--accent-color);
+  }
+
+  span {
+    white-space: nowrap;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+  }
+
+  &.active {
+    color: var(--accent-color);
+  }
+
+  @media screen and (max-width: 757px) {
+    img {
+      width: 35px;
+      height: 35px;
+    }
+  }
+}
