@@ -1,7 +1,5 @@
-import { createEffect } from 'effector';
-
 import { IUser } from '@/src/types/IUser';
-import { axiosInstance, ApiError } from './lib';
+import { axiosInstance } from './lib';
 
 import { UserResponseSchema } from './users';
 
@@ -23,48 +21,40 @@ export type IRegisterEmployeeCredentials = {
   inviteCode: string;
 };
 
-export const loginFx = createEffect<ILoginCredentials, IUser, ApiError>(
-  async (credentials): Promise<IUser> => {
-    const res = await axiosInstance.post(`${BASE_ROUTE}/login`, {
-      ...credentials,
-    });
+export const register = async (
+  credentials: IRegisterCredentials,
+): Promise<IUser> => {
+  const res = await axiosInstance.post(`${BASE_ROUTE}/register-customer`, {
+    ...credentials,
+  });
 
-    return UserResponseSchema.parse(res.data).data;
-  },
-);
+  return UserResponseSchema.parse(res.data).data;
+};
 
-export const registerFx = createEffect<IRegisterCredentials, IUser, ApiError>(
-  async (credentials): Promise<IUser> => {
-    const res = await axiosInstance.post(`${BASE_ROUTE}/register-customer`, {
-      ...credentials,
-    });
-
-    return UserResponseSchema.parse(res.data).data;
-  },
-);
-
-export const registerEmployeeFx = createEffect<
-  IRegisterEmployeeCredentials,
-  IUser,
-  ApiError
->(async (credentials): Promise<IUser> => {
+export const registerEmployee = async (
+  credentials: IRegisterEmployeeCredentials,
+): Promise<IUser> => {
   const res = await axiosInstance.post(`${BASE_ROUTE}/register-employee`, {
     ...credentials,
   });
 
   return UserResponseSchema.parse(res.data).data;
-});
+};
 
-export const fetchSessionFx = createEffect<void, IUser, ApiError>(
-  async (): Promise<IUser> => {
-    const res = await axiosInstance.get(`${BASE_ROUTE}/me`);
+export const login = async (credentials: ILoginCredentials): Promise<IUser> => {
+  const res = await axiosInstance.post(`${BASE_ROUTE}/login`, {
+    ...credentials,
+  });
 
-    return UserResponseSchema.parse(res.data).data;
-  },
-);
+  return UserResponseSchema.parse(res.data).data;
+};
 
-export const logoutFx = createEffect<void, void, ApiError>(
-  async (): Promise<void> => {
-    await axiosInstance.post(`${BASE_ROUTE}/logout`);
-  },
-);
+export const fetchSession = async (): Promise<IUser> => {
+  const res = await axiosInstance.get(`${BASE_ROUTE}/me`);
+
+  return UserResponseSchema.parse(res.data).data;
+};
+
+export const logout = async (): Promise<void> => {
+  await axiosInstance.post(`${BASE_ROUTE}/logout`);
+};

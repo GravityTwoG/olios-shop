@@ -1,16 +1,15 @@
-import { attach, createEvent, createStore, sample } from 'effector';
-import { and, every, not, or } from 'patronum';
+import { createEvent, createStore, sample } from 'effector';
+import { and, every, not } from 'patronum';
 
-import * as authApi from '@/src/shared/api/auth';
-import { fetchSessionFx } from '@/src/shared/session';
+import { loginFx } from '@/src/shared/auth';
 
-const loginFx = attach({ effect: authApi.loginFx });
-
+// Events
 export const emailChanged = createEvent<string>('Email changed');
 export const passwordChanged = createEvent<string>('Password changed');
 export const setLoginError = createEvent<string>('set loginError');
 export const formSubmitted = createEvent('Login form submitted');
 
+// Stores
 export const $email = createStore('');
 export const $emailError = createStore<null | 'empty' | 'invalid'>(null);
 
@@ -52,8 +51,8 @@ sample({
 });
 
 sample({
-  source: { email: $email, password: $password },
   clock: formSubmitted,
+  source: { email: $email, password: $password },
   filter: and($isFormValid, not($isLoginPending)),
   target: loginFx,
 });
@@ -63,8 +62,3 @@ $isLoginPending.on(loginFx, () => true);
 $loginError.on(loginFx.failData, (_, error) => error.message);
 
 $isLoginPending.on(loginFx.finally, () => false);
-
-sample({
-  clock: loginFx.done,
-  target: fetchSessionFx,
-});
