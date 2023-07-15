@@ -16,44 +16,11 @@ import {
   removeFromCart,
 } from './model';
 
-import { paths } from '@/src/paths';
-
-import Image from 'next/image';
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { ImageViewer } from '@/src/ui/atoms/ImageViewer';
-import Category from '@/src/ui/molecules/Category';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
-
-const categories: {
-  [index: string]: { label: React.ReactNode; icon: string };
-} = {
-  '0': {
-    label: 'living room',
-    icon: '/category-icons/Living-room.png',
-  },
-  '1': {
-    label: 'office',
-    icon: '/category-icons/Office.png',
-  },
-  '2': {
-    label: 'for kids',
-    icon: '/category-icons/For-kids.png',
-  },
-  kitchen: {
-    label: 'kitchen',
-    icon: '/category-icons/Kitchen.png',
-  },
-  accessories: {
-    label: 'accessories',
-    icon: '/category-icons/Accessories.png',
-  },
-};
-
-const getCategoryIcon = (category: string) => {
-  if (!categories[category]) return '';
-  return categories[category].icon;
-};
+import { ProductCategoryLink } from '@/src/shared/components/ProductCategoryLink';
 
 export default function ProductPageContainer() {
   const [
@@ -94,17 +61,9 @@ export default function ProductPageContainer() {
       <div className={classes['product__right']}>
         <div className={classes['product__right-inner']}>
           <div className={classes['product__header']}>
-            <Category
-              name={product.categoryName}
-              href={paths.home({}) + '?categoryId=' + product.categoryId}
-            >
-              <Image
-                src={getCategoryIcon(product.categoryName)}
-                width={50}
-                height={50}
-                alt=""
-              />
-            </Category>
+            {product.categoryId ? (
+              <ProductCategoryLink categoryId={product.categoryId} />
+            ) : null}
           </div>
 
           <div className={classes['product__info']}>

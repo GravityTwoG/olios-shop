@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
+import clsx from 'clsx';
 import classes from './burger-button.module.scss';
 
 export type BurgerButtonProps = {
   isOpened: boolean;
 } & React.HTMLAttributes<HTMLButtonElement>;
 
-export function BurgerButton(props: BurgerButtonProps) {
-  return (
-    <button
-      className={
-        props.isOpened
-          ? `${classes.BurgerButton} ${classes.BurgerButtonActive} ${props.className}`
-          : `${classes.BurgerButton} ${props.className}`
-      }
-      onClick={props.onClick}
-    >
-      <div />
-      <div />
-      <div />
-    </button>
-  );
-}
+export const BurgerButton = forwardRef<HTMLButtonElement, BurgerButtonProps>(
+  (props, ref) => {
+    return (
+      <button
+        {...props}
+        ref={ref}
+        className={clsx(
+          classes.BurgerButton,
+          props.className,
+          props.isOpened && classes.BurgerButtonActive,
+        )}
+      >
+        <div />
+        <div />
+        <div />
+      </button>
+    );
+  },
+);

@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import classes from './index.module.scss';
 
-import Head from 'next/head';
-import { ProductsGrid } from '@/src/features/Product/components/molecules/productsGrid/ProductsGrid';
-import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 import { useUnit } from 'effector-react';
 import {
   $isPending,
@@ -16,42 +13,13 @@ import {
   pageMounted,
   searchQueryChanged,
 } from './index.model';
+
+import Head from 'next/head';
+import { Container } from '@/src/ui/atoms/Container';
 import { Paginator } from '@/src/ui/molecules/Paginator';
 import { Preloader } from '@/src/ui/molecules/Preloader';
-import { Container } from '@/src/ui/atoms/Container';
-
-const categories = {
-  'living-room': {
-    label: 'living room',
-    icon: '/category-icons/Living-room.png',
-  },
-  office: {
-    label: 'office',
-    icon: '/category-icons/Office.png',
-  },
-  'for-kids': {
-    label: 'for kids',
-    icon: '/category-icons/For-kids.png',
-  },
-  kitchen: {
-    label: 'kitchen',
-    icon: '/category-icons/Kitchen.png',
-  },
-  accessories: {
-    label: 'accessories',
-    icon: '/category-icons/Accessories.png',
-  },
-};
-
-//  const computeCategory = useCallback((categoryUrl: string) => {
-//     if (!Object.hasOwn(categories, categoryUrl)) return;
-//     const category = categories[categoryUrl as keyof typeof categories];
-
-//     setState({
-//       category: category.label,
-//       categoryIcon: category.icon,
-//     });
-//   }, []);
+import { ProductsGrid } from '@/src/features/Product/components/molecules/productsGrid/ProductsGrid';
+import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 
 export function HomePage() {
   useEffect(() => {
