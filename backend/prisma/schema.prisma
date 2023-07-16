@@ -86,8 +86,8 @@ model Product {
 
   productImages ProductImage[] @relation
 
-  productCategory ProductCategory? @relation(fields: [categoryId], references: [id])
-  categoryId      Int?
+  productCategory ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  categoryId      Int
 
   basketItems BasketItem[]
   orderItems OrderItem[]
@@ -143,14 +143,16 @@ model BasketItem {
   id       String @id @default(uuid()) @db.Uuid
   quantity Int
 
-  basket   Basket @relation(fields: [basketId], references: [id])
+  basket   Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
   basketId String @db.Uuid
 
-  product   Product? @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
   productId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([basketId, productId])
 }
 
 //==========================================

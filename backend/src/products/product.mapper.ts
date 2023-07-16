@@ -18,7 +18,7 @@ export class ProductMapper {
     const returnValue = {
       id: product.id,
       categoryId: product.categoryId,
-      categoryName: product.productCategory ? product.productCategory.name : '',
+      categoryName: product.productCategory.name,
       description: product.description,
       name: product.name,
       oldPrice: product.oldPrice,

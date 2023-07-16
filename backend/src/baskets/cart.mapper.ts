@@ -21,7 +21,7 @@ export type CartItemJoined = {
       createdAt: Date;
       updatedAt: Date;
     }[];
-  } | null;
+  };
 };
 
 export type CartJoined = {
@@ -48,11 +48,11 @@ export class CartMapper {
       id: cartItem.id,
       quantity: cartItem.quantity,
       productId: cartItem.productId,
-      productName: cartItem.product?.name || '',
-      oldPrice: cartItem.product?.oldPrice || 0,
-      realPrice: cartItem.product?.realPrice || 0,
-      thumbUrl: cartItem.product?.productImages.length
-        ? `${this.storageUrl}/${cartItem.product?.productImages[0].imagePath}`
+      productName: cartItem.product.name,
+      oldPrice: cartItem.product.oldPrice,
+      realPrice: cartItem.product.realPrice,
+      thumbUrl: cartItem.product.productImages.length
+        ? `${this.storageUrl}/${cartItem.product.productImages[0].imagePath}`
         : '',
     };
   };

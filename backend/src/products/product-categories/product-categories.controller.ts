@@ -19,6 +19,9 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { plainToInstance } from 'class-transformer';
 
+import { UploadedImageFile } from 'src/common/decorators/uploaded-image-file.decorator';
+import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
+
 import { ProductCategoriesService } from './product-categories.service';
 import { ProductCategoryMapper } from './product-category.mapper';
 
@@ -29,7 +32,6 @@ import {
   ProductCategoryListOutputDTO,
 } from './dto/product-categories-response.dto';
 import { GetProductCategoriesDTO } from './dto/get-product-categories.dto';
-import { UploadedImageFile } from 'src/common/decorators/uploaded-image-file.decorator';
 
 @ApiTags('Product categories')
 @Controller('product-categories')
@@ -52,15 +54,7 @@ export class ProductCategoriesController {
 
     if (query.name) {
       params.where = {
-        OR: [
-          { name: { contains: query.name, mode: 'insensitive' } },
-          {
-            name: {
-              search: query.name.split(' ').join(' | '),
-              mode: 'insensitive',
-            },
-          },
-        ],
+        OR: [...createSearchQuery('name', query.name)],
       };
     }
 

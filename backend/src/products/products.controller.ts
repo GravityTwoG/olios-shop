@@ -17,6 +17,7 @@ import { plainToInstance } from 'class-transformer';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UploadedImageFiles } from 'src/common/decorators/uploaded-image-files.decorator';
+import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
 
 import { ProductsService } from './products.service';
 import { ProductMapper } from './product.mapper';
@@ -49,16 +50,7 @@ export class ProductsController {
     };
 
     if (query.searchQuery) {
-      const searchQuery = query.searchQuery;
-      const formatted = searchQuery.split(' ').join(' | ');
-      params.where = {
-        OR: [
-          { name: { contains: searchQuery, mode: 'insensitive' } },
-          { name: { search: formatted, mode: 'insensitive' } },
-          { description: { contains: searchQuery, mode: 'insensitive' } },
-          { description: { search: formatted, mode: 'insensitive' } },
-        ],
-      };
+      params.where = this.createSearchQuery(query.searchQuery);
     }
 
     const data = await this.productsService.findAll(params);
@@ -68,6 +60,20 @@ export class ProductsController {
         list: data.list.map(this.mapper.mapToProductDTO),
       },
     });
+  }
+
+  private createSearchQuery(searchQuery: string) {
+    return {
+      OR: [
+        ...createSearchQuery('name', searchQuery),
+        ...createSearchQuery('description', searchQuery),
+        {
+          productCategory: {
+            OR: createSearchQuery('name', searchQuery),
+          },
+        },
+      ],
+    };
   }
 
   @Get('/recommended')
@@ -82,14 +88,7 @@ export class ProductsController {
     };
 
     if (query.searchQuery && params.where) {
-      const searchQuery = query.searchQuery;
-      const formatted = searchQuery.split(' ').join(' | ');
-      params.where.OR = [
-        { name: { contains: searchQuery, mode: 'insensitive' } },
-        { name: { search: formatted, mode: 'insensitive' } },
-        { description: { contains: searchQuery, mode: 'insensitive' } },
-        { description: { search: formatted, mode: 'insensitive' } },
-      ];
+      params.where.OR = this.createSearchQuery(query.searchQuery).OR;
     }
 
     const data = await this.productsService.getRecommended(
