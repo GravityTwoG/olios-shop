@@ -44,6 +44,10 @@ export class CartDTO {
   @ValidateNested({ each: true })
   @Type(() => CartItemDTO)
   items: CartItemDTO[];
+
+  @ApiProperty()
+  @IsInt()
+  total: number;
 }
 
 export class CartResponseDTO extends BaseResponseDTO(CartDTO) {}
