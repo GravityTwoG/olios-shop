@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { AppConfigService } from 'src/config/configuration.schema';
+import { CartDTO, CartItemDTO } from './dto/cart.dto';
 
 export type CartItemJoined = {
   id: string;
@@ -36,14 +37,20 @@ export class CartMapper {
     this.storageUrl = configService.get('FILE_STORAGE_URL', { infer: true });
   }
 
-  mapToCartDTO = (cart: CartJoined) => {
+  mapToCartDTO = (cart: CartJoined): CartDTO => {
+    const total = cart.basketItems.reduce(
+      (acc, item) => acc + item.product.realPrice,
+      0,
+    );
+
     return {
       id: cart.id,
       items: cart.basketItems.map(this.mapToCartItemDTO),
+      total: total,
     };
   };
 
-  mapToCartItemDTO = (cartItem: CartItemJoined) => {
+  mapToCartItemDTO = (cartItem: CartItemJoined): CartItemDTO => {
     return {
       id: cartItem.id,
       quantity: cartItem.quantity,
