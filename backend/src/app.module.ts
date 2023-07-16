@@ -21,6 +21,7 @@ import { ProductsModule } from './products/products.module';
 import { ProductCategoriesModule } from './products/product-categories/product-categories.module';
 
 import { GlobalExceptionFilter } from './global.exception-filter';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { GlobalExceptionFilter } from './global.exception-filter';
     BasketsModule,
     ProductsModule,
     ProductCategoriesModule,
+    OrdersModule,
   ],
   providers: [{ provide: APP_FILTER, useClass: GlobalExceptionFilter }],
 })

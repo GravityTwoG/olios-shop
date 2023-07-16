@@ -59,12 +59,6 @@ model User {
 
 model CustomerProfile {
   id      String @id @default(uuid()) @db.Uuid
-  country String @default("") @db.VarChar
-  city    String @default("") @db.VarChar
-  street  String @default("") @db.VarChar
-  house   String @default("") @db.VarChar
-  floor   Int    @default(1)
-  flat    String @default("") @db.VarChar
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique() @db.Uuid
@@ -156,30 +150,48 @@ model BasketItem {
 }
 
 //==========================================
-
+enum OrderStatus {
+  CREATED
+  CANCELED
+  PAID
+  DELIVERED
+}
 
 model Order {
   id String @id @default(uuid()) @db.Uuid
 
-  customerProfile   CustomerProfile @relation(fields: [customerProfileId], references: [id])
+  customerProfile   CustomerProfile @relation(fields: [customerProfileId], references: [id], onDelete: Restrict)
   customerProfileId String          @db.Uuid
 
+  status     OrderStatus @default(CREATED)
   orderItems OrderItem[]
+
+  country String @db.VarChar
+  city    String @db.VarChar
+  street  String @db.VarChar
+  house   String @db.VarChar
+  floor   Int?    
+  flat    String? @db.VarChar
+
+  name  String @db.VarChar
+  phone String @db.VarChar
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model OrderItem {
-  id       String @id @default(uuid()) @db.Uuid
-  quantity Int
-  price    Int
+  id        String @id @default(uuid()) @db.Uuid
 
-  order    Order @relation(fields: [orderId], references: [id])
-  orderId String @db.Uuid
+  order     Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String @db.Uuid
 
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
   productId Int
+  name      String
+  price     Int
+  
+  quantity  Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
