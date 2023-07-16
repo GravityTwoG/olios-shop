@@ -14,7 +14,7 @@ const includes = {
 };
 
 export type ProductEntity = Product & {
-  productCategory: ProductCategory | null;
+  productCategory: ProductCategory;
   productImages: ProductImage[];
 };
 

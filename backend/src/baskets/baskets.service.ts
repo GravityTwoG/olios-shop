@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { Basket, BasketItem, Prisma } from '@prisma/client';
+import { Basket, Prisma } from '@prisma/client';
 
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
