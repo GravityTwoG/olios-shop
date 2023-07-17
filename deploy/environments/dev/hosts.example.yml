@@ -1,0 +1,6 @@
+all:
+  children:
+    olios_shop:
+      hosts:
+        test1:
+          ansible_host: 10.0.2.101
