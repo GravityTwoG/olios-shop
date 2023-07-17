@@ -15,6 +15,7 @@ import { ListDTO } from '@/src/shared/api/lib/types';
 
 const PAGE_SIZE = 12;
 
+// Effects
 export const fetchInviteCodesFx = createEffect<
   { pageSize: number; pageNumber: number; searchQuery: string },
   ListDTO<IInviteCode> & { pageNumber: number },
@@ -29,11 +30,13 @@ export const fetchInviteCodesFx = createEffect<
   return { ...data, pageNumber };
 });
 
+// Events
 export const pageMounted = createEvent('Page mounted');
 export const loadPage = createEvent<number>('Load another page');
 export const searchQueryChanged = createEvent<string>('Search query changed');
 const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
 
+// Stores
 export const $inviteCodes = createStore<IInviteCode[]>([]);
 export const $inviteCodesCount = createStore(0);
 export const $isPending = createStore(false);
@@ -50,18 +53,18 @@ reset({
 });
 
 sample({
+  clock: pageMounted,
   source: combine({
     pageSize: $pageSize,
     pageNumber: 0,
     searchQuery: $searchQuery,
   }),
-  clock: pageMounted,
   target: fetchInviteCodesFx,
 });
 
 sample({
-  source: { pageSize: $pageSize, searchQuery: $searchQuery },
   clock: loadPage,
+  source: { pageSize: $pageSize, searchQuery: $searchQuery },
   fn: ({ pageSize, searchQuery }, pageNumber) => ({
     pageSize,
     pageNumber,
@@ -71,12 +74,12 @@ sample({
 });
 
 sample({
+  clock: searchTriggered,
   source: {
     pageSize: $pageSize,
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  clock: searchTriggered,
   target: fetchInviteCodesFx,
 });
 
@@ -111,11 +114,11 @@ $isDeleting.on(deleteInviteCodeFx, () => true);
 $isDeleting.on(deleteInviteCodeFx.finally, () => false);
 
 sample({
+  clock: deleteInviteCodeFx.done,
   source: {
     pageSize: $pageSize,
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  clock: deleteInviteCodeFx.done,
   target: fetchInviteCodesFx,
 });

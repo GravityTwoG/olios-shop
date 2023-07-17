@@ -1,9 +1,11 @@
 import React from 'react';
+import clsx from 'clsx';
 import classes from './sidebar.module.scss';
 
 import { paths } from '@/src/paths';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { NavLink } from '../../atoms/NavLink';
 import { BurgerButton } from '../../molecules/BurgerButton';
 
@@ -16,18 +18,35 @@ export type SidebarProps = {
   className?: string;
   onBurgerMenuClick: () => void;
   burgerMenuOpened: boolean;
+  burgerButtonRef: React.RefObject<HTMLButtonElement>;
 };
 
 export default function Sidebar(props: SidebarProps) {
   return (
-    <aside className={`${classes.sidebar} ${props.className}`}>
+    <aside className={clsx(classes.sidebar, props.className)}>
       <Link href={paths.home({})} className={classes.SidebarLogo}>
-        <img src="/LOGO.png" alt="Olios Shop" />
+        <Image width={100} height={100} src="/LOGO.png" alt="Olios Shop" />
       </Link>
 
-      <MainNavigation />
+      <nav className={classes.nav}>
+        <NavLink
+          href={paths.home({})}
+          className={classes.NavItem}
+          activeClassName={classes.NavItemActive}
+        >
+          <HomeIcon />
+        </NavLink>
 
-      <div>
+        <NavLink
+          href={paths.basket({})}
+          className={classes.NavItem}
+          activeClassName={classes.NavItemActive}
+        >
+          <BasketIcon />
+        </NavLink>
+      </nav>
+
+      <nav className={classes.nav}>
         <NavLink
           href={paths.profile({})}
           className={classes.NavItem}
@@ -35,6 +54,7 @@ export default function Sidebar(props: SidebarProps) {
         >
           <ProfileIcon />
         </NavLink>
+
         <NavLink
           href={paths.about({})}
           className={classes.NavItem}
@@ -42,34 +62,14 @@ export default function Sidebar(props: SidebarProps) {
         >
           <AboutIcon />
         </NavLink>
-      </div>
+      </nav>
 
       <BurgerButton
         onClick={props.onBurgerMenuClick}
         isOpened={props.burgerMenuOpened}
         className={classes.SidebarBurger}
+        ref={props.burgerButtonRef}
       />
     </aside>
-  );
-}
-
-function MainNavigation() {
-  return (
-    <nav className={classes.nav}>
-      <NavLink
-        href={paths.home({})}
-        className={classes.NavItem}
-        activeClassName={classes.NavItemActive}
-      >
-        <HomeIcon />
-      </NavLink>
-      <NavLink
-        href={paths.basket({})}
-        className={classes.NavItem}
-        activeClassName={classes.NavItemActive}
-      >
-        <BasketIcon />
-      </NavLink>
-    </nav>
   );
 }

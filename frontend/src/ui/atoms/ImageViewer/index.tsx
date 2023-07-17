@@ -6,7 +6,7 @@ import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
 
 type ImageViewerProps = {
-  images: { caption: string; source: { thumbnail: string; regular: string } }[];
+  images: { src: string }[];
   isLoading?: boolean;
 };
 
@@ -17,7 +17,7 @@ export const ImageViewer = React.memo((props: ImageViewerProps) => {
   return (
     <Fragment>
       <Lightbox
-        slides={images.map((i) => ({ src: i.source.regular }))}
+        slides={images}
         on={{
           click: () => setIsOpen(true),
         }}
@@ -32,7 +32,7 @@ export const ImageViewer = React.memo((props: ImageViewerProps) => {
       <Lightbox
         open={isOpen}
         close={() => setIsOpen(false)}
-        slides={images.map((i) => ({ src: i.source.regular }))}
+        slides={images}
         carousel={{ padding: '4px' }}
         animation={{ swipe: 200 }}
         plugins={[Zoom]}

@@ -1,5 +1,4 @@
-import { IProduct } from '@/src/features/Product/store';
-import { ProductSchema } from '@/src/types/IProduct';
+import { ProductSchema, IProduct } from '@/src/types/IProduct';
 import {
   axiosInstance,
   ListDTO,
@@ -57,10 +56,11 @@ export const fetchProducts = async (
 };
 
 export const fetchRecommendedProducts = async (
-  query: PaginationQueryDTO & { categoryId: number },
+  query: PaginationQueryDTO & { productId: number },
 ): Promise<ListDTO<IProduct>> => {
-  const { categoryId, ...q } = query;
-  const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: q });
+  const response = await axiosInstance.get(`${BASE_ROUTE}/recommended`, {
+    params: query,
+  });
 
   return ProductListSchema.parse(response.data).data;
 };

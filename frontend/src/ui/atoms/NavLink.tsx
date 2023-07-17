@@ -1,6 +1,9 @@
 import React, { ReactNode } from 'react';
-import Link, { LinkProps } from 'next/link';
+import clsx from 'clsx';
+
 import { useRouter } from 'next/router';
+
+import Link, { LinkProps } from 'next/link';
 
 export type NavLinkProps = LinkProps & {
   className?: string;
@@ -19,13 +22,15 @@ export const NavLink: React.FC<NavLinkProps> = ({
   // pages/index.js will be matched via props.href
   // pages/about.js will be matched via props.href
   // pages/[slug].js will be matched via props.as
-  const actualClassName =
-    asPath === props.href || asPath === props.as
-      ? `${className} ${activeClassName}`
-      : className;
 
   return (
-    <Link {...props} className={actualClassName}>
+    <Link
+      {...props}
+      className={clsx(
+        className,
+        (asPath === props.href || asPath === props.as) && activeClassName,
+      )}
+    >
       {children}
     </Link>
   );

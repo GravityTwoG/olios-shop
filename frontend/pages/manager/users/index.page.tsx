@@ -30,6 +30,7 @@ import { Container } from '@/src/ui/atoms/Container';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
 import { NoResults } from '@/src/ui/atoms/NoResults';
+import { RoleBadge } from '@/src/shared/components/RoleBadge';
 
 const headers = [
   {
@@ -91,7 +92,7 @@ export function UsersPage() {
                 key="action"
                 className="flex items-center justify-between gap-3"
               >
-                <p>{user.role}</p>
+                <RoleBadge role={user.role} />
                 {currentUserId !== user.id && (
                   <Button
                     isLoading={isBlockingOrUnblocking}

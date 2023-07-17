@@ -14,11 +14,11 @@ import {
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 
+import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
 import { assertTruthy } from 'src/lib/domain/assertions';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-
 import { RequestUser } from 'src/auth/types';
 
 import { UpdateUserDTO } from './dto/update-user.dto';
@@ -52,23 +52,12 @@ export class UsersController {
     };
 
     if (query.searchQuery) {
-      const searchQuery = query.searchQuery;
-      const formatted = searchQuery.split(' ').join(' | ');
       params.where = {
         OR: [
-          { firstName: { contains: searchQuery, mode: 'insensitive' } },
-          { lastName: { contains: searchQuery, mode: 'insensitive' } },
-          { patronymic: { contains: searchQuery, mode: 'insensitive' } },
-          { email: { contains: searchQuery, mode: 'insensitive' } },
-          {
-            firstName: {
-              search: formatted,
-              mode: 'insensitive',
-            },
-          },
-          { lastName: { search: formatted, mode: 'insensitive' } },
-          { patronymic: { search: formatted, mode: 'insensitive' } },
-          { email: { search: formatted, mode: 'insensitive' } },
+          ...createSearchQuery('firstName', query.searchQuery),
+          ...createSearchQuery('lastName', query.searchQuery),
+          ...createSearchQuery('patronymic', query.searchQuery),
+          ...createSearchQuery('email', query.searchQuery),
         ],
       };
     }

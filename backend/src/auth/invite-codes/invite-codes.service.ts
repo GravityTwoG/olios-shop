@@ -1,6 +1,6 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { InviteCode, Prisma, UserRole } from '@prisma/client';
+import { InviteCode, Prisma } from '@prisma/client';
 
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
@@ -9,12 +9,8 @@ import { BaseListDTO } from 'src/common/dto/base-list.dto';
 import { InviteCodeDTO } from './dto/invite-code.dto';
 
 @Injectable()
-export class InviteCodesService implements OnModuleInit {
+export class InviteCodesService {
   constructor(private prisma: PrismaService) {}
-
-  async onModuleInit() {
-    await this.createStartInviteCode();
-  }
 
   async createInviteCode(
     createInviteCodeDto: CreateInviteCodeDto,
@@ -92,33 +88,6 @@ export class InviteCodesService implements OnModuleInit {
     });
     await this.prisma.inviteCode.delete({
       where: where,
-    });
-  }
-
-  private async createStartInviteCode(): Promise<InviteCode> {
-    const code = 'FIRST_MANAGER';
-
-    const invite = await this.prisma.inviteCode.findFirst({
-      where: {
-        code,
-      },
-    });
-
-    if (invite) {
-      return invite;
-    }
-
-    return this.prisma.inviteCode.create({
-      data: {
-        firstName: 'FirstName',
-        lastName: 'LastName',
-        patronymic: 'Patronymic',
-        birthDate: new Date(),
-        role: UserRole.MANAGER,
-        code,
-        isUsed: false,
-        usedBy: null,
-      },
     });
   }
 }

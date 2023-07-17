@@ -37,6 +37,14 @@ export const createCategory = async (
   return ProductCategoryResponseSchema.parse(response.data).data;
 };
 
+export const fetchCategory = async (
+  categoryId: number,
+): Promise<IProductCategory> => {
+  const response = await axiosInstance.get(`${BASE_ROUTE}/${categoryId}`);
+
+  return ProductCategoryResponseSchema.parse(response.data).data;
+};
+
 export const fetchCategories = async (
   query: PaginationQueryDTO & { name?: string },
 ): Promise<ListDTO<IProductCategory>> => {
