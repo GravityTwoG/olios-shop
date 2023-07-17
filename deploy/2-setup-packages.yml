@@ -1,0 +1,91 @@
+---
+- name: Setup packages
+  hosts: olios_shop
+  remote_user: '{{ user }}'
+  gather_facts: false
+
+  tasks:
+    - name: Install dependencies
+      ansible.builtin.apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+          - lsb-release
+          - pip
+        state: present
+        update_cache: true
+
+    - name: Add GPG key for docker repository
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: ugo+rw
+        force: true
+
+    - name: Add docker repository to apt
+      ansible.builtin.apt_repository:
+        repo: 'deb [arch=amd64, signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu focal stable'
+        state: present
+        update_cache: yes
+
+    - name: Install docker
+      ansible.builtin.apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+
+    - name: Install docker pip module
+      pip:
+        name: docker
+
+    - name: Check docker is active
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Ensure group "docker" exists
+      ansible.builtin.group:
+        name: docker
+        state: present
+
+    - name: Adding user to docker group
+      ansible.builtin.user:
+        name: '{{ user }}'
+        groups: docker
+        append: true
+
+    - name: Add GPG key for azlux repo
+      ansible.builtin.get_url:
+        url: https://azlux.fr/repo.gpg.key
+        dest: /etc/apt/keyrings/azlux.asc
+        mode: ugo+rw
+        force: true
+
+    - name: Add azlux repository to apt
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64, signed-by=/etc/apt/keyrings/azlux.asc] http://packages.azlux.fr/debian/ stable main
+        state: present
+
+    - name: Install docker-ctop
+      ansible.builtin.apt:
+        pkg: docker-ctop
+        state: present
+        update_cache: true
+
+    - name: Login to Github Container Registry
+      community.docker.docker_login:
+        registry: ghcr.io
+        username: '{{ container_registry_username }}'
+        password: '{{ container_registry_password }}'
+
+    - name: Set timezone to UTC-0
+      community.general.timezone:
+        name: Etc/UTC
