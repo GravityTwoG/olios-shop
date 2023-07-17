@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Roles } from '../decorators/roles.decorator';
+import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
 
 import { InviteCodesService } from './invite-codes.service';
 import { CreateInviteCodeDto } from './dto/create-invite-code.dto';
@@ -29,21 +30,11 @@ export class InviteCodesController {
       };
 
     if (query.searchQuery) {
-      const searchQuery = query.searchQuery;
-      const formatted = searchQuery.split(' ').join(' | ');
       params.where = {
         OR: [
-          { firstName: { contains: searchQuery, mode: 'insensitive' } },
-          { lastName: { contains: searchQuery, mode: 'insensitive' } },
-          { patronymic: { contains: searchQuery, mode: 'insensitive' } },
-          {
-            firstName: {
-              search: formatted,
-              mode: 'insensitive',
-            },
-          },
-          { lastName: { search: formatted, mode: 'insensitive' } },
-          { patronymic: { search: formatted, mode: 'insensitive' } },
+          ...createSearchQuery('firstName', query.searchQuery),
+          ...createSearchQuery('lastName', query.searchQuery),
+          ...createSearchQuery('patronymic', query.searchQuery),
         ],
       };
     }

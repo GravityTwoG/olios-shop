@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsInt,
@@ -5,34 +6,41 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { IsNullable } from 'src/common/validators/IsNullable';
 
 export class ProductDTO {
+  @ApiProperty()
   @IsNumber()
   id: number;
 
+  @ApiProperty()
   @IsNumber()
-  @IsNullable()
-  categoryId: number | null;
+  categoryId: number;
 
+  @ApiProperty()
   @IsString()
   categoryName: string;
 
+  @ApiProperty()
   @IsString()
   description: string;
 
+  @ApiProperty()
   @IsString()
   name: string;
 
+  @ApiProperty()
   @IsInt()
   oldPrice: number;
 
+  @ApiProperty()
   @IsInt()
   realPrice: number;
 
+  @ApiProperty()
   @IsString()
   thumbUrl: string;
 
+  @ApiProperty()
   @IsArray({ each: true })
   @ValidateNested({ each: true })
   @IsString()

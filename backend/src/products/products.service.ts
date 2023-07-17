@@ -4,8 +4,6 @@ import { Prisma, Product, ProductCategory, ProductImage } from '@prisma/client';
 import { ImagesService } from 'src/lib/images';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
-import { ListQueryDTO } from 'src/common/dto/list-query-dto';
-
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
 import { BaseListDTO } from 'src/common/dto/base-list.dto';
@@ -16,7 +14,7 @@ const includes = {
 };
 
 export type ProductEntity = Product & {
-  productCategory: ProductCategory | null;
+  productCategory: ProductCategory;
   productImages: ProductImage[];
 };
 
@@ -36,6 +34,34 @@ export class ProductsService {
   }): Promise<BaseListDTO<ProductEntity>> {
     const list = await this.prisma.product.findMany({
       ...params,
+      include: includes,
+    });
+    const count = await this.prisma.product.count({ where: params.where });
+
+    return { count, list };
+  }
+
+  async getRecommended(
+    params: {
+      skip?: number;
+      take?: number;
+      cursor?: Prisma.ProductWhereUniqueInput;
+      where?: Prisma.ProductWhereInput;
+      orderBy?: Prisma.Enumerable<Prisma.ProductOrderByWithRelationAndSearchRelevanceInput>;
+    },
+    productId: number,
+  ): Promise<BaseListDTO<ProductEntity>> {
+    const product = await this.prisma.product.findUniqueOrThrow({
+      where: { id: productId },
+    });
+
+    const list = await this.prisma.product.findMany({
+      ...params,
+      where: {
+        ...params.where,
+        categoryId: product?.categoryId,
+        id: { not: product.id },
+      },
       include: includes,
     });
     const count = await this.prisma.product.count({ where: params.where });

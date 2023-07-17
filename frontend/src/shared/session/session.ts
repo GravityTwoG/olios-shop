@@ -1,6 +1,7 @@
-import { createStore, attach } from 'effector';
+import { createStore, createEffect } from 'effector';
 
 import { IUser, IUserRole } from '@/src/types/IUser';
+import { ApiError } from '../api';
 import * as authApi from '@/src/shared/api/auth';
 
 const defaultUser: IUser = {
@@ -21,10 +22,16 @@ export enum AuthStatus {
   Authenticated = 'Authenticated',
 }
 
-export const fetchSessionFx = attach({ effect: authApi.fetchSessionFx });
+// Effects
+export const fetchSessionFx = createEffect<void, IUser, ApiError>(() => {
+  return authApi.fetchSession();
+});
 
-export const logoutFx = attach({ effect: authApi.logoutFx });
+export const logoutFx = createEffect<void, void, ApiError>(() =>
+  authApi.logout(),
+);
 
+// Stores
 export const $user = createStore<IUser>(defaultUser);
 export const $authStatus = createStore<AuthStatus>(AuthStatus.Initial);
 

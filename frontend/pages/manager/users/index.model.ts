@@ -10,6 +10,7 @@ import { toast } from '@/src/shared/toasts';
 
 const PAGE_SIZE = 12;
 
+// Effects
 export const fetchUsersFx = createEffect<
   { pageSize: number; pageNumber: number; searchQuery: string },
   ListDTO<IUser> & { pageNumber: number },
@@ -24,11 +25,13 @@ export const fetchUsersFx = createEffect<
   return { ...data, pageNumber };
 });
 
+// Events
 export const pageMounted = createEvent('Page mounted');
 export const loadPage = createEvent<number>('Load another page');
 export const searchQueryChanged = createEvent<string>('Search query changed');
 const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
 
+// Stores
 export const $users = createStore<IUser[]>([]);
 export const $usersCount = createStore(0);
 export const $isPending = createStore(false);
@@ -79,6 +82,8 @@ fetchUsersFx.failData.watch((error) => toast.error(error.message));
 $isPending.on(fetchUsersFx.finally, () => false);
 
 //
+// Block/Unblock users
+// Effects
 const blockUserFx = createEffect((userId: string) => {
   return usersApi.blockOrUnblockUser({ userId, isActive: false });
 });
@@ -87,9 +92,11 @@ const unblockUserFx = createEffect((userId: string) => {
   return usersApi.blockOrUnblockUser({ userId, isActive: true });
 });
 
+// Events
 export const blockUser = createEvent<string>('Block user');
 export const unblockUser = createEvent<string>('Unblock user');
 
+// Stores
 export const $isBlockingOrUnblocking = createStore(false);
 
 sample({ clock: blockUser, target: blockUserFx });
@@ -102,11 +109,11 @@ $isBlockingOrUnblocking.on(blockUserFx.finally, () => false);
 $isBlockingOrUnblocking.on(unblockUserFx.finally, () => false);
 
 sample({
+  clock: [blockUserFx.done, unblockUserFx.done],
   source: {
     pageSize: $pageSize,
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  clock: [blockUserFx.done, unblockUserFx.done],
   target: fetchUsersFx,
 });

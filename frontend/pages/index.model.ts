@@ -6,6 +6,7 @@ import { fetchProducts } from '@/src/shared/api/products';
 import { toast } from '@/src/shared/toasts';
 import { IProduct } from '@/src/types/IProduct';
 
+// Effects
 const fetchProductsFx = createEffect<
   { pageSize: number; pageNumber: number; searchQuery: string },
   ListDTO<IProduct> & { pageNumber: number },
@@ -22,11 +23,13 @@ const fetchProductsFx = createEffect<
   };
 });
 
+// Events
 export const pageMounted = createEvent('Page mounted');
 export const loadPage = createEvent<number>('Load page');
 export const searchQueryChanged = createEvent<string>('Search query changed');
 const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
 
+// Stores
 export const $products = createStore<IProduct[]>([]);
 export const $productsCount = createStore(0);
 export const $searchQuery = createStore('');

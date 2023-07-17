@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 
 export type SpinnerProps = {
   className?: string;
@@ -7,7 +8,7 @@ export type SpinnerProps = {
 export const Spinner = (props: SpinnerProps) => {
   return (
     <svg
-      className={`stroke-blue-600 ${props.className || ''}`}
+      className={clsx(props.className, 'stroke-blue-600')}
       xmlns="http://www.w3.org/2000/svg"
       style={{
         background: 'none',

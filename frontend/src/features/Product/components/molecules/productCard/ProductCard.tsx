@@ -2,7 +2,7 @@ import React from 'react';
 import classes from './product-card.module.scss';
 
 import { paths } from '@/src/paths';
-import { IProduct } from '../../../store';
+import { IProduct } from '@/src/types/IProduct';
 
 import Link from 'next/link';
 import { ProductCardImage } from './ProductCardImage';
