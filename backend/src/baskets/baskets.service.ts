@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 import { Basket, Prisma } from '@prisma/client';
 
+import { NoPermissionException } from 'src/lib/domain/domain.exception';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 import { CartMapper } from './cart.mapper';
 import { CartItemDTO } from './dto/cart.dto';
+import { assertTruthy } from 'src/lib/domain/assertions';
 
 const CartItemInclude = {
   product: {
@@ -56,6 +58,25 @@ export class BasketsService {
     return this.mapper.mapToCartDTO(cart);
   }
 
+  async findCustomersCartById(dto: { userId: string; cartId: string }) {
+    const profile = await this.prisma.customerProfile.findUniqueOrThrow({
+      where: { userId: dto.userId },
+    });
+
+    const cart = await this.prisma.basket.findUniqueOrThrow({
+      where: { id: dto.cartId },
+      include: CartInclude,
+    });
+
+    assertTruthy(
+      cart.customerProfileId === profile.id,
+      NoPermissionException,
+      'Invalid customer',
+    );
+
+    return this.mapper.mapToCartDTO(cart);
+  }
+
   async isInCart(data: {
     userId: string;
     productId: number;
@@ -76,6 +97,7 @@ export class BasketsService {
           productName: '',
           oldPrice: 0,
           realPrice: 0,
+          sum: 0,
           thumbUrl: '',
         };
   }
@@ -140,6 +162,7 @@ export class BasketsService {
       productName: '',
       oldPrice: 0,
       realPrice: 0,
+      sum: 0,
       thumbUrl: '',
     };
   }

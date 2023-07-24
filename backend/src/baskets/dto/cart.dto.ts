@@ -30,6 +30,10 @@ export class CartItemDTO {
   realPrice: number;
 
   @ApiProperty()
+  @IsInt()
+  sum: number;
+
+  @ApiProperty()
   @IsString()
   thumbUrl: string;
 }

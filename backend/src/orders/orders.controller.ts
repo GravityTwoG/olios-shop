@@ -18,6 +18,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { OrdersService } from './orders.service';
 import { CreateOrderDTO } from './dto/create-order.dto';
 import { GetOrdersDTO } from './dto/get-orders.dto';
+import { OrderResponseDTO, OrdersListResponseDTO } from './dto/order.dto';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -26,31 +27,76 @@ export class OrdersController {
 
   @Roles(UserRole.CUSTOMER)
   @Post()
-  create(
+  async create(
     @Body() createOrderDto: CreateOrderDTO,
     @CurrentUser() user: RequestUser,
-  ) {
-    return this.ordersService.create(createOrderDto, user.id);
+  ): Promise<OrderResponseDTO> {
+    const order = await this.ordersService.create(createOrderDto, user.id);
+    return { data: order };
+  }
+
+  @Roles(UserRole.MANAGER)
+  @Get('/manager')
+  async allOrders(
+    @Query() query: GetOrdersDTO,
+  ): Promise<OrdersListResponseDTO> {
+    const result = await this.ordersService.findAll({
+      take: query.take,
+      skip: query.skip,
+    });
+
+    return {
+      data: result,
+    };
+  }
+
+  @Roles(UserRole.MANAGER)
+  @Get('/manager/:id')
+  async getOrder(@Param('id') id: string): Promise<OrderResponseDTO> {
+    const order = await this.ordersService.findOne(id);
+    return { data: order };
+  }
+
+  @Roles(UserRole.CUSTOMER)
+  @Patch('/manager/:id/delivered')
+  async markAsDelivered(@Param('id') id: string): Promise<OrderResponseDTO> {
+    const order = await this.ordersService.delivered(id);
+    return { data: order };
   }
 
   @Roles(UserRole.CUSTOMER)
   @Get()
-  findAll(@Query() query: GetOrdersDTO, @CurrentUser() user: RequestUser) {
-    return this.ordersService.findAll(
+  async customersOrders(
+    @Query() query: GetOrdersDTO,
+    @CurrentUser() user: RequestUser,
+  ): Promise<OrdersListResponseDTO> {
+    const result = await this.ordersService.getCustomersOrders(
       { take: query.take, skip: query.skip },
       user.id,
     );
+
+    return {
+      data: result,
+    };
   }
 
   @Roles(UserRole.CUSTOMER)
   @Get(':id')
-  findOne(@Param('id') id: string, @CurrentUser() user: RequestUser) {
-    return this.ordersService.findOne(id, user.id);
+  async getCustomerOrder(
+    @Param('id') id: string,
+    @CurrentUser() user: RequestUser,
+  ): Promise<OrderResponseDTO> {
+    const order = await this.ordersService.getCustomersOrder(id, user.id);
+    return { data: order };
   }
 
   @Roles(UserRole.CUSTOMER)
   @Patch(':id')
-  cancel(@Param('id') id: string, @CurrentUser() user: RequestUser) {
-    return this.ordersService.cancel(id, user.id);
+  async cancel(
+    @Param('id') id: string,
+    @CurrentUser() user: RequestUser,
+  ): Promise<OrderResponseDTO> {
+    const order = await this.ordersService.cancel(id, user.id);
+    return { data: order };
   }
 }

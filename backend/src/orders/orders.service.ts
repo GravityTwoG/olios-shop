@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { assertTruthy } from 'src/lib/domain/assertions';
-import { InvalidPayloadException } from 'src/lib/domain/domain.exception';
+import {
+  InvalidPayloadException,
+  NoPermissionException,
+} from 'src/lib/domain/domain.exception';
 
 import { CreateOrderDTO } from './dto/create-order.dto';
 import { OrderStatus, Prisma } from '@prisma/client';
@@ -32,7 +35,7 @@ export class OrdersService {
         const profile = await this.getCustomerProfile(userId, tx);
 
         const cart = await tx.basket.findUniqueOrThrow({
-          where: { id: createOrderDto.basketId, customerProfileId: profile.id },
+          where: { id: createOrderDto.cartId },
           include: {
             basketItems: {
               include: {
@@ -42,6 +45,12 @@ export class OrdersService {
           },
         });
 
+        assertTruthy(
+          cart.customerProfileId === profile.id,
+          NoPermissionException,
+          'Invalid customer',
+        );
+
         const cartItems = cart.basketItems.map((item) => ({
           id: item.id,
           quantity: item.quantity,
@@ -49,6 +58,12 @@ export class OrdersService {
           productName: item.product.name,
           price: item.product.realPrice,
         }));
+
+        assertTruthy(
+          cartItems.length > 0,
+          InvalidPayloadException,
+          'Cart is empty',
+        );
 
         const order = await tx.order.create({
           data: {
@@ -62,8 +77,8 @@ export class OrdersService {
             flat: createOrderDto.flat,
             floor: createOrderDto.floor,
 
-            name: '',
-            phone: '',
+            name: createOrderDto.name,
+            phone: createOrderDto.phoneNumber,
 
             orderItems: {
               createMany: {
@@ -96,7 +111,23 @@ export class OrdersService {
     return prisma.customerProfile.findFirstOrThrow({ where: { userId } });
   }
 
-  async findAll(
+  async findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.OrderWhereUniqueInput;
+    where?: Prisma.OrderWhereInput;
+    orderBy?: Prisma.Enumerable<Prisma.OrderOrderByWithRelationAndSearchRelevanceInput>;
+  }) {
+    const list = await this.prisma.order.findMany({
+      ...params,
+      include: OrderInclude,
+    });
+    const count = await this.prisma.order.count({ where: params.where });
+
+    return { list: list.map(this.mapper.mapToOrderDTO), count };
+  }
+
+  async getCustomersOrders(
     params: {
       skip?: number;
       take?: number;
@@ -108,17 +139,22 @@ export class OrdersService {
   ) {
     const profile = await this.getCustomerProfile(userId);
 
-    const list = await this.prisma.order.findMany({
+    return this.findAll({
       ...params,
-      where: { customerProfileId: profile.id },
-      include: OrderInclude,
+      where: { ...params.where, customerProfileId: profile.id },
     });
-    const count = await this.prisma.order.count({ where: params.where });
-
-    return { list: list.map(this.mapper.mapToOrderDTO), count };
   }
 
-  async findOne(id: string, userId: string) {
+  async findOne(id: string) {
+    const order = await this.prisma.order.findFirstOrThrow({
+      where: { id },
+      include: OrderInclude,
+    });
+
+    return this.mapper.mapToOrderDTO(order);
+  }
+
+  async getCustomersOrder(id: string, userId: string) {
     const profile = await this.getCustomerProfile(userId);
 
     const order = await this.prisma.order.findFirstOrThrow({
@@ -144,19 +180,19 @@ export class OrdersService {
         'This order cannot be paid',
       );
 
-      return tx.order.update({
+      const updatedOrder = await tx.order.update({
         data: { status: OrderStatus.PAID },
         where: { id },
         include: OrderInclude,
       });
+      return this.mapper.mapToOrderDTO(updatedOrder);
     });
   }
 
-  delivered(id: string, userId: string) {
+  delivered(id: string) {
     return this.prisma.$transaction(async (tx) => {
-      const profile = await this.getCustomerProfile(userId);
       const order = await tx.order.findFirstOrThrow({
-        where: { id, customerProfileId: profile.id },
+        where: { id },
       });
 
       assertTruthy(
@@ -165,11 +201,12 @@ export class OrdersService {
         'This order cannot be delivered',
       );
 
-      return tx.order.update({
+      const updatedOrder = await tx.order.update({
         data: { status: OrderStatus.DELIVERED },
         where: { id },
         include: OrderInclude,
       });
+      return this.mapper.mapToOrderDTO(updatedOrder);
     });
   }
 
@@ -188,11 +225,12 @@ export class OrdersService {
           'This order cannot be cancelled',
         );
 
-        return tx.order.update({
+        const updatedOrder = await tx.order.update({
           data: { status: OrderStatus.CANCELED },
           where: { id },
           include: OrderInclude,
         });
+        return this.mapper.mapToOrderDTO(updatedOrder);
       },
       { isolationLevel: 'Serializable' },
     );
