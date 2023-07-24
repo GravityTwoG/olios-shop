@@ -1,0 +1,112 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:7.0.2
+    restart: always
+    networks:
+      - internal
+    volumes:
+      - ./docker-volumes/redis:/data/redis
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  minio:
+    image: minio/minio:RELEASE.2022-07-08T00-05-23Z
+    restart: always
+    volumes:
+      - ./docker-volumes/s3/data1-1:/data1
+      - ./docker-volumes/s3/data1-2:/data2
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    networks:
+      - internal
+      - reverse-proxy
+    environment:
+      MINIO_ROOT_USER: {{ minio_root_user }}
+      MINIO_ROOT_PASSWORD: {{ minio_root_password }}
+    command: server http://minio/data{1...2} --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 30s
+      timeout: 20s
+      retries: 3 
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  postgres:
+    image: postgres:14.4
+    restart: always
+    networks:
+      - internal
+    volumes:
+      - ./docker-volumes/pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: {{ postgres_user }}
+      POSTGRES_PASSWORD: {{ postgres_password }}
+      POSTGRES_DB: {{ postgres_db }}
+      LANG: 'en_US.UTF-8'
+      PORT: 5432
+      PD_DATA: /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U olios-backend -d olios-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  backend:
+    image: ghcr.io/gravitytwog/olios-backend:1
+    restart: always
+    ports:
+      - 5000:5000
+    environment:
+      NODE_ENV: production
+      SESSION_SECRET: {{ session_secret }}
+      DATABASE_URL: 'postgresql://{{ postgres_user }}:{{ postgres_password }}@postgres:5432/{{ postgres_db }}?schema=public'
+      REDIS_URI: redis://redis
+      MINIO_PROTOCOL: http
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: {{ minio_root_user }}
+      MINIO_SECRET_KEY: {{ minio_root_password }}
+      ENVIRONMENT: staging
+      FILE_STORAGE_URL: https://{{ domain_name }}/storage
+      HEALTH_URL: /api/v1/health
+    networks:
+      - internal
+      - reverse-proxy
+    depends_on:
+      - redis
+      - postgres
+      - minio
+#    healthcheck:
+#      test: ['CMD', 'yarn', 'healthcheck']
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+    volumes: 
+      - type: bind
+        source: ./app.log
+        target: /app.log
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+networks:
+  internal:
+    driver: bridge
+
+  reverse-proxy:
+    external: true

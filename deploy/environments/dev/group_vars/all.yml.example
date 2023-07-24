@@ -1,0 +1,23 @@
+---
+user: linuxuser
+user_password: 'password'
+public_key_path: ~/.ssh/id_rsa.pub
+
+container_registry_username: username
+container_registry_password: PAT
+
+# Letsencrypt, Nginx configuration
+domain_name: example.com
+domain_email: email@gmail.com
+
+# Minio
+minio_root_user: minio-root-user
+minio_root_password: minio-root-password
+
+# Postgres
+postgres_user: olios-backend
+postgres_password: olios-backend-password
+postgres_db: olios-db
+
+#
+session_secret: 12jeo12ejoi12ej1123123o2ejo1i2j1oi2

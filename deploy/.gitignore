@@ -1,0 +1,3 @@
+gdrive_export.tar
+environments/*/hosts.yml
+environments/*/group_vars/*.yml
