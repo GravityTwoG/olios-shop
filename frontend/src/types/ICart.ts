@@ -7,6 +7,7 @@ export const CartItemSchema = z.object({
   productName: z.string(),
   oldPrice: z.number().int().gte(0),
   realPrice: z.number().int().gte(0),
+  sum: z.number().int().gte(0),
   thumbUrl: z.string(),
 });
 

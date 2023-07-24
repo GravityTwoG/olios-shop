@@ -10,8 +10,8 @@ import { PrivatePage } from '@/src/features/Auth';
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { StyledLink } from '@/src/ui/atoms/StyledLink';
 import { Preloader } from '@/src/ui/molecules/Preloader';
-import { CTAButton } from '@/src/ui/atoms/CTAButton';
 
 function Basket() {
   const [cart, isCartPending] = useUnit([$cart, $isCartPending]);
@@ -25,9 +25,13 @@ function Basket() {
       <div className={classes['basket-page__title']}>Basket</div>
       <div className="my-4 flex justify-end items-center gap-6">
         Total: {cart.total}
-        <span>
-          <CTAButton>Order</CTAButton>
-        </span>
+        {cart.items.length > 0 && (
+          <span>
+            <StyledLink href={`${paths.ordersCreate({ cartId: cart.id })}`}>
+              Order
+            </StyledLink>
+          </span>
+        )}
       </div>
 
       <Preloader isLoading={isCartPending}>

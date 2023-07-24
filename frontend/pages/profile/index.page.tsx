@@ -1,7 +1,6 @@
 import { paths } from '@/src/paths';
 import { IUserRole } from '@/src/types/IUser';
 
-import { UserCard } from '@/src/features/Auth';
 import {
   AuthStatus,
   logoutFx,
@@ -11,10 +10,11 @@ import {
 
 import { PrivatePage } from '@/src/features/Auth';
 
-import { Flex } from '@/src/ui/atoms/Flex';
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Container } from '@/src/ui/atoms/Container';
 import { AppLink } from '@/src/ui/atoms/AppLink';
+import { RoleGuard } from '@/src/shared/components/RoleGuard';
+import { UserCard } from '@/src/features/Auth';
 
 function ProfilePage() {
   const authStatus = useAuthStatus();
@@ -24,26 +24,39 @@ function ProfilePage() {
     <Container className="py-8">
       <UserCard user={user} isLoaded={authStatus !== AuthStatus.Pending} />
 
-      {user.role === IUserRole.CONTENT_MANAGER && (
-        <Flex jcc margin="1rem 0">
+      <RoleGuard roles={IUserRole.CUSTOMER}>
+        <div className="flex justify-center my-4">
+          <AppLink href={paths.orders({})}>Orders</AppLink>
+        </div>
+      </RoleGuard>
+
+      <RoleGuard roles={IUserRole.CONTENT_MANAGER}>
+        <div className="flex justify-center my-4">
           <AppLink href={paths.content({})}>Manage content</AppLink>
-        </Flex>
-      )}
+        </div>
+      </RoleGuard>
 
-      {user.role === IUserRole.MANAGER && (
-        <Flex jcc margin="1rem 0">
+      <RoleGuard roles={IUserRole.MANAGER}>
+        <div className="flex justify-center my-4">
           <AppLink href={paths.users({})}>Manage Users</AppLink>
-        </Flex>
-      )}
-      {user.role === IUserRole.MANAGER && (
-        <Flex jcc margin="1rem 0">
-          <AppLink href={paths.inviteCodes({})}>Manage Invite Codes</AppLink>
-        </Flex>
-      )}
+        </div>
 
-      <Flex jcc margin="1rem 0">
-        <CTAButton onClick={() => logoutFx()}>logout</CTAButton>
-      </Flex>
+        <div className="flex justify-center my-4">
+          <AppLink href={paths.inviteCodes({})}>Manage Invite Codes</AppLink>
+        </div>
+
+        <div className="flex justify-center my-4">
+          <AppLink href={paths.manageOrders({})}>Manage Orders</AppLink>
+        </div>
+      </RoleGuard>
+
+      <div className="flex justify-center my-8">
+        <div>
+          <CTAButton color="secondary" onClick={() => logoutFx()}>
+            logout
+          </CTAButton>
+        </div>
+      </div>
     </Container>
   );
 }

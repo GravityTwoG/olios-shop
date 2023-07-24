@@ -10,7 +10,7 @@ import '@/src/styles/ui.scss';
 import { fetchSessionFx } from '@/src/shared/session';
 
 import { BurgerButton } from '@/src/ui/molecules/BurgerButton';
-import Sidebar from '@/src/ui/organisms/Sidebar/Sidebar';
+import Sidebar from '@/src/shared/components/Sidebar/Sidebar';
 import { Menu } from '@/src/ui/organisms/Menu';
 import { AppToaster } from '@/src/shared/toasts';
 import { useOnClickOutside } from '@/src/ui/hooks/useOnClickOutside';
