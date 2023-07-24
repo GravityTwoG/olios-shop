@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
+import { APP_GUARD, RouterModule } from '@nestjs/core';
 
 import passport from 'passport';
 import { Strategy } from 'passport-local';
@@ -11,6 +11,7 @@ import { UsersModule } from '../users/users.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { InviteCodesModule } from './invite-codes/invite-codes.module';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { InviteCodesModule } from './invite-codes/invite-codes.module';
         );
       },
     },
+    { provide: APP_GUARD, useClass: RolesGuard },
   ],
   controllers: [AuthController],
 })
