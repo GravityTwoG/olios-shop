@@ -4,7 +4,7 @@ import { IsInt, IsString } from 'class-validator';
 export class CreateOrderDTO {
   @ApiProperty()
   @IsString()
-  basketId: string;
+  cartId: string;
 
   @ApiProperty()
   @IsString()
@@ -36,5 +36,5 @@ export class CreateOrderDTO {
 
   @ApiProperty()
   @IsString()
-  phone: string;
+  phoneNumber: string;
 }

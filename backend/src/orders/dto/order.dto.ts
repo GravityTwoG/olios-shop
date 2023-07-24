@@ -9,6 +9,8 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { BaseListResponseDTO } from 'src/common/dto/base-list.dto';
+import { BaseResponseDTO } from 'src/common/dto/base-response.dto';
 
 export class OrderItemDTO {
   @ApiProperty()
@@ -79,7 +81,7 @@ export class OrderDTO {
 
   @ApiProperty()
   @IsString()
-  phone: string;
+  phoneNumber: string;
 
   @ApiProperty({ type: [OrderItemDTO] })
   @IsArray({ each: true })
@@ -91,3 +93,6 @@ export class OrderDTO {
   @IsString()
   total: number;
 }
+
+export class OrderResponseDTO extends BaseResponseDTO(OrderDTO) {}
+export class OrdersListResponseDTO extends BaseListResponseDTO(OrderDTO) {}

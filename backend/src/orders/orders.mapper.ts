@@ -82,7 +82,7 @@ export class OrdersMapper {
       floor: order.floor || 0,
 
       name: order.name,
-      phone: order.phone,
+      phoneNumber: order.phone,
 
       items: items,
 

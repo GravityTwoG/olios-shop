@@ -34,6 +34,20 @@ export class BasketsController {
     return plainToInstance(CartResponseDTO, { data: cart });
   }
 
+  @ApiResponse({ type: CartResponseDTO })
+  @Get('/cart/:cartId')
+  async getCartById(
+    @Param('cartId') cartId: string,
+    @CurrentUser() user: RequestUser,
+  ): Promise<CartResponseDTO> {
+    const cart = await this.basketsService.findCustomersCartById({
+      userId: user.id,
+      cartId,
+    });
+
+    return plainToInstance(CartResponseDTO, { data: cart });
+  }
+
   @ApiResponse({ type: CartItemResponseDTO })
   @Roles(UserRole.CUSTOMER)
   @Get('/is-in-cart/:productId')

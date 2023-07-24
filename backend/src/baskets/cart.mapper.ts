@@ -39,7 +39,7 @@ export class CartMapper {
 
   mapToCartDTO = (cart: CartJoined): CartDTO => {
     const total = cart.basketItems.reduce(
-      (acc, item) => acc + item.product.realPrice,
+      (acc, item) => acc + item.product.realPrice * item.quantity,
       0,
     );
 
@@ -58,6 +58,7 @@ export class CartMapper {
       productName: cartItem.product.name,
       oldPrice: cartItem.product.oldPrice,
       realPrice: cartItem.product.realPrice,
+      sum: cartItem.product.realPrice * cartItem.quantity,
       thumbUrl: cartItem.product.productImages.length
         ? `${this.storageUrl}/${cartItem.product.productImages[0].imagePath}`
         : '',

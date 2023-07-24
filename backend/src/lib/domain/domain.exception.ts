@@ -47,3 +47,11 @@ export class UnknownException extends DomainException {
     super(DomainExceptionCodes.UNKNOWN, message);
   }
 }
+
+export class NoPermissionException extends DomainException {
+  code = DomainExceptionCodes.NO_PERMISSION;
+
+  constructor(message: string) {
+    super(DomainExceptionCodes.NO_PERMISSION, message);
+  }
+}
