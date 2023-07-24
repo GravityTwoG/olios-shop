@@ -6,5 +6,5 @@ export const createField = <T>(name: string, defaultValue: T) => {
 
   $field.on(fieldChanged, (_, newValue) => newValue);
 
-  return [$field, fieldChanged];
+  return [$field, fieldChanged] as const;
 };

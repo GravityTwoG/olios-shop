@@ -6,6 +6,8 @@ import { AuthStatus, useAuthStatus, useUserRole } from '@/src/shared/session';
 import { paths } from '@/src/paths';
 
 import { PageLoader } from '@/src/ui/atoms/PageLoader';
+import { Container } from '@/src/ui/atoms/Container';
+import { H1 } from '@/src/ui/atoms/Typography';
 
 export const PrivatePage = <P extends Record<string, unknown>>(
   Component: React.ComponentType<P>,
@@ -33,6 +35,10 @@ export const PrivatePage = <P extends Record<string, unknown>>(
       return <Component {...props} />;
     }
 
-    return null;
+    return (
+      <Container className="h-full flex justify-center items-center">
+        <H1>Forbidden</H1>
+      </Container>
+    );
   };
 };

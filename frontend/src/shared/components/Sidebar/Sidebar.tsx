@@ -6,13 +6,15 @@ import { paths } from '@/src/paths';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { NavLink } from '../../atoms/NavLink';
-import { BurgerButton } from '../../molecules/BurgerButton';
+import { NavLink } from '../../../ui/atoms/NavLink';
+import { BurgerButton } from '../../../ui/molecules/BurgerButton';
 
 import HomeIcon from './img/Home.svg';
 import BasketIcon from './img/Basket.svg';
 import AboutIcon from './img/About.svg';
 import ProfileIcon from './img/Profile.svg';
+import { RoleGuard } from '../RoleGuard';
+import { IUserRole } from '@/src/types/IUser';
 
 export type SidebarProps = {
   className?: string;
@@ -37,13 +39,15 @@ export default function Sidebar(props: SidebarProps) {
           <HomeIcon />
         </NavLink>
 
-        <NavLink
-          href={paths.basket({})}
-          className={classes.NavItem}
-          activeClassName={classes.NavItemActive}
-        >
-          <BasketIcon />
-        </NavLink>
+        <RoleGuard roles={IUserRole.CUSTOMER}>
+          <NavLink
+            href={paths.basket({})}
+            className={classes.NavItem}
+            activeClassName={classes.NavItemActive}
+          >
+            <BasketIcon />
+          </NavLink>
+        </RoleGuard>
       </nav>
 
       <nav className={classes.nav}>

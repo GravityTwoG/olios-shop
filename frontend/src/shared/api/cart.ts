@@ -18,6 +18,12 @@ export const fetchCart = async (): Promise<ICart> => {
   return CartResponseSchema.parse(response.data).data;
 };
 
+export const fetchCartById = async (cartId: string): Promise<ICart> => {
+  const response = await axiosInstance.get(`${BASE_ROUTE}/cart/${cartId}`);
+
+  return CartResponseSchema.parse(response.data).data;
+};
+
 export const isInCart = async (productId: number): Promise<ICartItem> => {
   const response = await axiosInstance.get(
     `${BASE_ROUTE}/is-in-cart/${productId}`,

@@ -69,6 +69,7 @@ export const $cartItem = createStore<ICartItem & { isInCart: boolean }>({
   productId: 0,
   productName: '',
   thumbUrl: '',
+  sum: 0,
 });
 
 export const $isProductInCartPending = createStore(false);

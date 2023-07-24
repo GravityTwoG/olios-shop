@@ -7,7 +7,7 @@ export type BurgerButtonProps = {
 } & React.HTMLAttributes<HTMLButtonElement>;
 
 export const BurgerButton = forwardRef<HTMLButtonElement, BurgerButtonProps>(
-  (props, ref) => {
+  ({ isOpened, ...props }, ref) => {
     return (
       <button
         {...props}
@@ -15,7 +15,7 @@ export const BurgerButton = forwardRef<HTMLButtonElement, BurgerButtonProps>(
         className={clsx(
           classes.BurgerButton,
           props.className,
-          props.isOpened && classes.BurgerButtonActive,
+          isOpened && classes.BurgerButtonActive,
         )}
       >
         <div />

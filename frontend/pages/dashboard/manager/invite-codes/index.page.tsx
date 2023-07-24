@@ -24,7 +24,6 @@ import Head from 'next/head';
 import { Paper } from '@/src/ui/atoms/Paper';
 import { Input } from '@/src/ui/atoms/Input';
 import { Button } from '@/src/ui/atoms/Button';
-import { Flex } from '@/src/ui/atoms/Flex';
 import { H1 } from '@/src/ui/atoms/Typography';
 import { NoResults } from '@/src/ui/atoms/NoResults';
 import { Container } from '@/src/ui/atoms/Container';
@@ -77,11 +76,11 @@ export function InviteCodesPage() {
       </Head>
       <H1>Invite Codes</H1>
 
-      <Flex jcc margin="1rem 0">
+      <div className="flex justify-center my-4">
         <AppLink href={paths.inviteCodesCreate({})}>
           Create Invite Codes
         </AppLink>
-      </Flex>
+      </div>
 
       <Paper>
         <Input

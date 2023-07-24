@@ -1,0 +1,61 @@
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+import { IUserRole } from '@/src/types/IUser';
+
+import { useUnit } from 'effector-react';
+import { $isOrderPending, $order, pageMounted } from './index.model';
+
+import { PrivatePage } from '@/src/features/Auth';
+
+import { Paper } from '@/src/ui/atoms/Paper';
+import { H1 } from '@/src/ui/atoms/Typography';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
+import { Container } from '@/src/ui/atoms/Container';
+import { Preloader } from '@/src/ui/molecules/Preloader';
+import { Form } from '@/src/ui/molecules/Form';
+import { InputField } from '@/src/ui/molecules/Field';
+
+const OrdersPaymentPage = () => {
+  const router = useRouter();
+  const orderId = router.query.orderId;
+
+  useEffect(() => {
+    if (orderId && typeof orderId === 'string') {
+      pageMounted(orderId);
+    }
+  }, [orderId]);
+
+  const [order, isOrderPending] = useUnit([$order, $isOrderPending]);
+
+  return (
+    <Container className="py-8">
+      <H1>Payment</H1>
+
+      <Preloader isLoading={isOrderPending}>
+        <Paper>
+          <p>
+            Country: {order.country}, City: {order.city}, Street: {order.street}
+            , House: {order.house}, Flat: {order.flat}, Floor: {order.floor}
+          </p>
+
+          <p>Name: {order.name}</p>
+          <p>phoneNumber: {order.phoneNumber}</p>
+
+          <p>Total: {order.total}</p>
+
+          <Form>
+            <InputField label="Card number" />
+            <InputField label="Card date" />
+            <InputField label="Card CVC" />
+            <InputField label="Card Holder" />
+
+            <CTAButton type="submit">PAY</CTAButton>
+          </Form>
+        </Paper>
+      </Preloader>
+    </Container>
+  );
+};
+
+export default PrivatePage(OrdersPaymentPage, [IUserRole.CUSTOMER]);
