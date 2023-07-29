@@ -15,7 +15,7 @@ import { UsersModule } from './users/users.module';
 import { ContentManagerProfilesModule } from './profiles/content-managers/content-manager-profiles.module';
 import { CustomerProfilesModule } from './profiles/customers/customer-profiles.module';
 
-import { BasketsModule } from './baskets/baskets.module';
+import { CartsModule } from './carts/carts.module';
 
 import { ProductsModule } from './products/products.module';
 import { ProductCategoriesModule } from './products/product-categories/product-categories.module';
@@ -57,7 +57,7 @@ import { OrdersModule } from './orders/orders.module';
     UsersModule,
     CustomerProfilesModule,
     ContentManagerProfilesModule,
-    BasketsModule,
+    CartsModule,
     ProductsModule,
     ProductCategoriesModule,
     OrdersModule,

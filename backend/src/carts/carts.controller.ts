@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -16,20 +17,49 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { RequestUser } from 'src/auth/types';
 
-import { BasketsService } from './baskets.service';
+import { CartsService } from './carts.service';
 
 import { AddToCartDTO } from './dto/add-to-cart.dto';
-import { CartItemResponseDTO, CartResponseDTO } from './dto/cart.dto';
+import {
+  CartItemResponseDTO,
+  CartResponseDTO,
+  CartsListResponseDTO,
+} from './dto/cart.dto';
+import { CreateCartDTO } from './dto/create-cart.dto';
 
 @ApiTags('Cart')
 @Controller('/cart')
-export class BasketsController {
-  constructor(private readonly basketsService: BasketsService) {}
+export class CartsController {
+  constructor(private readonly cartsService: CartsService) {}
+
+  @ApiResponse({ type: CartsListResponseDTO })
+  @Get('/carts')
+  async getCarts(
+    @CurrentUser() user: RequestUser,
+  ): Promise<CartsListResponseDTO> {
+    const carts = await this.cartsService.findCustomersCarts(user.id);
+
+    return plainToInstance(CartsListResponseDTO, { data: carts });
+  }
 
   @ApiResponse({ type: CartResponseDTO })
-  @Get('/cart')
-  async getCart(@CurrentUser() user: RequestUser): Promise<CartResponseDTO> {
-    const cart = await this.basketsService.findCustomersCart(user.id);
+  @Post('/cart/')
+  async createCart(
+    @Body() data: CreateCartDTO,
+    @CurrentUser() user: RequestUser,
+  ): Promise<CartResponseDTO> {
+    const cart = await this.cartsService.createCart(user.id, data);
+
+    return plainToInstance(CartResponseDTO, { data: cart });
+  }
+
+  @ApiResponse({ type: CartResponseDTO })
+  @Patch('/cart/:cartId/default')
+  async selectAsDefault(
+    @Param('cartId') cartId: string,
+    @CurrentUser() user: RequestUser,
+  ): Promise<CartResponseDTO> {
+    const cart = await this.cartsService.selectAsDefault(user.id, cartId);
 
     return plainToInstance(CartResponseDTO, { data: cart });
   }
@@ -40,7 +70,7 @@ export class BasketsController {
     @Param('cartId') cartId: string,
     @CurrentUser() user: RequestUser,
   ): Promise<CartResponseDTO> {
-    const cart = await this.basketsService.findCustomersCartById({
+    const cart = await this.cartsService.findCustomersCartById({
       userId: user.id,
       cartId,
     });
@@ -55,7 +85,7 @@ export class BasketsController {
     @Param('productId', ParseIntPipe) productId: number,
     @CurrentUser() user: RequestUser,
   ): Promise<CartItemResponseDTO> {
-    const result = await this.basketsService.isInCart({
+    const result = await this.cartsService.isInCart({
       productId,
       userId: user.id,
     });
@@ -70,7 +100,7 @@ export class BasketsController {
     @Body() addToCartDTO: AddToCartDTO,
     @CurrentUser() user: RequestUser,
   ): Promise<CartItemResponseDTO> {
-    const item = await this.basketsService.addToCart({
+    const item = await this.cartsService.addToCart({
       ...addToCartDTO,
       userId: user.id,
     });
@@ -97,7 +127,7 @@ export class BasketsController {
     @Param('cartItemId') cartItemId: string,
     @CurrentUser() user: RequestUser,
   ): Promise<CartItemResponseDTO> {
-    const item = await this.basketsService.removeFromCart({
+    const item = await this.cartsService.removeFromCart({
       cartItemId: cartItemId,
       userId: user.id,
     });

@@ -1,6 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsInt, IsString, Min, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsInt,
+  IsString,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+
+import { BaseListResponseDTO } from 'src/common/dto/base-list.dto';
 import { BaseResponseDTO } from 'src/common/dto/base-response.dto';
 
 export class CartItemDTO {
@@ -43,6 +52,14 @@ export class CartDTO {
   @IsString()
   id: string;
 
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  isDefault: boolean;
+
   @ApiProperty({ type: CartItemDTO })
   @IsArray({ each: true })
   @ValidateNested({ each: true })
@@ -53,6 +70,24 @@ export class CartDTO {
   @IsInt()
   total: number;
 }
+
+export class CartFromListDTO {
+  @ApiProperty()
+  @IsString()
+  id: string;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  isDefault: boolean;
+}
+
+export class CartsListResponseDTO extends BaseListResponseDTO(
+  CartFromListDTO,
+) {}
 
 export class CartResponseDTO extends BaseResponseDTO(CartDTO) {}
 

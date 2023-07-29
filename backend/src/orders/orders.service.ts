@@ -34,10 +34,10 @@ export class OrdersService {
       async (tx) => {
         const profile = await this.getCustomerProfile(userId, tx);
 
-        const cart = await tx.basket.findUniqueOrThrow({
+        const cart = await tx.cart.findUniqueOrThrow({
           where: { id: createOrderDto.cartId },
           include: {
-            basketItems: {
+            cartItems: {
               include: {
                 product: true,
               },
@@ -51,7 +51,7 @@ export class OrdersService {
           'Invalid customer',
         );
 
-        const cartItems = cart.basketItems.map((item) => ({
+        const cartItems = cart.cartItems.map((item) => ({
           id: item.id,
           quantity: item.quantity,
           productId: item.productId,
@@ -94,8 +94,8 @@ export class OrdersService {
           include: OrderInclude,
         });
 
-        await this.prisma.basketItem.deleteMany({
-          where: { id: { in: cart.basketItems.map((item) => item.id) } },
+        await this.prisma.cartItem.deleteMany({
+          where: { id: { in: cart.cartItems.map((item) => item.id) } },
         });
 
         return this.mapper.mapToOrderDTO(order);
