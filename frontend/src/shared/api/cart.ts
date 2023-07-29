@@ -1,4 +1,10 @@
-import { axiosInstance, createResponseSchema } from './lib';
+import { z } from 'zod';
+import {
+  ListDTO,
+  axiosInstance,
+  createListResponseSchema,
+  createResponseSchema,
+} from './lib';
 import {
   CartItemSchema,
   CartSchema,
@@ -10,12 +16,36 @@ const BASE_ROUTE = '/cart';
 
 const CartResponseSchema = createResponseSchema(CartSchema);
 
+const CartFromListSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  isDefault: z.boolean(),
+});
+
+export type ICartFromList = z.infer<typeof CartFromListSchema>;
+
+const CartsListResponseSchema = createListResponseSchema(CartFromListSchema);
+
 const IsInCartResponseSchema = createResponseSchema(CartItemSchema);
 
-export const fetchCart = async (): Promise<ICart> => {
-  const response = await axiosInstance.get(`${BASE_ROUTE}/cart/`);
+export const createCart = async (name: string): Promise<ICart> => {
+  const response = await axiosInstance.post(`${BASE_ROUTE}/cart/`, { name });
 
   return CartResponseSchema.parse(response.data).data;
+};
+
+export const selectAsDefault = async (cartId: string): Promise<ICart> => {
+  const response = await axiosInstance.patch(
+    `${BASE_ROUTE}/cart/${cartId}/default`,
+  );
+
+  return CartResponseSchema.parse(response.data).data;
+};
+
+export const fetchCarts = async (): Promise<ListDTO<ICartFromList>> => {
+  const response = await axiosInstance.get(`${BASE_ROUTE}/carts/`);
+
+  return CartsListResponseSchema.parse(response.data).data;
 };
 
 export const fetchCartById = async (cartId: string): Promise<ICart> => {
