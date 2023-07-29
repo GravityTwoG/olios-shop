@@ -41,7 +41,7 @@ export default function Sidebar(props: SidebarProps) {
 
         <RoleGuard roles={IUserRole.CUSTOMER}>
           <NavLink
-            href={paths.basket({})}
+            href={paths.cart({})}
             className={classes.NavItem}
             activeClassName={classes.NavItemActive}
           >

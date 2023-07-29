@@ -9,7 +9,7 @@ import { IOrder, OrderStatus } from '@/src/types/IOrder';
 
 // Effects
 const fetchOrderFx = createEffect<string, IOrder, ApiError>((orderId) => {
-  return ordersApi.fetchOrder(orderId);
+  return ordersApi.fetchCustomersOrder(orderId);
 });
 
 // Events

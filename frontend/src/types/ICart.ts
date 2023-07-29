@@ -15,6 +15,8 @@ export type ICartItem = z.infer<typeof CartItemSchema>;
 
 export const CartSchema = z.object({
   id: z.string(),
+  name: z.string(),
+  isDefault: z.boolean(),
   items: z.array(CartItemSchema),
   total: z.number().int().gte(0),
 });

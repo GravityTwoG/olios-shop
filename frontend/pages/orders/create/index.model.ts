@@ -20,6 +20,8 @@ export const pageMounted = createEvent<string>('Create order page mounted');
 // Stores
 export const $cart = createStore<ICart>({
   id: '',
+  name: '',
+  isDefault: true,
   items: [],
   total: 0,
 });

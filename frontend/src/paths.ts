@@ -12,7 +12,7 @@ const profile = path('/profile');
 
 const product = path('/product/:id');
 
-const basket = path('/basket');
+const cart = path('/cart');
 
 const orders = path('/orders');
 const ordersCreate = path('/orders/create/:cartId');
@@ -31,7 +31,7 @@ const manager = dashboard.path('/manager');
 const users = manager.path('/users');
 
 const inviteCodes = manager.path('/invite-codes');
-const inviteCodesCreate = inviteCodes.path('/invite-codes/create');
+const inviteCodesCreate = inviteCodes.path('/create');
 
 const manageOrders = manager.path('/orders');
 const manageOrdersView = manageOrders.path('/view/:orderId');
@@ -45,7 +45,7 @@ export const paths = {
   registerEmployee,
   profile,
 
-  basket,
+  cart,
   orders,
   ordersCreate,
   ordersPayment,
