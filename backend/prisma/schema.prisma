@@ -63,7 +63,7 @@ model CustomerProfile {
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique() @db.Uuid
 
-  basket Basket?
+  cart Cart[]
   orders Order[]
 
   createdAt DateTime @default(now())
@@ -83,7 +83,7 @@ model Product {
   productCategory ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   categoryId      Int
 
-  basketItems BasketItem[]
+  cartItems CartItem[]
   orderItems OrderItem[]
 
   createdAt DateTime @default(now())
@@ -121,24 +121,28 @@ model ProductImage {
 
 //=======================================
 
-model Basket {
+model Cart {
   id String @id @default(uuid()) @db.Uuid
 
   customerProfile   CustomerProfile @relation(fields: [customerProfileId], references: [id])
-  customerProfileId String          @unique() @db.Uuid
+  customerProfileId String          @db.Uuid
+  isDefault         Boolean
+  name              String
 
-  basketItems BasketItem[]
+  cartItems CartItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([customerProfileId], type: Hash)
 }
 
-model BasketItem {
+model CartItem {
   id       String @id @default(uuid()) @db.Uuid
   quantity Int
 
-  basket   Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
-  basketId String @db.Uuid
+  cart   Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartId String @db.Uuid
 
   product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
   productId Int
@@ -146,7 +150,7 @@ model BasketItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([basketId, productId])
+  @@unique([cartId, productId])
 }
 
 //==========================================

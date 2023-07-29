@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { User, CustomerProfile, Prisma } from '@prisma/client';
 
-import { BasketsService } from 'src/baskets/baskets.service';
+import { CartsService } from 'src/carts/carts.service';
 import { BaseListDTO } from 'src/common/dto/base-list.dto';
 
 import { PrismaService } from 'src/lib/prisma/prisma.service';
@@ -11,20 +11,19 @@ import { PrismaService } from 'src/lib/prisma/prisma.service';
 export class CustomerProfilesService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly basketsService: BasketsService,
+    private readonly cartsService: CartsService,
   ) {}
 
   async createProfile(
     user: User,
-    prisma: Prisma.TransactionClient = this.prisma,
+    prisma: Prisma.TransactionClient,
   ): Promise<CustomerProfile> {
     const profile = await prisma.customerProfile.create({
       data: {
         userId: user.id,
       },
     });
-    // create basket for customer
-    await this.basketsService.createBasket(profile.id, prisma);
+    await this.cartsService.createDefaultCart(profile.id, prisma);
 
     return profile;
   }

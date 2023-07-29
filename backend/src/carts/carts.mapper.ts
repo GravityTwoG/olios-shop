@@ -27,10 +27,12 @@ export type CartItemJoined = {
 
 export type CartJoined = {
   id: string;
-  basketItems: CartItemJoined[];
+  name: string;
+  isDefault: boolean;
+  cartItems: CartItemJoined[];
 };
 
-export class CartMapper {
+export class CartsMapper {
   private readonly storageUrl: string;
 
   constructor(@Inject(ConfigService) configService: AppConfigService) {
@@ -38,14 +40,16 @@ export class CartMapper {
   }
 
   mapToCartDTO = (cart: CartJoined): CartDTO => {
-    const total = cart.basketItems.reduce(
+    const total = cart.cartItems.reduce(
       (acc, item) => acc + item.product.realPrice * item.quantity,
       0,
     );
 
     return {
       id: cart.id,
-      items: cart.basketItems.map(this.mapToCartItemDTO),
+      name: cart.name,
+      isDefault: cart.isDefault,
+      items: cart.cartItems.map(this.mapToCartItemDTO),
       total: total,
     };
   };
