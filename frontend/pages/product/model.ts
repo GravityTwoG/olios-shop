@@ -23,7 +23,7 @@ const addToCartFx = createEffect<
   return cartApi.addToCart(data);
 });
 
-const removeFromCartFx = createEffect<string, ICartItem>(async (cartItemId) => {
+const removeFromCartFx = createEffect<string, void>((cartItemId) => {
   return cartApi.removeFromCart(cartItemId);
 });
 
@@ -145,16 +145,17 @@ $isProductInCartPending.on(
   () => true,
 );
 
-$cartItem.on(
-  [checkIsInCartFx.doneData, addToCartFx.doneData, removeFromCartFx.doneData],
-  (_, data) => {
-    if (data.quantity === 0) {
-      return { ...data, quantity: 1, isInCart: false };
-    }
+$cartItem.on([checkIsInCartFx.doneData, addToCartFx.doneData], (_, data) => {
+  if (data.quantity === 0) {
+    return { ...data, quantity: 1, isInCart: false };
+  }
 
-    return { ...data, isInCart: true };
-  },
-);
+  return { ...data, isInCart: true };
+});
+
+$cartItem.on(removeFromCartFx.doneData, (cartItem) => {
+  return { ...cartItem, quantity: 1, isInCart: false };
+});
 
 checkIsInCartFx.failData.watch((error) => toast.error(error.message));
 addToCartFx.failData.watch((e) => toast.error(e.message));
