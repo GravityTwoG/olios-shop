@@ -15,6 +15,7 @@ import AboutIcon from './img/About.svg';
 import ProfileIcon from './img/Profile.svg';
 import { RoleGuard } from '../RoleGuard';
 import { IUserRole } from '@/src/types/IUser';
+import { useHideOnScroll } from './useHideOnScroll';
 
 export type SidebarProps = {
   className?: string;
@@ -23,9 +24,13 @@ export type SidebarProps = {
   burgerButtonRef: React.RefObject<HTMLButtonElement>;
 };
 
+const headerHeight = 60;
+
 export default function Sidebar(props: SidebarProps) {
+  const headerRef = useHideOnScroll({ scrollHeight: headerHeight });
+
   return (
-    <aside className={clsx(classes.sidebar, props.className)}>
+    <aside className={clsx(classes.sidebar, props.className)} ref={headerRef}>
       <Link href={paths.home({})} className={classes.SidebarLogo}>
         <Image width={100} height={100} src="/LOGO.png" alt="Olios Shop" />
       </Link>
@@ -39,7 +44,7 @@ export default function Sidebar(props: SidebarProps) {
           <HomeIcon />
         </NavLink>
 
-        <RoleGuard roles={IUserRole.CUSTOMER}>
+        <RoleGuard roles={IUserRole.CUSTOMER} allowAnonymous>
           <NavLink
             href={paths.cart({})}
             className={classes.NavItem}
@@ -61,7 +66,7 @@ export default function Sidebar(props: SidebarProps) {
 
         <NavLink
           href={paths.about({})}
-          className={classes.NavItem}
+          className={clsx(classes.NavItem, classes.hiddenOnMobileOrTablet)}
           activeClassName={classes.NavItemActive}
         >
           <AboutIcon />

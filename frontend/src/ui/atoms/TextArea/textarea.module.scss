@@ -9,6 +9,7 @@
   outline: none;
   resize: none;
   transition: border-color 0.1s ease;
+  caret-color: var(--accent-color);
 
   &:focus {
     border-color: var(--accent-color);
