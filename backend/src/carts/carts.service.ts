@@ -33,6 +33,7 @@ export class CartsService {
     private readonly mapper: CartsMapper,
   ) {}
 
+  // Carts
   createDefaultCart(
     customerProfileId: string,
     prisma: Prisma.TransactionClient = this.prisma,
@@ -74,17 +75,18 @@ export class CartsService {
 
     const carts = await this.prisma.cart.findMany({
       where: { customerProfileId: profile.id },
+      select: {
+        id: true,
+        name: true,
+        isDefault: true,
+      },
       orderBy: {
         createdAt: 'asc',
       },
     });
 
     return {
-      list: carts.map((c) => ({
-        id: c.id,
-        name: c.name,
-        isDefault: c.isDefault,
-      })),
+      list: carts,
       count: carts.length,
     };
   }
@@ -106,42 +108,6 @@ export class CartsService {
     );
 
     return this.mapper.mapToCartDTO(cart);
-  }
-
-  async isInCart(data: {
-    userId: string;
-    productId: number;
-  }): Promise<CartItemDTO> {
-    const cart = await this.getCustomersDefaultCart(data.userId);
-
-    const item = await this.prisma.cartItem.findFirst({
-      where: { productId: data.productId, cartId: cart.id },
-      include: CartItemInclude,
-    });
-
-    return item
-      ? this.mapper.mapToCartItemDTO(item)
-      : {
-          id: '',
-          quantity: 0,
-          productId: data.productId,
-          productName: '',
-          oldPrice: 0,
-          realPrice: 0,
-          sum: 0,
-          thumbUrl: '',
-        };
-  }
-
-  private async getCustomersDefaultCart(userId: string) {
-    const profile = await this.prisma.customerProfile.findUniqueOrThrow({
-      where: { userId: userId },
-    });
-
-    const cart = await this.prisma.cart.findFirstOrThrow({
-      where: { customerProfileId: profile.id, isDefault: true },
-    });
-    return cart;
   }
 
   async selectAsDefault(userId: string, cartId: string) {
@@ -172,6 +138,21 @@ export class CartsService {
     );
   }
 
+  async deleteCart(userId: string, cartId: string): Promise<void> {
+    const profile = await this.prisma.customerProfile.findUniqueOrThrow({
+      where: { userId: userId },
+    });
+
+    await this.prisma.cart.deleteMany({
+      where: {
+        id: cartId,
+        customerProfileId: profile.id,
+        isDefault: false,
+      },
+    });
+  }
+
+  // Cart items
   async addToCart(data: {
     userId: string;
     productId: number;
@@ -206,23 +187,48 @@ export class CartsService {
     return this.mapper.mapToCartItemDTO(newItem);
   }
 
+  private async getCustomersDefaultCart(userId: string) {
+    const profile = await this.prisma.customerProfile.findUniqueOrThrow({
+      where: { userId: userId },
+    });
+
+    const cart = await this.prisma.cart.findFirstOrThrow({
+      where: { customerProfileId: profile.id, isDefault: true },
+    });
+    return cart;
+  }
+
+  async isInCart(data: {
+    userId: string;
+    productId: number;
+  }): Promise<CartItemDTO> {
+    const cart = await this.getCustomersDefaultCart(data.userId);
+
+    const item = await this.prisma.cartItem.findFirst({
+      where: { productId: data.productId, cartId: cart.id },
+      include: CartItemInclude,
+    });
+
+    return item
+      ? this.mapper.mapToCartItemDTO(item)
+      : {
+          id: '',
+          quantity: 0,
+          productId: data.productId,
+          productName: '',
+          oldPrice: 0,
+          realPrice: 0,
+          sum: 0,
+          thumbUrl: '',
+        };
+  }
+
   async removeFromCart(data: {
     userId: string;
     cartItemId: string;
-  }): Promise<CartItemDTO> {
+  }): Promise<void> {
     await this.prisma.cartItem.delete({
       where: { id: data.cartItemId },
     });
-
-    return {
-      id: '',
-      quantity: 0,
-      productId: 0,
-      productName: '',
-      oldPrice: 0,
-      realPrice: 0,
-      sum: 0,
-      thumbUrl: '',
-    };
   }
 }
