@@ -28,16 +28,9 @@ const CartsListResponseSchema = createListResponseSchema(CartFromListSchema);
 
 const IsInCartResponseSchema = createResponseSchema(CartItemSchema);
 
+// Carts
 export const createCart = async (name: string): Promise<ICart> => {
   const response = await axiosInstance.post(`${BASE_ROUTE}/cart/`, { name });
-
-  return CartResponseSchema.parse(response.data).data;
-};
-
-export const selectAsDefault = async (cartId: string): Promise<ICart> => {
-  const response = await axiosInstance.patch(
-    `${BASE_ROUTE}/cart/${cartId}/default`,
-  );
 
   return CartResponseSchema.parse(response.data).data;
 };
@@ -54,14 +47,19 @@ export const fetchCartById = async (cartId: string): Promise<ICart> => {
   return CartResponseSchema.parse(response.data).data;
 };
 
-export const isInCart = async (productId: number): Promise<ICartItem> => {
-  const response = await axiosInstance.get(
-    `${BASE_ROUTE}/is-in-cart/${productId}`,
+export const selectAsDefault = async (cartId: string): Promise<ICart> => {
+  const response = await axiosInstance.patch(
+    `${BASE_ROUTE}/cart/${cartId}/default`,
   );
 
-  return IsInCartResponseSchema.parse(response.data).data;
+  return CartResponseSchema.parse(response.data).data;
 };
 
+export const deleteCart = async (cartId: string): Promise<void> => {
+  await axiosInstance.delete(`${BASE_ROUTE}/cart/${cartId}`);
+};
+
+// Cart items
 export const addToCart = async (data: {
   productId: number;
   quantity: number;
@@ -71,12 +69,14 @@ export const addToCart = async (data: {
   return IsInCartResponseSchema.parse(response.data).data;
 };
 
-export const removeFromCart = async (
-  cartItemId: string,
-): Promise<ICartItem> => {
-  const response = await axiosInstance.delete(
-    `${BASE_ROUTE}/remove-from-cart/${cartItemId}`,
+export const isInCart = async (productId: number): Promise<ICartItem> => {
+  const response = await axiosInstance.get(
+    `${BASE_ROUTE}/is-in-cart/${productId}`,
   );
 
   return IsInCartResponseSchema.parse(response.data).data;
+};
+
+export const removeFromCart = async (cartItemId: string): Promise<void> => {
+  await axiosInstance.delete(`${BASE_ROUTE}/remove-from-cart/${cartItemId}`);
 };

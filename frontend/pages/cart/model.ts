@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 
-import { ICart, ICartItem } from '@/src/types/ICart';
+import { ICart } from '@/src/types/ICart';
 import { toast } from '@/src/shared/toasts';
 import * as cartApi from '@/src/shared/api/cart';
 
@@ -21,7 +21,11 @@ const selectAsDefaultFx = createEffect<string, ICart>(async (cartId) => {
   return cartApi.selectAsDefault(cartId);
 });
 
-const removeFromCartFx = createEffect<string, ICartItem>(async (cartItemId) => {
+const deleteCartFx = createEffect<string, void>((cartId) => {
+  return cartApi.deleteCart(cartId);
+});
+
+const removeFromCartFx = createEffect<string, void>((cartItemId) => {
   return cartApi.removeFromCart(cartItemId);
 });
 
@@ -29,6 +33,8 @@ const removeFromCartFx = createEffect<string, ICartItem>(async (cartItemId) => {
 export const pageMounted = createEvent('Cart page mounted');
 export const loadCart = createEvent<string>('Load cart');
 export const selectedAsDefault = createEvent('Selected as default');
+export const cartDeleted = createEvent('Cart deleted');
+
 export const removeFromCart = createEvent<string>('Remove from cart');
 
 // Stores
@@ -82,6 +88,22 @@ fetchCartFx.failData.watch((e) => toast.error(e.message));
 
 $isCartPending.on(fetchCartFx.finally, () => false);
 
+sample({
+  clock: cartDeleted,
+  source: { cart: $cart },
+  fn: ({ cart }) => cart.id,
+  target: deleteCartFx,
+});
+
+deleteCartFx.failData.watch((e) => toast.error(e.message));
+
+sample({
+  clock: deleteCartFx.done,
+  source: { cart: $cart },
+  fn: ({ cart }) => cart.id,
+  target: fetchCartsFx,
+});
+
 //
 sample({
   clock: removeFromCart,
@@ -96,7 +118,9 @@ $isRemoving.on(removeFromCartFx.finally, () => false);
 
 sample({
   clock: removeFromCartFx.done,
-  target: fetchCartsFx,
+  source: { cart: $cart },
+  fn: ({ cart }) => cart.id,
+  target: fetchCartFx,
 });
 
 //

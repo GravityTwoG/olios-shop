@@ -8,6 +8,7 @@ import {
   $carts,
   $isCartPending,
   $newCartName,
+  cartDeleted,
   loadCart,
   newCartFormSubmitted,
   newCartNameChanged,
@@ -31,12 +32,7 @@ import { Form } from '@/src/ui/molecules/Form';
 import { Container } from '@/src/ui/atoms/Container';
 
 function CartPage() {
-  const [carts, cart, isCartPending, newCartName] = useUnit([
-    $carts,
-    $cart,
-    $isCartPending,
-    $newCartName,
-  ]);
+  const [cart, isCartPending] = useUnit([$cart, $isCartPending]);
 
   useEffect(() => {
     pageMounted();
@@ -46,45 +42,19 @@ function CartPage() {
     <Container className={clsx(classes['basket-page'], 'my-8')}>
       <div className={classes['basket-page__title']}>Basket</div>
 
-      <div className="overflow-auto mx-[-0.75rem] ">
-        <ul className="flex items-stretch gap-4 px-[0.75rem] w-fit">
-          {carts.map((c) => (
-            <li
-              key={c.id}
-              className={clsx(
-                'bg-white py-3 px-4 cursor-pointer w-[170px]',
-                c.id === cart.id && 'border-[1px] border-slate-950',
-              )}
-              onClick={() => loadCart(c.id)}
-            >
-              <p>{c.name}</p>
-              <p className="text-xs">{c.isDefault ? 'Default' : ''}</p>
-            </li>
-          ))}
-
-          <li className="bg-white py-3 px-4 w-[170px]">
-            <Form onSubmit={() => newCartFormSubmitted()}>
-              <p className="mb-2">
-                <input
-                  className="border-slate-950 border-[1px] px-2 py-1 w-full"
-                  value={newCartName}
-                  placeholder="cart name"
-                  onChange={(e) => newCartNameChanged(e.target.value)}
-                />
-              </p>
-              <Button className="w-full" type="submit">
-                Create new cart
-              </Button>
-            </Form>
-          </li>
-        </ul>
-      </div>
+      <CartsList />
 
       <div className="mt-8 mb-4 flex justify-between items-center gap-6">
-        <div>
+        <div className="flex gap-2">
           {!cart.isDefault && (
             <Button color="secondary" onClick={() => selectedAsDefault()}>
               Select as default
+            </Button>
+          )}
+
+          {!cart.isDefault && (
+            <Button color="danger" onClick={() => cartDeleted()}>
+              Delete cart
             </Button>
           )}
         </div>
@@ -100,7 +70,6 @@ function CartPage() {
           )}
         </div>
       </div>
-
       <Preloader isLoading={isCartPending}>
         <ul>
           {cart.items.map((item) => {
@@ -146,10 +115,53 @@ function CartPage() {
           })}
         </ul>
       </Preloader>
-
       <div className={classes['order']} />
     </Container>
   );
 }
+
+const CartsList = () => {
+  const [carts, selectedCart, newCartName] = useUnit([
+    $carts,
+    $cart,
+    $newCartName,
+  ]);
+
+  return (
+    <div className={clsx('mx-[-0.75rem]', classes.CartsList)}>
+      <ul className="px-[0.75rem] flex items-stretch gap-4 py-3 overflow-auto snap-x scroll-pl-[0.75rem]">
+        {carts.map((c) => (
+          <li
+            key={c.id}
+            className={clsx(
+              'bg-white py-3 px-4 cursor-pointer w-[170px] flex-none snap-start',
+              c.id === selectedCart.id && 'border-[1px] border-slate-950',
+            )}
+            onClick={() => loadCart(c.id)}
+          >
+            <p>{c.name}</p>
+            <p className="text-xs">{c.isDefault ? 'Default' : ''}</p>
+          </li>
+        ))}
+
+        <li className="bg-white py-3 px-4 w-[170px] snap-start">
+          <Form onSubmit={() => newCartFormSubmitted()}>
+            <p className="mb-2">
+              <input
+                className="border-slate-950 border-[1px] px-2 py-1 w-full"
+                value={newCartName}
+                placeholder="cart name"
+                onChange={(e) => newCartNameChanged(e.target.value)}
+              />
+            </p>
+            <Button className="w-full" type="submit">
+              Create new cart
+            </Button>
+          </Form>
+        </li>
+      </ul>
+    </div>
+  );
+};
 
 export default PrivatePage(CartPage, [IUserRole.CUSTOMER]);
