@@ -32,7 +32,9 @@ import { CreateCartDTO } from './dto/create-cart.dto';
 export class CartsController {
   constructor(private readonly cartsService: CartsService) {}
 
+  // Carts
   @ApiResponse({ type: CartsListResponseDTO })
+  @Roles(UserRole.CUSTOMER)
   @Get('/carts')
   async getCarts(
     @CurrentUser() user: RequestUser,
@@ -43,6 +45,7 @@ export class CartsController {
   }
 
   @ApiResponse({ type: CartResponseDTO })
+  @Roles(UserRole.CUSTOMER)
   @Post('/cart/')
   async createCart(
     @Body() data: CreateCartDTO,
@@ -54,17 +57,7 @@ export class CartsController {
   }
 
   @ApiResponse({ type: CartResponseDTO })
-  @Patch('/cart/:cartId/default')
-  async selectAsDefault(
-    @Param('cartId') cartId: string,
-    @CurrentUser() user: RequestUser,
-  ): Promise<CartResponseDTO> {
-    const cart = await this.cartsService.selectAsDefault(user.id, cartId);
-
-    return plainToInstance(CartResponseDTO, { data: cart });
-  }
-
-  @ApiResponse({ type: CartResponseDTO })
+  @Roles(UserRole.CUSTOMER)
   @Get('/cart/:cartId')
   async getCartById(
     @Param('cartId') cartId: string,
@@ -78,6 +71,28 @@ export class CartsController {
     return plainToInstance(CartResponseDTO, { data: cart });
   }
 
+  @ApiResponse({ type: CartResponseDTO })
+  @Roles(UserRole.CUSTOMER)
+  @Patch('/cart/:cartId/default')
+  async selectAsDefault(
+    @Param('cartId') cartId: string,
+    @CurrentUser() user: RequestUser,
+  ): Promise<CartResponseDTO> {
+    const cart = await this.cartsService.selectAsDefault(user.id, cartId);
+
+    return plainToInstance(CartResponseDTO, { data: cart });
+  }
+
+  @Roles(UserRole.CUSTOMER)
+  @Delete('/cart/:cartId')
+  async deleteCart(
+    @Param('cartId') cartId: string,
+    @CurrentUser() user: RequestUser,
+  ): Promise<void> {
+    await this.cartsService.deleteCart(user.id, cartId);
+  }
+
+  // Cart items
   @ApiResponse({ type: CartItemResponseDTO })
   @Roles(UserRole.CUSTOMER)
   @Get('/is-in-cart/:productId')
@@ -106,34 +121,19 @@ export class CartsController {
     });
 
     return plainToInstance(CartItemResponseDTO, {
-      data: item
-        ? item
-        : {
-            id: '',
-            quantity: 0,
-            productId: 0,
-            productName: '',
-            oldPrice: 0,
-            realPrice: 0,
-            thumbUrl: '',
-          },
+      data: item,
     });
   }
 
-  @ApiResponse({ type: CartItemResponseDTO })
   @Roles(UserRole.CUSTOMER)
   @Delete('/remove-from-cart/:cartItemId')
   async removeFromCart(
     @Param('cartItemId') cartItemId: string,
     @CurrentUser() user: RequestUser,
-  ): Promise<CartItemResponseDTO> {
-    const item = await this.cartsService.removeFromCart({
+  ): Promise<void> {
+    await this.cartsService.removeFromCart({
       cartItemId: cartItemId,
       userId: user.id,
-    });
-
-    return plainToInstance(CartItemResponseDTO, {
-      data: item,
     });
   }
 }
