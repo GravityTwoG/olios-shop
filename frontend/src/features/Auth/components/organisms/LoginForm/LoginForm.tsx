@@ -29,7 +29,7 @@ export const LoginForm = () => {
     ]);
 
   return (
-    <Form onSubmit={() => formSubmitted()}>
+    <Form className="py-2" onSubmit={() => formSubmitted()}>
       <InputField
         label="Email"
         placeholder="email"

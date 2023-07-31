@@ -7,6 +7,7 @@ import { AuthStatus, useAuthStatus, useUserRole } from '../session';
 export type RoleGuardProps = {
   roles: IUserRole | IUserRole[];
   children?: ReactNode;
+  allowAnonymous?: boolean;
 };
 
 export const RoleGuard = (props: RoleGuardProps) => {
@@ -14,9 +15,11 @@ export const RoleGuard = (props: RoleGuardProps) => {
   const authStatus = useAuthStatus();
   const isAuthenticated = authStatus === AuthStatus.Authenticated;
 
-  if (!isAuthenticated) return null;
+  if (!isAuthenticated && props.allowAnonymous) {
+    return <>{props.children}</>;
+  }
 
-  if (Array.isArray(props.roles) && props.roles.some((r) => r === userRole)) {
+  if (Array.isArray(props.roles) && props.roles.includes(userRole)) {
     return <>{props.children}</>;
   }
 

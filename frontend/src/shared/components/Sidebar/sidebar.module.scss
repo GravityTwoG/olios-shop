@@ -35,7 +35,7 @@
   gap: 1.5rem;
 
   .NavItem {
-    width: 50px;
+    width: 36px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -49,7 +49,7 @@
       fill: var(--accent-color);
     }
 
-    &.NavItemActive svg path {
+    &.NavItemActive path {
       fill: var(--accent-color);
     }
   }
@@ -63,14 +63,21 @@
   box-shadow: none;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .sidebar {
     width: 100%;
     height: 60px;
-    padding: 10px 15px 10px 75px;
+    padding: 10px 10px 10px 60px;
     flex-direction: row;
     justify-content: flex-end;
     gap: 0.5rem;
+    transition: transform 0.15s ease-in-out;
+    transform: translateY(0%);
+    will-change: transform;
+
+    &[data-is-hidden='true'] {
+      transform: translateY(-100%);
+    }
   }
 
   .nav {
@@ -80,11 +87,17 @@
 
   .SidebarLogo {
     top: 50%;
-    left: 20px;
+    left: 12px;
     transform: translateY(-50%);
   }
 
   .SidebarBurger {
     display: block;
+  }
+}
+
+*.hiddenOnMobileOrTablet {
+  @media (max-width: 768px) {
+    display: none !important;
   }
 }

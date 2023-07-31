@@ -66,6 +66,7 @@ const FakeInput = forwardRef<
       <input
         type="checkbox"
         name={props.name}
+        onChange={() => {}}
         ref={ref}
         className={classes.FakeInput}
       />
