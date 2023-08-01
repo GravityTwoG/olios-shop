@@ -44,7 +44,7 @@ function CartPage() {
 
       <CartsList />
 
-      <div className="mt-8 mb-4 flex justify-between items-center gap-6">
+      <div className="mt-8 mb-4 flex flex-wrap justify-between items-center gap-6">
         <div className="flex gap-2">
           {!cart.isDefault && (
             <Button color="secondary" onClick={() => selectedAsDefault()}>
