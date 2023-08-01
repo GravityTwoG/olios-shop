@@ -1,6 +1,5 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
-import { plainToInstance } from 'class-transformer';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 
@@ -25,7 +24,7 @@ export class CustomerProfilesController {
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<CustomerProfileResponseDTO> {
     const data = await this.customerProfilesService.find(id);
-    return plainToInstance(CustomerProfileResponseDTO, { data });
+    return { data };
   }
 
   @ApiCookieAuth()
@@ -35,6 +34,6 @@ export class CustomerProfilesController {
     @Query() query: GetCustomerProfilesDTO,
   ): Promise<CustomerProfilesListResponseDTO> {
     const data = await this.customerProfilesService.findAll(query);
-    return plainToInstance(CustomerProfilesListResponseDTO, { data });
+    return { data };
   }
 }

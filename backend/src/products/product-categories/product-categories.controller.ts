@@ -17,7 +17,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { plainToInstance } from 'class-transformer';
 
 import { UploadedImageFile } from 'src/common/decorators/uploaded-image-file.decorator';
 import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
@@ -60,12 +59,12 @@ export class ProductCategoriesController {
 
     const data = await this.productCategoriesService.findAll(params);
 
-    return plainToInstance(ProductCategoryListOutputDTO, {
+    return {
       data: {
         count: data.count,
         list: data.list.map(this.mapper.mapToProductCategoryDTO),
       },
-    });
+    };
   }
 
   @Get('/:id')
@@ -74,9 +73,9 @@ export class ProductCategoriesController {
   ): Promise<ProductCategoryResponseDTO> {
     const category = await this.productCategoriesService.findOne(id);
 
-    return plainToInstance(ProductCategoryResponseDTO, {
+    return {
       data: this.mapper.mapToProductCategoryDTO(category),
-    });
+    };
   }
 
   @UseInterceptors(
@@ -98,9 +97,9 @@ export class ProductCategoriesController {
       icon,
     );
 
-    return plainToInstance(ProductCategoryResponseDTO, {
+    return {
       data: this.mapper.mapToProductCategoryDTO(category),
-    });
+    };
   }
 
   @UseInterceptors(
@@ -122,9 +121,9 @@ export class ProductCategoriesController {
       icon,
     );
 
-    return plainToInstance(ProductCategoryResponseDTO, {
+    return {
       data: this.mapper.mapToProductCategoryDTO(category),
-    });
+    };
   }
 
   @ApiCookieAuth()

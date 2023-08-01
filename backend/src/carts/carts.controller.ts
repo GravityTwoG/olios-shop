@@ -9,7 +9,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { plainToInstance } from 'class-transformer';
 
 import { UserRole } from '@prisma/client';
 
@@ -41,7 +40,7 @@ export class CartsController {
   ): Promise<CartsListResponseDTO> {
     const carts = await this.cartsService.findCustomersCarts(user.id);
 
-    return plainToInstance(CartsListResponseDTO, { data: carts });
+    return { data: carts };
   }
 
   @ApiResponse({ type: CartResponseDTO })
@@ -53,7 +52,7 @@ export class CartsController {
   ): Promise<CartResponseDTO> {
     const cart = await this.cartsService.createCart(user.id, data);
 
-    return plainToInstance(CartResponseDTO, { data: cart });
+    return { data: cart };
   }
 
   @ApiResponse({ type: CartResponseDTO })
@@ -68,7 +67,7 @@ export class CartsController {
       cartId,
     });
 
-    return plainToInstance(CartResponseDTO, { data: cart });
+    return { data: cart };
   }
 
   @ApiResponse({ type: CartResponseDTO })
@@ -80,7 +79,7 @@ export class CartsController {
   ): Promise<CartResponseDTO> {
     const cart = await this.cartsService.selectAsDefault(user.id, cartId);
 
-    return plainToInstance(CartResponseDTO, { data: cart });
+    return { data: cart };
   }
 
   @Roles(UserRole.CUSTOMER)
@@ -105,7 +104,7 @@ export class CartsController {
       userId: user.id,
     });
 
-    return plainToInstance(CartItemResponseDTO, { data: result });
+    return { data: result };
   }
 
   @ApiResponse({ type: CartItemResponseDTO })
@@ -120,9 +119,9 @@ export class CartsController {
       userId: user.id,
     });
 
-    return plainToInstance(CartItemResponseDTO, {
+    return {
       data: item,
-    });
+    };
   }
 
   @Roles(UserRole.CUSTOMER)

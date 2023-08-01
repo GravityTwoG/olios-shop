@@ -12,7 +12,6 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
-import { plainToInstance } from 'class-transformer';
 
 import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
 import { assertTruthy } from 'src/lib/domain/assertions';
@@ -41,7 +40,7 @@ export class UsersController {
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ): Promise<UserResponseDTO> {
     const user = await this.usersService.getUser({ id });
-    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
+    return { data: mapUserToDto(user) };
   }
 
   @Get()
@@ -63,9 +62,9 @@ export class UsersController {
     }
 
     const data = await this.usersService.getUsers(params);
-    return plainToInstance(UsersListResponseDTO, {
+    return {
       data: { count: data.count, list: data.list.map(mapUserToDto) },
-    });
+    };
   }
 
   @Post('/:id')
@@ -83,7 +82,7 @@ export class UsersController {
     );
 
     const user = await this.usersService.updateUser(id, data);
-    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
+    return { data: mapUserToDto(user) };
   }
 
   @ApiCookieAuth()
@@ -102,6 +101,6 @@ export class UsersController {
     );
 
     const user = await this.usersService.setUserIsActive(id, isActive);
-    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
+    return { data: mapUserToDto(user) };
   }
 }

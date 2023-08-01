@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
-import { plainToInstance } from 'class-transformer';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UploadedImageFiles } from 'src/common/decorators/uploaded-image-files.decorator';
@@ -54,12 +53,12 @@ export class ProductsController {
     }
 
     const data = await this.productsService.findAll(params);
-    return plainToInstance(ProductsListResponseDTO, {
+    return {
       data: {
         count: data.count,
         list: data.list.map(this.mapper.mapToProductDTO),
       },
-    });
+    };
   }
 
   private createSearchQuery(searchQuery: string) {
@@ -95,12 +94,12 @@ export class ProductsController {
       params,
       query.productId,
     );
-    return plainToInstance(ProductsListResponseDTO, {
+    return {
       data: {
         count: data.count,
         list: data.list.map(this.mapper.mapToProductDTO),
       },
-    });
+    };
   }
 
   @Get('/:id')
@@ -108,9 +107,9 @@ export class ProductsController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ProductResponseDTO> {
     const product = await this.productsService.findOne(id);
-    return plainToInstance(ProductResponseDTO, {
+    return {
       data: this.mapper.mapToProductDTO(product),
-    });
+    };
   }
 
   @Post()
@@ -142,9 +141,9 @@ export class ProductsController {
       createProductInput,
       images,
     );
-    return plainToInstance(ProductResponseDTO, {
+    return {
       data: this.mapper.mapToProductDTO(product),
-    });
+    };
   }
 
   @ApiConsumes('multipart/form-data')
@@ -162,9 +161,9 @@ export class ProductsController {
       updateProductInput,
       images,
     );
-    return plainToInstance(ProductResponseDTO, {
+    return {
       data: this.mapper.mapToProductDTO(product),
-    });
+    };
   }
 
   @Delete('/:id')
