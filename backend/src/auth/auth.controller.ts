@@ -12,7 +12,6 @@ import {
 import { ApiBody, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { Authenticator } from 'passport';
 import { Response } from 'express';
-import { plainToInstance } from 'class-transformer';
 
 import { User } from '@prisma/client';
 
@@ -55,7 +54,7 @@ export class AuthController {
   @Get('/me')
   @UseGuards(AuthGuard)
   async me(@CurrentUser() user: RequestUser): Promise<UserResponseDTO> {
-    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
+    return { data: mapUserToDto(user) };
   }
 
   @Post('/login')
@@ -83,7 +82,7 @@ export class AuthController {
 
     req.user = user;
     req.session.user = user;
-    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
+    return { data: mapUserToDto(user) };
   }
 
   @Post('/register-customer')
@@ -91,7 +90,7 @@ export class AuthController {
     @Body() registerUserDto: RegisterCustomerDto,
   ): Promise<UserResponseDTO> {
     const user = await this.authService.registerCustomer(registerUserDto);
-    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
+    return { data: mapUserToDto(user) };
   }
 
   @Post('/register-employee')
@@ -99,7 +98,7 @@ export class AuthController {
     @Body() registerEmployeeDto: RegisterEmployeeDto,
   ): Promise<UserResponseDTO> {
     const user = await this.authService.registerEmployee(registerEmployeeDto);
-    return plainToInstance(UserResponseDTO, { data: mapUserToDto(user) });
+    return { data: mapUserToDto(user) };
   }
 
   @ApiCookieAuth()
