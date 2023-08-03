@@ -34,6 +34,8 @@ sample({
   target: updateCategoryFx,
 });
 
+updateCategoryFx.failData.watch((e) => toast.error(e.message));
+
 sample({
   clock: deleteCategory,
   target: deleteCategoryFx,

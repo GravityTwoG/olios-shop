@@ -5,6 +5,7 @@ export const ProductCategorySchema = z.object({
   name: z.string(),
   iconUrl: z.string(),
   parentId: z.number().or(z.null()),
+  parentName: z.string(),
   children: z.array(z.number()),
 });
 

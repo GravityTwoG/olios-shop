@@ -2,21 +2,26 @@ import { createEffect, createEvent, createStore, sample } from 'effector';
 import { reset } from 'patronum';
 
 import { ApiError } from '@/src/shared/api';
-import { createCategory } from '@/src/shared/api/product-categories';
+import {
+  CreateCategoryDTO,
+  createCategory,
+} from '@/src/shared/api/product-categories';
 import { Image } from '@/src/ui/atoms/ImageInput';
 
 // Effects
-const createCategoryFx = createEffect<
-  { name: string; icon: Blob },
-  void,
-  ApiError
->(async ({ name, icon }) => {
-  await createCategory(name, icon);
-});
+const createCategoryFx = createEffect<CreateCategoryDTO, void, ApiError>(
+  async (data) => {
+    await createCategory(data);
+  },
+);
 
 // Events
 export const nameChanged = createEvent<string>('');
 export const iconChanged = createEvent<Image>('');
+export const parentCategoryChanged = createEvent<{
+  label: string;
+  value: string;
+}>('');
 export const formSubmitted = createEvent('');
 export const categoryCreated = createCategoryFx.done;
 
@@ -26,10 +31,18 @@ export const $icon = createStore<Image>({
   raw: null,
   preview: '',
 });
+export const $parentCategory = createStore<{
+  label: string;
+  value: string;
+}>({
+  label: 'Not selected',
+  value: '',
+});
 export const $isPending = createStore(false);
 
 $name.on(nameChanged, (_, newValue) => newValue);
 $icon.on(iconChanged, (_, newValue) => newValue);
+$parentCategory.on(parentCategoryChanged, (_, newValue) => newValue);
 
 reset({
   clock: categoryCreated,
@@ -41,9 +54,14 @@ sample({
   source: {
     name: $name,
     icon: $icon,
+    parent: $parentCategory,
   },
   filter: ({ name, icon }) => name.trim().length !== 0 && icon.raw !== null,
-  fn: ({ name, icon }) => ({ name, icon: icon.raw! }),
+  fn: ({ name, icon, parent }) => ({
+    name,
+    categoryIcon: icon.raw!,
+    parentId: parent.value.trim().length ? Number(parent.value) : null,
+  }),
   target: createCategoryFx,
 });
 
