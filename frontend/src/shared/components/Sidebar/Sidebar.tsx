@@ -26,7 +26,7 @@ export type SidebarProps = {
 
 const headerHeight = 60;
 
-export default function Sidebar(props: SidebarProps) {
+export const Sidebar = (props: SidebarProps) => {
   const headerRef = useHideOnScroll({ scrollHeight: headerHeight });
 
   return (
@@ -81,4 +81,4 @@ export default function Sidebar(props: SidebarProps) {
       />
     </aside>
   );
-}
+};

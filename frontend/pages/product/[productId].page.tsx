@@ -20,7 +20,7 @@ import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { ImageViewer } from '@/src/ui/atoms/ImageViewer';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
-import { ProductCategoryLink } from '@/src/shared/components/ProductCategoryLink';
+import { ProductCategoryLinkLoader } from '@/src/shared/components/ProductCategoryLinkLoader';
 
 export default function ProductPageContainer() {
   const [
@@ -68,9 +68,7 @@ export default function ProductPageContainer() {
       <div className={classes['product__right']}>
         <div className={classes['product__right-inner']}>
           <div className={classes['product__header']}>
-            {product.categoryId ? (
-              <ProductCategoryLink categoryId={product.categoryId} />
-            ) : null}
+            <ProductCategoryLinkLoader categoryId={product.categoryId} />
           </div>
 
           <div className={classes['product__info']}>

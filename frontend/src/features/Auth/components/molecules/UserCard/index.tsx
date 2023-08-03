@@ -1,9 +1,8 @@
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
-
 import { IUser } from '@/src/types/IUser';
 
 import classes from './user-card.module.scss';
+
+import { Skeleton } from '@/src/ui/atoms/Skeleton';
 
 export type UserCardProps = {
   user: IUser;
