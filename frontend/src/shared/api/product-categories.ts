@@ -20,13 +20,22 @@ const ProductCategoryListSchema = createListResponseSchema(
 
 const BASE_ROUTE = '/product-categories';
 
+export type CreateCategoryDTO = {
+  name: string;
+  categoryIcon: Blob;
+  parentId: number | null;
+};
+
 export const createCategory = async (
-  name: string,
-  categoryIcon: Blob,
+  data: CreateCategoryDTO,
 ): Promise<IProductCategory> => {
   const formData = new FormData();
-  formData.append('name', name);
-  formData.append('icon', categoryIcon);
+  formData.append('name', data.name);
+  formData.append('icon', data.categoryIcon);
+
+  if (data.parentId !== null) {
+    formData.append('parentId', data.parentId.toString());
+  }
 
   const response = await axiosInstance.post(`${BASE_ROUTE}`, formData, {
     headers: {
@@ -46,16 +55,25 @@ export const fetchCategory = async (
 };
 
 export const fetchCategories = async (
-  query: PaginationQueryDTO & { name?: string },
+  query: PaginationQueryDTO & {
+    name?: string;
+    parentId?: number | null;
+  },
 ): Promise<ListDTO<IProductCategory>> => {
-  const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
+  const params: Record<string, unknown> = query;
+
+  if (query.parentId === null) {
+    params.parentId = 'null';
+  }
+
+  const response = await axiosInstance.get(`${BASE_ROUTE}`, { params });
 
   return ProductCategoryListSchema.parse(response.data).data;
 };
 
 export type UpdateCategoryDTO = {
   id: number;
-} & Partial<{ name: string; categoryIcon: Blob }>;
+} & Partial<{ name: string; categoryIcon: Blob; parentId: number | null }>;
 
 export const updateCategory = async (
   category: UpdateCategoryDTO,
@@ -67,6 +85,12 @@ export const updateCategory = async (
   }
   if (category.categoryIcon) {
     formData.append('icon', category.categoryIcon);
+  }
+
+  if (category.parentId === null) {
+    formData.append('parentId', 'null');
+  } else if (category.parentId !== undefined) {
+    formData.append('parentId', category.parentId.toString());
   }
 
   const response = await axiosInstance.put(`${BASE_ROUTE}`, formData, {

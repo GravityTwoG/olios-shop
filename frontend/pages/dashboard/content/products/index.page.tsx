@@ -23,7 +23,7 @@ import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Form } from '@/src/ui/molecules/Form';
 import { Field, InputField, TextAreaField } from '@/src/ui/molecules/Field';
 import { MultipleImagesInput } from '@/src/ui/molecules/MultipleImagesInput';
-import { CategoriesSelect } from '@/src/shared/components/CategoriesSelect';
+import { ProductCategoriesSelect } from '@/src/shared/components/ProductCategoriesSelect';
 import { ProductsWidget } from './ProductsWidget';
 
 export default function ProductsManagementPage() {
@@ -85,7 +85,7 @@ export default function ProductsManagementPage() {
             onChange={(e) => priceChangedEvent(Number(e.target.value))}
           />
           <Field label="Category" htmlFor={categoriesId}>
-            <CategoriesSelect
+            <ProductCategoriesSelect
               option={category}
               onChange={(option) => categoryChangedEvent(option)}
               id={categoriesId}

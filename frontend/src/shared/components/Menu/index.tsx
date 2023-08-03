@@ -16,7 +16,8 @@ import { NavLink } from '../../../ui/atoms/NavLink';
 import { ProductCategoryLink } from '@/src/shared/components/ProductCategoryLink';
 import { ProductCategoryLinkSkeleton } from '../ProductCategoryLinkLoader';
 
-const fetchCategoriesSWR = () => fetchCategories({ take: 8, skip: 0 });
+const fetchCategoriesSWR = () =>
+  fetchCategories({ take: 8, skip: 0, parentId: null });
 
 export type MenuProps = {
   isOpened: boolean;
@@ -26,15 +27,18 @@ export type MenuProps = {
 
 export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
   (props, ref) => {
-    const { data: categories } = useSWR<ListDTO<IProductCategory>, ApiError>(
+    const { data, isLoading } = useSWR<ListDTO<IProductCategory>, ApiError>(
       '/api/product-categories',
       fetchCategoriesSWR,
       {
+        errorRetryInterval: 30000,
         onError: (e) => {
           toast.error(e.message);
         },
       },
     );
+
+    const categories = data ? data.list : [];
 
     return (
       <div
@@ -46,10 +50,10 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
         )}
       >
         <div className={classes.categories}>
-          {categories === undefined && <ProductCategoryLinksSkeleton />}
+          {isLoading && <ProductCategoryLinksSkeleton />}
 
           {categories !== undefined &&
-            categories.list.map((category) => (
+            categories.map((category) => (
               <ProductCategoryLink
                 key={category.id}
                 category={category}
