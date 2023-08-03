@@ -12,8 +12,9 @@ import { toast } from '@/src/shared/toasts';
 
 import { paths } from '@/src/paths';
 
-import { NavLink } from '../../atoms/NavLink';
+import { NavLink } from '../../../ui/atoms/NavLink';
 import { ProductCategoryLink } from '@/src/shared/components/ProductCategoryLink';
+import { ProductCategoryLinkSkeleton } from '../ProductCategoryLinkLoader';
 
 const fetchCategoriesSWR = () => fetchCategories({ take: 8, skip: 0 });
 
@@ -25,7 +26,7 @@ export type MenuProps = {
 
 export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
   (props, ref) => {
-    const { data } = useSWR<ListDTO<IProductCategory>, ApiError>(
+    const { data: categories } = useSWR<ListDTO<IProductCategory>, ApiError>(
       '/api/product-categories',
       fetchCategoriesSWR,
       {
@@ -34,8 +35,6 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
         },
       },
     );
-
-    const categories = data ? data.list : [];
 
     return (
       <div
@@ -47,13 +46,16 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
         )}
       >
         <div className={classes.categories}>
-          {categories.map((category) => (
-            <ProductCategoryLink
-              key={category.id}
-              categoryId={category.id}
-              onClick={props.onClose}
-            />
-          ))}
+          {categories === undefined && <ProductCategoryLinksSkeleton />}
+
+          {categories !== undefined &&
+            categories.list.map((category) => (
+              <ProductCategoryLink
+                key={category.id}
+                category={category}
+                onClick={props.onClose}
+              />
+            ))}
         </div>
 
         <NavLink href={paths.home({})} className={classes.showAll}>
@@ -63,3 +65,16 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
     );
   },
 );
+
+const ProductCategoryLinksSkeleton = () => {
+  return (
+    <>
+      <ProductCategoryLinkSkeleton />
+      <ProductCategoryLinkSkeleton />
+      <ProductCategoryLinkSkeleton />
+      <ProductCategoryLinkSkeleton />
+      <ProductCategoryLinkSkeleton />
+      <ProductCategoryLinkSkeleton />
+    </>
+  );
+};

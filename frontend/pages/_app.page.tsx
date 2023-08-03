@@ -13,8 +13,8 @@ import { appStarted } from '@/src/shared/session';
 import { useOnClickOutside } from '@/src/ui/hooks/useOnClickOutside';
 
 import { BurgerButton } from '@/src/ui/molecules/BurgerButton';
-import { Menu } from '@/src/ui/organisms/Menu';
-import Sidebar from '@/src/shared/components/Sidebar/Sidebar';
+import { Menu } from '@/src/shared/components/Menu';
+import { Sidebar } from '@/src/shared/components/Sidebar';
 import { AppToaster } from '@/src/shared/toasts';
 
 const App = ({ children }: { children: ReactNode }) => {
