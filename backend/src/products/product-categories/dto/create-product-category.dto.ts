@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsInt, IsString } from 'class-validator';
+import { IsNullable } from 'src/common/validators/IsNullable';
 
 export class CreateProductCategoryDTO {
   @ApiProperty()
@@ -8,8 +9,13 @@ export class CreateProductCategoryDTO {
   name: string;
 
   @ApiProperty()
-  @IsOptional()
   @IsInt()
-  @Type(() => Number)
-  parentId?: number | null;
+  @IsNullable()
+  @Transform(({ value }) => {
+    if (value === 'null') {
+      return null;
+    }
+    return Number(value);
+  })
+  parentId: number | null;
 }
