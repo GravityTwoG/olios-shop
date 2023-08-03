@@ -19,24 +19,30 @@ import { InputField } from '@/src/ui/molecules/Field';
 export function AddNewCategory() {
   const [name, icon, isPending] = useUnit([$name, $icon, $isPending]);
 
+  const [formSubmittedEvent, nameChangedEvent, iconChangedEvent] = useUnit([
+    formSubmitted,
+    nameChanged,
+    iconChanged,
+  ]);
+
   return (
     <Paper>
       <H2>Add new category</H2>
 
-      <Form className="text-center" onSubmit={() => formSubmitted()}>
+      <Form className="text-center" onSubmit={() => formSubmittedEvent()}>
         <InputField
           label="Name"
           name="name"
           placeholder="name"
           value={name}
-          onChange={(e) => nameChanged(e.target.value)}
+          onChange={(e) => nameChangedEvent(e.target.value)}
         />
 
         <div className="m-4">
           <ImageInput
             preview={icon.preview}
             onChange={(image) => {
-              iconChanged(image);
+              iconChangedEvent(image);
             }}
           />
         </div>

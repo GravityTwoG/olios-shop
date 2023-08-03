@@ -39,12 +39,19 @@ export default function ProductPageContainer() {
     $areRecommendedProductsPending,
   ]);
 
+  const [
+    addToCartEvent,
+    amountInCartChangedEvent,
+    pageMountedEvent,
+    removeFromCartEvent,
+  ] = useUnit([addToCart, amountInCartChanged, pageMounted, removeFromCart]);
+
   const { query } = useRouter();
   useEffect(() => {
     if (typeof query.productId === 'string') {
-      pageMounted(+query.productId);
+      pageMountedEvent(+query.productId);
     }
-  }, [query.productId]);
+  }, [pageMountedEvent, query.productId]);
 
   return (
     <div className={classes['product']}>
@@ -97,7 +104,9 @@ export default function ProductPageContainer() {
                   className={classes['product__quantity-input']}
                   type="number"
                   value={cartItem.quantity}
-                  onChange={(e) => amountInCartChanged(Number(e.target.value))}
+                  onChange={(e) =>
+                    amountInCartChangedEvent(Number(e.target.value))
+                  }
                   min="0"
                   disabled={cartItem.isInCart}
                 />
@@ -105,7 +114,7 @@ export default function ProductPageContainer() {
                 {cartItem.isInCart ? (
                   <CTAButton
                     color="primary"
-                    onClick={() => removeFromCart()}
+                    onClick={() => removeFromCartEvent()}
                     isLoading={isProductInCartPending}
                   >
                     Remove
@@ -113,7 +122,7 @@ export default function ProductPageContainer() {
                 ) : (
                   <CTAButton
                     color="primary"
-                    onClick={() => addToCart()}
+                    onClick={() => addToCartEvent()}
                     isLoading={isProductInCartPending}
                   >
                     Add to cart

@@ -4,7 +4,7 @@ import { useUnit } from 'effector-react';
 import { IProductCategory } from '@/src/types/IProductCategory';
 import { toast } from '@/src/shared/toasts';
 
-import { $isDeleting, deleteCategory, updateCategoryFx } from './index.model';
+import { $isDeleting, deleteCategory, updateCategory } from './index.model';
 
 import Image from 'next/image';
 import { Button } from '@/src/ui/atoms/Button';
@@ -16,7 +16,11 @@ type ProductCategoryItemProps = {
 };
 
 export const ProductCategoryItem = ({ category }: ProductCategoryItemProps) => {
-  const isDeleting = useUnit($isDeleting);
+  const [isDeleting, deleteCategoryEvent, updateCategoryEvent] = useUnit([
+    $isDeleting,
+    deleteCategory,
+    updateCategory,
+  ]);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -27,10 +31,10 @@ export const ProductCategoryItem = ({ category }: ProductCategoryItemProps) => {
   });
   const [isPending, setIsPending] = useState(false);
 
-  const onSave = async () => {
+  const onSave = () => {
     try {
       setIsPending(true);
-      await updateCategoryFx({
+      updateCategoryEvent({
         id: category.id,
         name,
         categoryIcon: icon.raw || undefined,
@@ -84,7 +88,7 @@ export const ProductCategoryItem = ({ category }: ProductCategoryItemProps) => {
           Edit
         </Button>
         <Button
-          onDoubleClick={() => deleteCategory(category.id)}
+          onDoubleClick={() => deleteCategoryEvent(category.id)}
           isLoading={isDeleting}
           color="danger"
         >

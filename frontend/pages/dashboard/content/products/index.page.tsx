@@ -16,16 +16,15 @@ import {
   priceChanged,
 } from './index.model';
 
+import { Paper } from '@/src/ui/atoms/Paper';
 import { H1, H2 } from '@/src/ui/atoms/Typography';
 import { Container } from '@/src/ui/atoms/Container';
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
-import { Field, InputField, TextAreaField } from '@/src/ui/molecules/Field';
-import { CategoriesSelect } from '@/src/shared/components/CategoriesSelect';
-
 import { Form } from '@/src/ui/molecules/Form';
-import { ProductsWidget } from './ProductsWidget';
-import { Paper } from '@/src/ui/atoms/Paper';
+import { Field, InputField, TextAreaField } from '@/src/ui/molecules/Field';
 import { MultipleImagesInput } from '@/src/ui/molecules/MultipleImagesInput';
+import { CategoriesSelect } from '@/src/shared/components/CategoriesSelect';
+import { ProductsWidget } from './ProductsWidget';
 
 export default function ProductsManagementPage() {
   const [name, description, price, category, images, isPending] = useUnit([
@@ -37,6 +36,22 @@ export default function ProductsManagementPage() {
     $isPending,
   ]);
 
+  const [
+    formSubmittedEvent,
+    nameChangedEvent,
+    descriptionChangedEvent,
+    priceChangedEvent,
+    categoryChangedEvent,
+    imagesChangedEvent,
+  ] = useUnit([
+    formSubmitted,
+    nameChanged,
+    descriptionChanged,
+    priceChanged,
+    categoryChanged,
+    imagesChanged,
+  ]);
+
   const imagesId = useId();
   const categoriesId = useId();
 
@@ -46,32 +61,33 @@ export default function ProductsManagementPage() {
       <H2>Add new product</H2>
 
       <Paper className="my-8">
-        <Form className="text-center" onSubmit={() => formSubmitted()}>
+        <Form className="text-center" onSubmit={() => formSubmittedEvent()}>
           <InputField
             label="Name"
             name="name"
             placeholder="name"
             value={name}
-            onChange={(e) => nameChanged(e.target.value)}
+            onChange={(e) => nameChangedEvent(e.target.value)}
           />
           <TextAreaField
             label="Description"
             name="description"
             placeholder="description"
             value={description}
-            onChange={(e) => descriptionChanged(e.target.value)}
+            onChange={(e) => descriptionChangedEvent(e.target.value)}
           />
           <InputField
             label="Price"
             name="price"
             placeholder="price"
+            type="number"
             value={price}
-            onChange={(e) => priceChanged(+e.target.value)}
+            onChange={(e) => priceChangedEvent(Number(e.target.value))}
           />
           <Field label="Category" htmlFor={categoriesId}>
             <CategoriesSelect
               option={category}
-              onChange={(option) => categoryChanged(option)}
+              onChange={(option) => categoryChangedEvent(option)}
               id={categoriesId}
             />
           </Field>
@@ -79,7 +95,7 @@ export default function ProductsManagementPage() {
           <Field label="Images" htmlFor={imagesId} className="mb-4">
             <MultipleImagesInput
               images={images}
-              onChange={(newImages) => imagesChanged(newImages)}
+              onChange={(newImages) => imagesChangedEvent(newImages)}
               id={imagesId}
             />
           </Field>

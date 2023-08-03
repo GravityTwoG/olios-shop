@@ -11,7 +11,7 @@ import { toast } from '@/src/shared/toasts';
 const PAGE_SIZE = 12;
 
 // Effects
-export const fetchUsersFx = createEffect<
+const fetchUsersFx = createEffect<
   { pageSize: number; pageNumber: number; searchQuery: string },
   ListDTO<IUser> & { pageNumber: number },
   ApiError

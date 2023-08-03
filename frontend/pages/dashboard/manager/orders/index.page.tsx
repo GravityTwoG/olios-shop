@@ -44,10 +44,6 @@ const headers = [
 ];
 
 const ManageOrdersPage = () => {
-  useEffect(() => {
-    pageMounted();
-  }, []);
-
   const [orders, ordersCount, isPending, pageSize, pageNumber] = useUnit([
     $orders,
     $ordersCount,
@@ -57,6 +53,12 @@ const ManageOrdersPage = () => {
     $pageSize,
     $pageNumber,
   ]);
+
+  const [loadPageEvent, pageMountedEvent] = useUnit([loadPage, pageMounted]);
+
+  useEffect(() => {
+    pageMountedEvent();
+  }, [pageMountedEvent]);
 
   return (
     <Container className="py-8">
@@ -87,7 +89,7 @@ const ManageOrdersPage = () => {
           count={ordersCount}
           pageSize={pageSize}
           currentPage={pageNumber}
-          onPageSelect={loadPage}
+          onPageSelect={loadPageEvent}
         />
       </Paper>
     </Container>

@@ -33,10 +33,16 @@ import { Container } from '@/src/ui/atoms/Container';
 
 function CartPage() {
   const [cart, isCartPending] = useUnit([$cart, $isCartPending]);
+  const [
+    pageMountedEvent,
+    selectedAsDefaultEvent,
+    cartDeletedEvent,
+    removedFromCartEvent,
+  ] = useUnit([pageMounted, selectedAsDefault, cartDeleted, removeFromCart]);
 
   useEffect(() => {
-    pageMounted();
-  }, []);
+    pageMountedEvent();
+  }, [pageMountedEvent]);
 
   return (
     <Container className={clsx(classes['basket-page'], 'my-8')}>
@@ -47,13 +53,13 @@ function CartPage() {
       <div className="mt-8 mb-4 flex flex-wrap justify-between items-center gap-6">
         <div className="flex gap-2">
           {!cart.isDefault && (
-            <Button color="secondary" onClick={() => selectedAsDefault()}>
+            <Button color="secondary" onClick={() => selectedAsDefaultEvent()}>
               Select as default
             </Button>
           )}
 
           {!cart.isDefault && (
-            <Button color="danger" onClick={() => cartDeleted()}>
+            <Button color="danger" onClick={() => cartDeletedEvent()}>
               Delete cart
             </Button>
           )}
@@ -106,7 +112,7 @@ function CartPage() {
                     title="Remove from cart"
                     aria-label="Remove from cart"
                     onClick={() => {
-                      removeFromCart(item.id);
+                      removedFromCartEvent(item.id);
                     }}
                   />
                 </div>
@@ -127,6 +133,9 @@ const CartsList = () => {
     $newCartName,
   ]);
 
+  const [loadCartEvent, newCartFormSubmittedEvent, newCartNameChangedEvent] =
+    useUnit([loadCart, newCartFormSubmitted, newCartNameChanged]);
+
   return (
     <div className={clsx('mx-[-0.75rem]', classes.CartsList)}>
       <ul className="px-[0.75rem] flex items-stretch gap-4 py-3 overflow-auto snap-x scroll-pl-[0.75rem]">
@@ -137,7 +146,7 @@ const CartsList = () => {
               'bg-white py-3 px-4 cursor-pointer w-[170px] flex-none snap-start',
               c.id === selectedCart.id && 'border-[1px] border-slate-950',
             )}
-            onClick={() => loadCart(c.id)}
+            onClick={() => loadCartEvent(c.id)}
           >
             <p>{c.name}</p>
             <p className="text-xs">{c.isDefault ? 'Default' : ''}</p>
@@ -145,13 +154,13 @@ const CartsList = () => {
         ))}
 
         <li className="bg-white py-3 px-4 w-[170px] snap-start">
-          <Form onSubmit={() => newCartFormSubmitted()}>
+          <Form onSubmit={() => newCartFormSubmittedEvent()}>
             <p className="mb-2">
               <input
                 className="border-slate-950 border-[1px] px-2 py-1 w-full"
                 value={newCartName}
                 placeholder="cart name"
-                onChange={(e) => newCartNameChanged(e.target.value)}
+                onChange={(e) => newCartNameChangedEvent(e.target.value)}
               />
             </p>
             <Button className="w-full" type="submit">

@@ -1,25 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, ReactNode } from 'react';
 import classes from './_app.module.scss';
-
-import { AppProps } from 'next/app';
-
 import '@/src/styles/globals.css';
 import '@/src/styles/theme.css';
 import '@/src/styles/ui.scss';
 
-import { fetchSessionFx } from '@/src/shared/session';
+import { AppProps } from 'next/app';
+import { EffectorNext } from '@effector/next';
 
-import { BurgerButton } from '@/src/ui/molecules/BurgerButton';
-import Sidebar from '@/src/shared/components/Sidebar/Sidebar';
-import { Menu } from '@/src/ui/organisms/Menu';
-import { AppToaster } from '@/src/shared/toasts';
+import { useUnit } from 'effector-react';
+import { appStarted } from '@/src/shared/session';
+
 import { useOnClickOutside } from '@/src/ui/hooks/useOnClickOutside';
 
-export default function App({ Component, pageProps }: AppProps) {
+import { BurgerButton } from '@/src/ui/molecules/BurgerButton';
+import { Menu } from '@/src/ui/organisms/Menu';
+import Sidebar from '@/src/shared/components/Sidebar/Sidebar';
+import { AppToaster } from '@/src/shared/toasts';
+
+const App = ({ children }: { children: ReactNode }) => {
+  const [appStartedEvent] = useUnit([appStarted]);
+
   useEffect(() => {
-    // check if user is already authenticated
-    fetchSessionFx();
-  }, []);
+    appStartedEvent();
+  }, [appStartedEvent]);
 
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
@@ -50,7 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
       />
 
       <div className={classes.content}>
-        <Component {...pageProps} />
+        {children}
 
         <div className={classes.AppBurgerButton}>
           <BurgerButton
@@ -68,5 +71,20 @@ export default function App({ Component, pageProps }: AppProps) {
       />
       <AppToaster />
     </div>
+  );
+};
+
+type PageProps = { values: Record<string, unknown> };
+
+export default function AppWrapper<T extends PageProps>({
+  Component,
+  pageProps,
+}: AppProps<T>) {
+  return (
+    <EffectorNext values={pageProps.values}>
+      <App>
+        <Component {...pageProps} />
+      </App>
+    </EffectorNext>
   );
 }

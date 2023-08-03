@@ -65,9 +65,16 @@ export function InviteCodesPage() {
     $isDeleting,
   ]);
 
+  const [
+    deleteInviteCodeEvent,
+    loadPageEvent,
+    pageMountedEvent,
+    searchQueryChangedEvent,
+  ] = useUnit([deleteInviteCode, loadPage, pageMounted, searchQueryChanged]);
+
   useEffect(() => {
-    pageMounted();
-  }, []);
+    pageMountedEvent();
+  }, [pageMountedEvent]);
 
   return (
     <Container className="py-8">
@@ -85,7 +92,7 @@ export function InviteCodesPage() {
       <Paper>
         <Input
           value={searchQuery}
-          onChange={(e) => searchQueryChanged(e.target.value)}
+          onChange={(e) => searchQueryChangedEvent(e.target.value)}
         />
 
         <Table
@@ -106,7 +113,7 @@ export function InviteCodesPage() {
                 {!invite.isUsed && (
                   <Button
                     isLoading={isDeleting}
-                    onClick={() => deleteInviteCode(invite.id)}
+                    onClick={() => deleteInviteCodeEvent(invite.id)}
                   >
                     Delete
                   </Button>
@@ -121,7 +128,7 @@ export function InviteCodesPage() {
           pageSize={pageSize}
           currentPage={pageNumber}
           count={inviteCodesCount}
-          onPageSelect={loadPage}
+          onPageSelect={loadPageEvent}
         />
       </Paper>
     </Container>

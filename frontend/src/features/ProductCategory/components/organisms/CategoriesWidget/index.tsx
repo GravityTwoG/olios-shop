@@ -39,16 +39,22 @@ export const CategoriesWidget = () => {
     $isPending,
   ]);
 
+  const [mountedEvent, searchQueryChangedEvent, loadPageEvent] = useUnit([
+    mounted,
+    searchQueryChanged,
+    loadPage,
+  ]);
+
   useEffect(() => {
-    mounted();
-  }, []);
+    mountedEvent();
+  }, [mountedEvent]);
 
   return (
     <Paper>
       <H2>Product Categories</H2>
       <Input
         value={searchQuery}
-        onChange={(e) => searchQueryChanged(e.target.value)}
+        onChange={(e) => searchQueryChangedEvent(e.target.value)}
         className="mt-3"
       />
 
@@ -66,7 +72,7 @@ export const CategoriesWidget = () => {
         pageSize={pageSize}
         currentPage={pageNumber}
         count={categoriesCount}
-        onPageSelect={loadPage}
+        onPageSelect={loadPageEvent}
       />
     </Paper>
   );

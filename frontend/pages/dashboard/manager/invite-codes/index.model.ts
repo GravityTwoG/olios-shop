@@ -16,7 +16,7 @@ import { ListDTO } from '@/src/shared/api/lib/types';
 const PAGE_SIZE = 12;
 
 // Effects
-export const fetchInviteCodesFx = createEffect<
+const fetchInviteCodesFx = createEffect<
   { pageSize: number; pageNumber: number; searchQuery: string },
   ListDTO<IInviteCode> & { pageNumber: number },
   ApiError

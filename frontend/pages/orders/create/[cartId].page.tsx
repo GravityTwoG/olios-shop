@@ -64,18 +64,6 @@ const CreateOrderPage = () => {
   const router = useRouter();
   const cartId = router.query.cartId;
 
-  useEffect(() => {
-    if (cartId && typeof cartId === 'string') {
-      pageMounted(cartId);
-    }
-  }, [cartId]);
-
-  useEffect(() => {
-    orderCreated.watch((order) => {
-      router.push(paths.ordersPayment({ orderId: order.id }));
-    });
-  }, [router]);
-
   const [
     cart,
     isCartPending,
@@ -101,6 +89,42 @@ const CreateOrderPage = () => {
     $phoneNumber,
     $isCreating,
   ]);
+
+  const [
+    cityChangedEvent,
+    countryChangedEvent,
+    flatChangedEvent,
+    floorChangedEvent,
+    formSubmittedEvent,
+    houseChangedEvent,
+    nameChangedEvent,
+    pageMountedEvent,
+    phoneNumberChangedEvent,
+    streetChangedEvent,
+  ] = useUnit([
+    cityChanged,
+    countryChanged,
+    flatChanged,
+    floorChanged,
+    formSubmitted,
+    houseChanged,
+    nameChanged,
+    pageMounted,
+    phoneNumberChanged,
+    streetChanged,
+  ]);
+
+  useEffect(() => {
+    if (cartId && typeof cartId === 'string') {
+      pageMountedEvent(cartId);
+    }
+  }, [pageMountedEvent, cartId]);
+
+  useEffect(() => {
+    orderCreated.watch((order) => {
+      router.push(paths.ordersPayment({ orderId: order.id }));
+    });
+  }, [router]);
 
   return (
     <Container>
@@ -128,50 +152,50 @@ const CreateOrderPage = () => {
           Total: {cart.total}
         </div>
 
-        <Form className="my-4" onSubmit={() => formSubmitted()}>
+        <Form className="my-4" onSubmit={() => formSubmittedEvent()}>
           <H2>Shipping Info</H2>
 
           <InputField
             label="Country"
             value={country}
-            onChange={(e) => countryChanged(e.target.value)}
+            onChange={(e) => countryChangedEvent(e.target.value)}
           />
           <InputField
             label="City"
             value={city}
-            onChange={(e) => cityChanged(e.target.value)}
+            onChange={(e) => cityChangedEvent(e.target.value)}
           />
           <InputField
             label="Street"
             value={street}
-            onChange={(e) => streetChanged(e.target.value)}
+            onChange={(e) => streetChangedEvent(e.target.value)}
           />
           <InputField
             label="House"
             value={house}
-            onChange={(e) => houseChanged(e.target.value)}
+            onChange={(e) => houseChangedEvent(e.target.value)}
           />
           <InputField
             label="Flat"
             value={flat}
-            onChange={(e) => flatChanged(e.target.value)}
+            onChange={(e) => flatChangedEvent(e.target.value)}
           />
           <InputField
             label="Floor"
             type="number"
             value={floor}
-            onChange={(e) => floorChanged(Number(e.target.value))}
+            onChange={(e) => floorChangedEvent(Number(e.target.value))}
           />
 
           <InputField
             label="Phone Number"
             value={phoneNumber}
-            onChange={(e) => phoneNumberChanged(e.target.value)}
+            onChange={(e) => phoneNumberChangedEvent(e.target.value)}
           />
           <InputField
             label="Name"
             value={name}
-            onChange={(e) => nameChanged(e.target.value)}
+            onChange={(e) => nameChangedEvent(e.target.value)}
           />
 
           <CTAButton type="submit" isLoading={isCreating}>

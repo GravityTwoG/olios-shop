@@ -3,7 +3,7 @@ import { IUserRole } from '@/src/types/IUser';
 
 import {
   AuthStatus,
-  logoutFx,
+  logout,
   useAuthStatus,
   useUser,
 } from '@/src/shared/session';
@@ -15,10 +15,13 @@ import { Container } from '@/src/ui/atoms/Container';
 import { AppLink } from '@/src/ui/atoms/AppLink';
 import { RoleGuard } from '@/src/shared/components/RoleGuard';
 import { UserCard } from '@/src/features/Auth';
+import { useUnit } from 'effector-react';
 
 function ProfilePage() {
   const authStatus = useAuthStatus();
   const user = useUser();
+
+  const [logoutEvent] = useUnit([logout]);
 
   return (
     <Container className="py-8">
@@ -52,7 +55,7 @@ function ProfilePage() {
 
       <div className="flex justify-center my-8">
         <div>
-          <CTAButton color="secondary" onClick={() => logoutFx()}>
+          <CTAButton color="secondary" onClick={() => logoutEvent()}>
             logout
           </CTAButton>
         </div>

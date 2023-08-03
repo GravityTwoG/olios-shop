@@ -23,25 +23,24 @@ export const RegisterForm = () => {
     $isPending,
   ]);
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    formSubmitted();
-  };
+  const [formSubmittedEvent, emailChangedEvent, passwordChangedEvent] = useUnit(
+    [formSubmitted, emailChanged, passwordChanged],
+  );
 
   return (
-    <Form className="py-2" onSubmit={onSubmit}>
+    <Form className="py-2" onSubmit={() => formSubmittedEvent()}>
       <InputField
         label="Email"
         placeholder="email"
         value={email}
-        onChange={(e) => emailChanged(e.target.value)}
+        onChange={(e) => emailChangedEvent(e.target.value)}
       />
       <InputField
         label="Password"
         placeholder="password"
         type="password"
         value={password}
-        onChange={(e) => passwordChanged(e.target.value)}
+        onChange={(e) => passwordChangedEvent(e.target.value)}
       />
 
       <FormError>{error}</FormError>

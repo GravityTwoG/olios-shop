@@ -60,11 +60,26 @@ export function UsersPage() {
     $pageNumber,
     $searchQuery,
   ]);
+
+  const [
+    blockUserEvent,
+    loadPageEvent,
+    pageMountedEvent,
+    searchQueryChangedEvent,
+    unblockUserEvent,
+  ] = useUnit([
+    blockUser,
+    loadPage,
+    pageMounted,
+    searchQueryChanged,
+    unblockUser,
+  ]);
+
   const currentUserId = useUser().id;
 
   useEffect(() => {
-    pageMounted();
-  }, []);
+    pageMountedEvent();
+  }, [pageMountedEvent]);
 
   return (
     <Container className="py-8">
@@ -76,7 +91,7 @@ export function UsersPage() {
       <Paper>
         <Input
           value={searchQuery}
-          onChange={(e) => searchQueryChanged(e.target.value)}
+          onChange={(e) => searchQueryChangedEvent(e.target.value)}
         />
 
         <Table
@@ -97,7 +112,9 @@ export function UsersPage() {
                   <Button
                     isLoading={isBlockingOrUnblocking}
                     onClick={() =>
-                      user.isActive ? blockUser(user.id) : unblockUser(user.id)
+                      user.isActive
+                        ? blockUserEvent(user.id)
+                        : unblockUserEvent(user.id)
                     }
                   >
                     {user.isActive ? 'Block' : 'Unblock'}
@@ -113,7 +130,7 @@ export function UsersPage() {
           pageSize={pageSize}
           currentPage={pageNumber}
           count={usersCount}
-          onPageSelect={loadPage}
+          onPageSelect={loadPageEvent}
         />
       </Paper>
     </Container>
