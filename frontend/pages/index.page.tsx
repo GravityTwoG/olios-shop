@@ -22,9 +22,6 @@ import { ProductsGrid } from '@/src/features/Product/components/molecules/produc
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 
 export function HomePage() {
-  useEffect(() => {
-    pageMounted();
-  }, []);
   const [
     products,
     productsCount,
@@ -40,6 +37,16 @@ export function HomePage() {
     $isPending,
     $searchQuery,
   ]);
+
+  const [pageMountedEvent, searchQueryChangedEvent, loadPageEvent] = useUnit([
+    pageMounted,
+    searchQueryChanged,
+    loadPage,
+  ]);
+
+  useEffect(() => {
+    pageMountedEvent();
+  }, [pageMountedEvent]);
 
   return (
     <div className={classes['MainPage']}>
@@ -71,14 +78,14 @@ export function HomePage() {
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => searchQueryChanged(e.target.value)}
+            onChange={(e) => searchQueryChangedEvent(e.target.value)}
             placeholder="Type product that you are looking for!"
           />
           <div className={classes.Underline} />
 
           <button
             className={classes.ResetButton}
-            onClick={() => searchQueryChanged('')}
+            onClick={() => searchQueryChangedEvent('')}
             title="Clear"
             aria-label="Clear"
           />
@@ -118,7 +125,7 @@ export function HomePage() {
           pageSize={pageSize}
           currentPage={pageNumber}
           count={productsCount}
-          onPageSelect={loadPage}
+          onPageSelect={loadPageEvent}
         />
       </Container>
     </div>

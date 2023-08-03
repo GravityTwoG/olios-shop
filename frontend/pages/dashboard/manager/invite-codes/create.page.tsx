@@ -42,6 +42,22 @@ const CreateInviteCodePage = () => {
       $error,
     ]);
 
+  const [
+    birthDateChangedEvent,
+    firstNameChangedEvent,
+    formSubmittedEvent,
+    lastNameChangedEvent,
+    patronymicChangedEvent,
+    roleChangedEvent,
+  ] = useUnit([
+    birthDateChanged,
+    firstNameChanged,
+    formSubmitted,
+    lastNameChanged,
+    patronymicChanged,
+    roleChanged,
+  ]);
+
   const router = useRouter();
   useEffect(() => {
     return inviteCodeCreated.watch(() => router.push(paths.inviteCodes({})));
@@ -56,34 +72,29 @@ const CreateInviteCodePage = () => {
       </Head>
       <H1>Create Invite Code</H1>
 
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          formSubmitted();
-        }}
-      >
+      <Form onSubmit={() => formSubmittedEvent()}>
         <InputField
           label="First Name"
           placeholder="First Name"
           value={firstName}
-          onChange={(e) => firstNameChanged(e.target.value)}
+          onChange={(e) => firstNameChangedEvent(e.target.value)}
         />
         <InputField
           label="Last Name"
           placeholder="Last Name"
           value={lastName}
-          onChange={(e) => lastNameChanged(e.target.value)}
+          onChange={(e) => lastNameChangedEvent(e.target.value)}
         />
         <InputField
           label="Patronymic"
           placeholder="Patronymic"
           value={patronymic}
-          onChange={(e) => patronymicChanged(e.target.value)}
+          onChange={(e) => patronymicChangedEvent(e.target.value)}
         />
         <Field label="Role" htmlFor={rolesId}>
           <RoleSelect
             role={role}
-            onChange={(r) => roleChanged(r)}
+            onChange={(r) => roleChangedEvent(r)}
             id={rolesId}
           />
         </Field>
@@ -92,7 +103,7 @@ const CreateInviteCodePage = () => {
           placeholder="Birth Date"
           type="date"
           value={birthDate}
-          onChange={(e) => birthDateChanged(e.target.value)}
+          onChange={(e) => birthDateChangedEvent(e.target.value)}
         />
 
         <FormError>{error}</FormError>

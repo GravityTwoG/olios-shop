@@ -73,12 +73,6 @@ const nextConfig = {
 
     return config;
   },
-  compiler: {
-    styledComponents: {
-      // Not supported yet.
-      pure: true,
-    },
-  },
   output: 'standalone',
   pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
   images: {

@@ -28,13 +28,17 @@ export const LoginForm = () => {
       $isLoginPending,
     ]);
 
+  const [formSubmittedEvent, emailChangedEvent, passwordChangedEvent] = useUnit(
+    [formSubmitted, emailChanged, passwordChanged],
+  );
+
   return (
-    <Form className="py-2" onSubmit={() => formSubmitted()}>
+    <Form className="py-2" onSubmit={() => formSubmittedEvent()}>
       <InputField
         label="Email"
         placeholder="email"
         value={email}
-        onChange={(e) => emailChanged(e.target.value)}
+        onChange={(e) => emailChangedEvent(e.target.value)}
       />
       <FormError>{emailError}</FormError>
 
@@ -43,7 +47,7 @@ export const LoginForm = () => {
         placeholder="password"
         type="password"
         value={password}
-        onChange={(e) => passwordChanged(e.target.value)}
+        onChange={(e) => passwordChangedEvent(e.target.value)}
       />
       <FormError>{passwordError}</FormError>
 

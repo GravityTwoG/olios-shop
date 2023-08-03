@@ -59,6 +59,8 @@ const OrdersPage = () => {
     $pageNumber,
   ]);
 
+  const [loadPageEvent] = useUnit([loadPage]);
+
   return (
     <Container className="py-8">
       <H1>Orders</H1>
@@ -95,7 +97,7 @@ const OrdersPage = () => {
           count={ordersCount}
           pageSize={pageSize}
           currentPage={pageNumber}
-          onPageSelect={loadPage}
+          onPageSelect={loadPageEvent}
         />
       </Paper>
     </Container>

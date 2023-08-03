@@ -38,13 +38,17 @@ const OrdersPaymentPage = () => {
   const router = useRouter();
   const orderId = router.query.orderId;
 
+  const [order, isOrderPending, pageMountedEvent] = useUnit([
+    $order,
+    $isOrderPending,
+    pageMounted,
+  ]);
+
   useEffect(() => {
     if (orderId && typeof orderId === 'string') {
-      pageMounted(orderId);
+      pageMountedEvent(orderId);
     }
-  }, [orderId]);
-
-  const [order, isOrderPending] = useUnit([$order, $isOrderPending]);
+  }, [pageMountedEvent, orderId]);
 
   return (
     <Container className="py-8">

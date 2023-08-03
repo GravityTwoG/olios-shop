@@ -26,31 +26,38 @@ export const RegisterEmployeeForm = () => {
     $error,
   ]);
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    formSubmitted();
-  };
+  const [
+    formSubmittedEvent,
+    emailChangedEvent,
+    passwordChangedEvent,
+    inviteCodeChangedEvent,
+  ] = useUnit([
+    formSubmitted,
+    emailChanged,
+    passwordChanged,
+    inviteCodeChanged,
+  ]);
 
   return (
-    <Form className="py-2" onSubmit={onSubmit}>
+    <Form className="py-2" onSubmit={() => formSubmittedEvent()}>
       <InputField
         label="Email"
         placeholder="email"
         value={email}
-        onChange={(e) => emailChanged(e.target.value)}
+        onChange={(e) => emailChangedEvent(e.target.value)}
       />
       <InputField
         label="Password"
         placeholder="password"
         type="password"
         value={password}
-        onChange={(e) => passwordChanged(e.target.value)}
+        onChange={(e) => passwordChangedEvent(e.target.value)}
       />
       <InputField
         label="Invite code"
         placeholder="invite-code"
         value={inviteCode}
-        onChange={(e) => inviteCodeChanged(e.target.value)}
+        onChange={(e) => inviteCodeChangedEvent(e.target.value)}
       />
 
       <FormError>{error}</FormError>

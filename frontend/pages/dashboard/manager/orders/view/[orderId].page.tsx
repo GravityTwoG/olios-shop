@@ -43,20 +43,20 @@ const headers = [
 ];
 
 const OrdersPaymentPage = () => {
-  const router = useRouter();
-  const orderId = router.query.orderId;
-
-  useEffect(() => {
-    if (orderId && typeof orderId === 'string') {
-      pageMounted(orderId);
-    }
-  }, [orderId]);
-
   const [order, isOrderPending, isMarking] = useUnit([
     $order,
     $isOrderPending,
     $isMarking,
   ]);
+  const [deliveredEvent, pageMountedEvent] = useUnit([delivered, pageMounted]);
+
+  const router = useRouter();
+  const orderId = router.query.orderId;
+  useEffect(() => {
+    if (orderId && typeof orderId === 'string') {
+      pageMountedEvent(orderId);
+    }
+  }, [pageMountedEvent, orderId]);
 
   return (
     <Container className="py-8">
@@ -67,7 +67,7 @@ const OrdersPaymentPage = () => {
           <div className="mb-4 flex gap-4 items-center justify-between">
             <p>Status: {order.status}</p>
             {order.status === OrderStatus.PAID && (
-              <Button isLoading={isMarking} onClick={() => delivered()}>
+              <Button isLoading={isMarking} onClick={() => deliveredEvent()}>
                 Mark as delivered
               </Button>
             )}

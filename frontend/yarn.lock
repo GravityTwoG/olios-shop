@@ -1048,6 +1048,11 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     to-fast-properties "^2.0.0"
 
+"@effector/next@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@effector/next/-/next-0.5.1.tgz#723d60afcb922ee72ac01bf05ee70691cacb5125"
+  integrity sha512-tpLpeL4IgFxlCAR7SbVjLMeIND+xBvZ/Qs1kWJVufgMnrDpBw6yVw/KG6keKTRDxLnoP1HVWJ7Nd8zW3ivviMw==
+
 "@emotion/babel-plugin@^11.11.0":
   version "11.11.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.11.0.tgz#c2d872b6a7767a9d176d007f5b31f7d504bb5d6c"

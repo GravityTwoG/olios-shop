@@ -43,16 +43,22 @@ export const ProductsWidget = () => {
     $isPending,
   ]);
 
+  const [mountedEvent, searchQueryChangedEvent, loadPageEvent] = useUnit([
+    mounted,
+    searchQueryChanged,
+    loadPage,
+  ]);
+
   useEffect(() => {
-    mounted();
-  }, []);
+    mountedEvent();
+  }, [mountedEvent]);
 
   return (
     <Paper>
       <H2>Product products</H2>
       <Input
         value={searchQuery}
-        onChange={(e) => searchQueryChanged(e.target.value)}
+        onChange={(e) => searchQueryChangedEvent(e.target.value)}
         className="mt-3"
       />
 
@@ -70,7 +76,7 @@ export const ProductsWidget = () => {
         pageSize={pageSize}
         currentPage={pageNumber}
         count={productsCount}
-        onPageSelect={loadPage}
+        onPageSelect={loadPageEvent}
       />
     </Paper>
   );
@@ -81,7 +87,10 @@ type ProductListItemProps = {
 };
 
 const ProductListItem = ({ product }: ProductListItemProps) => {
-  const isDeleting = useUnit($isDeleting);
+  const [isDeleting, deleteProductEvent] = useUnit([
+    $isDeleting,
+    deleteProduct,
+  ]);
 
   return (
     <li className="flex items-center py-4 gap-2">
@@ -92,7 +101,7 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
       <div className="ml-auto">
         <Button
           onDoubleClick={() => {
-            deleteProduct(product.id);
+            deleteProductEvent(product.id);
           }}
           isLoading={isDeleting}
         >
