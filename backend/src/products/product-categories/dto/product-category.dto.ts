@@ -20,6 +20,10 @@ export class ProductCategoryDTO {
   @ApiProperty()
   parentId: number | null;
 
+  @IsString()
+  @ApiProperty()
+  parentName: string;
+
   @IsNumber({}, { each: true })
   @ApiProperty()
   children: number[];

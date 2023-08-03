@@ -51,8 +51,15 @@ export class ProductCategoriesController {
         skip: query.skip,
       };
 
+    if (query.parentId !== undefined) {
+      params.where = {
+        parentId: query.parentId,
+      };
+    }
+
     if (query.name) {
       params.where = {
+        ...params.where,
         OR: [...createSearchQuery('name', query.name)],
       };
     }
@@ -112,7 +119,7 @@ export class ProductCategoriesController {
   @Put('')
   async updateProductCategoryIcon(
     @Body() updateProductCategoryDTO: UpdateProductCategoryDTO,
-    @UploadedImageFile()
+    @UploadedImageFile({ fileIsRequired: false })
     icon?: Express.Multer.File,
   ): Promise<ProductCategoryResponseDTO> {
     const category = await this.productCategoriesService.update(
