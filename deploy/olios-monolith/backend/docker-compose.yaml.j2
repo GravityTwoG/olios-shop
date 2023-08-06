@@ -98,7 +98,7 @@ services:
     volumes: 
       - type: bind
         source: ./app.log
-        target: /app.log
+        target: /usr/src/app/app.log
     logging:
       options:
         max-size: "10m"
