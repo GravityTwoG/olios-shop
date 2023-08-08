@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { Injectable } from '@nestjs/common';
 import { Prisma, ProductCategory } from '@prisma/client';
 
@@ -9,9 +10,10 @@ import { UpdateProductCategoryDTO } from './dto/update-product-category.dto';
 
 export type ProductCategoryJoined = ProductCategory & {
   parent: ProductCategory | null;
+  children: ProductCategory[];
 };
 
-const ProductCategoryInclude = { parent: true };
+const ProductCategoryInclude = { parent: true, children: { take: 1 } };
 
 @Injectable()
 export class ProductCategoriesService {
@@ -68,6 +70,30 @@ export class ProductCategoriesService {
     });
 
     return category;
+  }
+
+  async getSubtreeIds(categoryId: number): Promise<number[]> {
+    const ids = await this.prisma.$queryRaw`
+      WITH RECURSIVE Parents AS (
+        -- base member, root of the subtree
+        SELECT id
+        FROM "ProductCategory"
+        WHERE id = ${categoryId}
+        
+        UNION ALL
+
+        -- recursive member
+        SELECT child.id
+        FROM Parents
+        INNER JOIN "ProductCategory" child ON child."parentId" = Parents.id 
+      )
+      SELECT id
+      FROM Parents;
+    `;
+
+    assert(Array.isArray(ids));
+
+    return ids.map(({ id }) => id);
   }
 
   async update(

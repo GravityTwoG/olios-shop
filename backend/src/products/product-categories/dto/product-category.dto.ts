@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 import { IsNullable } from 'src/common/validators/IsNullable';
 
 export class ProductCategoryDTO {
@@ -24,7 +24,7 @@ export class ProductCategoryDTO {
   @ApiProperty()
   parentName: string;
 
-  @IsNumber({}, { each: true })
   @ApiProperty()
-  children: number[];
+  @IsBoolean()
+  hasChildren: boolean;
 }

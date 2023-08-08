@@ -25,24 +25,30 @@ import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport: {
-          targets: [
-            {
-              target: 'pino/file',
-              options: {
-                destination: './app.log',
-              },
-              level: 'info',
+    LoggerModule.forRootAsync({
+      useFactory() {
+        return {
+          pinoHttp: {
+            level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
+            autoLogging: process.env.NODE_ENV === 'production',
+            transport: {
+              targets: [
+                {
+                  target: 'pino/file',
+                  options: {
+                    destination: './app.log',
+                  },
+                  level: 'info',
+                },
+                {
+                  target: 'pino-pretty',
+                  options: {},
+                  level: 'info',
+                },
+              ],
             },
-            {
-              target: 'pino-pretty',
-              options: {},
-              level: 'info',
-            },
-          ],
-        },
+          },
+        };
       },
     }),
     ConfigModule.forRoot({
