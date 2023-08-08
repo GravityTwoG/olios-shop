@@ -16,6 +16,7 @@ import { BurgerButton } from '@/src/ui/molecules/BurgerButton';
 import { Menu } from '@/src/shared/components/Menu';
 import { Sidebar } from '@/src/shared/components/Sidebar';
 import { AppToaster } from '@/src/shared/toasts';
+import { NextProgressBar } from '@/src/ui/atoms/NextProgressBar';
 
 const App = ({ children }: { children: ReactNode }) => {
   const [appStartedEvent] = useUnit([appStarted]);
@@ -46,6 +47,8 @@ const App = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className={classes.App}>
+      <NextProgressBar />
+
       <Sidebar
         onBurgerMenuClick={toggleMenu}
         burgerMenuOpened={isMenuOpened}
