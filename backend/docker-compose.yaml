@@ -41,8 +41,8 @@ services:
       - ./docker-volumes/dev/s3/data1-1:/data1
       - ./docker-volumes/dev/s3/data1-2:/data2
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - '10000:9000'
+      - '10001:9001'
     networks:
       - internal
     environment:

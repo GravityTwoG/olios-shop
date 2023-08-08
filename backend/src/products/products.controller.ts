@@ -52,6 +52,13 @@ export class ProductsController {
       params.where = this.createSearchQuery(query.searchQuery);
     }
 
+    if (query.categoryId) {
+      params.where = {
+        ...params.where,
+        categoryId: query.categoryId,
+      };
+    }
+
     const data = await this.productsService.findAll(params);
     return {
       data: {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { Prisma, Product, ProductCategory, ProductImage } from '@prisma/client';
 import { ImagesService } from 'src/lib/images';
@@ -7,6 +7,7 @@ import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
 import { BaseListDTO } from 'src/common/dto/base-list.dto';
+import { ProductCategoriesService } from './product-categories/product-categories.service';
 
 const includes = {
   productCategory: true,
@@ -20,23 +21,41 @@ export type ProductEntity = Product & {
 
 @Injectable()
 export class ProductsService {
+  private readonly logger = new Logger(ProductsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly imagesService: ImagesService,
+    private readonly categoriesService: ProductCategoriesService,
   ) {}
 
   async findAll(params: {
     skip?: number;
     take?: number;
     cursor?: Prisma.ProductWhereUniqueInput;
-    where?: Prisma.ProductWhereInput;
+    where?: Omit<Prisma.ProductWhereInput, 'categoryId'> & {
+      categoryId?: number;
+    };
     orderBy?: Prisma.Enumerable<Prisma.ProductOrderByWithRelationAndSearchRelevanceInput>;
   }): Promise<BaseListDTO<ProductEntity>> {
+    const internalParams = params;
+
+    if (params.where && params.where.categoryId) {
+      const categoryIds = await this.categoriesService.getSubtreeIds(
+        params.where.categoryId,
+      );
+      (internalParams.where as Prisma.ProductWhereInput).categoryId = {
+        in: categoryIds,
+      };
+    }
+
     const list = await this.prisma.product.findMany({
-      ...params,
+      ...internalParams,
       include: includes,
     });
-    const count = await this.prisma.product.count({ where: params.where });
+    const count = await this.prisma.product.count({
+      where: internalParams.where,
+    });
 
     return { count, list };
   }
@@ -173,7 +192,7 @@ export class ProductsService {
           await this.imagesService.delete(objectName, 'product-images');
         }
       } catch (err) {
-        console.log(err);
+        this.logger.error(err);
       }
     });
   }

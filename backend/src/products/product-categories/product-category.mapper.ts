@@ -17,14 +17,13 @@ export class ProductCategoryMapper {
   mapToProductCategoryDTO = (
     category: ProductCategoryJoined,
   ): ProductCategoryDTO => {
-    console.log(category);
     return {
       id: category.id,
       name: category.name,
       iconUrl: `${this.storageURL}/${category.iconUrl}`,
       parentId: category.parentId,
       parentName: category.parent ? category.parent.name : '',
-      children: [],
+      hasChildren: category.children.length > 0,
     };
   };
 }

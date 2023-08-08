@@ -18,11 +18,15 @@ export class ImagesService implements OnModuleInit {
   constructor(@InjectMinio() private readonly minioClient: MinioClient) {}
 
   async onModuleInit() {
-    await this.initializeBuckets();
+    try {
+      await this.initializeBuckets();
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
-  public async initializeBuckets() {
-    buckets.forEach(async (bucketName) => {
+  private async initializeBuckets() {
+    for (const bucketName of buckets) {
       const bucketExists = await this.minioClient.bucketExists(bucketName);
 
       if (!bucketExists) {
@@ -38,7 +42,7 @@ export class ImagesService implements OnModuleInit {
           this.logger.log('Bucket policy was set.');
         },
       );
-    });
+    }
   }
 
   public async upload(file: Express.Multer.File, bucketName: BucketName) {

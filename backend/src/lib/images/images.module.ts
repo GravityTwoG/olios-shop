@@ -16,7 +16,7 @@ import { ImagesService } from './images.service';
           endPoint: configService.get('MINIO_ENDPOINT', {
             infer: true,
           }),
-          port: configService.get('MINIO_PORT')!,
+          port: configService.get('MINIO_PORT', { infer: true }),
           useSSL: false,
           accessKey: configService.get('MINIO_ACCESS_KEY', {
             infer: true,
