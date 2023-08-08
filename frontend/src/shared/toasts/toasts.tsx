@@ -1,4 +1,12 @@
-import toastlib, { Toaster } from 'react-hot-toast';
+import dynamic from 'next/dynamic';
+import toastlib from 'react-hot-toast';
+
+const Toaster = dynamic(
+  () => import('react-hot-toast').then((c) => c.Toaster),
+  {
+    ssr: false,
+  },
+);
 
 export const AppToaster = () => (
   <Toaster

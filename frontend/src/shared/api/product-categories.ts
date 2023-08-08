@@ -32,10 +32,10 @@ export const createCategory = async (
   const formData = new FormData();
   formData.append('name', data.name);
   formData.append('icon', data.categoryIcon);
-
-  if (data.parentId !== null) {
-    formData.append('parentId', data.parentId.toString());
-  }
+  formData.append(
+    'parentId',
+    data.parentId !== null ? data.parentId.toString() : 'null',
+  );
 
   const response = await axiosInstance.post(`${BASE_ROUTE}`, formData, {
     headers: {

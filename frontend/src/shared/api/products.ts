@@ -48,7 +48,10 @@ export const fetchProduct = async (productId: number): Promise<IProduct> => {
 };
 
 export const fetchProducts = async (
-  query: PaginationQueryDTO & { searchQuery: string },
+  query: PaginationQueryDTO & {
+    searchQuery: string;
+    categoryId: number | null;
+  },
 ): Promise<ListDTO<IProduct>> => {
   const response = await axiosInstance.get(`${BASE_ROUTE}`, { params: query });
 

@@ -22,6 +22,7 @@ const fetchProductsFx = createEffect<
     take: pageSize,
     skip: pageSize * pageNumber,
     searchQuery,
+    categoryId: null,
   });
   return { ...result, pageNumber };
 });

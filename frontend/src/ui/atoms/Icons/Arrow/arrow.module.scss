@@ -1,0 +1,35 @@
+.Arrow {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+
+  & > span {
+    top: 10px;
+    position: absolute;
+    width: 12px;
+    height: 2px;
+    border-radius: 1px;
+
+    background-color: #000;
+    transition: transform 0.2s ease;
+
+    &:nth-child(1) {
+      left: 0;
+      transform: rotate(45deg);
+    }
+    &:nth-child(2) {
+      right: 0;
+      transform: rotate(-45deg);
+    }
+  }
+
+  &.up > span {
+    &:nth-child(1) {
+      transform: rotate(-45deg);
+    }
+    &:nth-child(2) {
+      transform: rotate(45deg);
+    }
+  }
+}
