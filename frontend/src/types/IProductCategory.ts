@@ -6,7 +6,7 @@ export const ProductCategorySchema = z.object({
   iconUrl: z.string(),
   parentId: z.number().or(z.null()),
   parentName: z.string(),
-  children: z.array(z.number()),
+  hasChildren: z.boolean(),
 });
 
 export type IProductCategory = z.infer<typeof ProductCategorySchema>;

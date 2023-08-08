@@ -9,7 +9,10 @@ import { toast } from '../../toasts';
 export const useProductCategory = (categoryId: number | null) => {
   const { data: category } = useSWR<IProductCategory | undefined, ApiError>(
     `/api/product-categories/${categoryId || 'null'}`,
-    () => (categoryId !== null ? fetchCategory(categoryId) : undefined),
+    () =>
+      categoryId !== null && categoryId !== 0
+        ? fetchCategory(categoryId)
+        : undefined,
     {
       onError(e) {
         toast.error(e.message);

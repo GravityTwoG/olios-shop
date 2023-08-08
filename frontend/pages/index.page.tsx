@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import classes from './index.module.scss';
 
+import { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
+
+import { allSettled, fork, serialize } from 'effector';
 import { useUnit } from 'effector-react';
 import {
+  $categoryId,
   $isPending,
   $pageNumber,
   $pageSize,
@@ -20,6 +25,22 @@ import { Paginator } from '@/src/ui/molecules/Paginator';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { ProductsGrid } from '@/src/features/Product/components/molecules/productsGrid/ProductsGrid';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
+import { ProductCategoriesTree } from '@/src/features/ProductCategory/components/organisms/ProductCategoriesTree';
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const scope = fork();
+
+  await allSettled(pageMounted, {
+    scope,
+    params: Number(ctx.query.categoryId),
+  });
+
+  return {
+    props: {
+      values: serialize(scope),
+    },
+  };
+};
 
 export function HomePage() {
   const [
@@ -29,6 +50,7 @@ export function HomePage() {
     pageNumber,
     isPending,
     searchQuery,
+    categoryId,
   ] = useUnit([
     $products,
     $productsCount,
@@ -36,17 +58,15 @@ export function HomePage() {
     $pageNumber,
     $isPending,
     $searchQuery,
+    $categoryId,
   ]);
 
-  const [pageMountedEvent, searchQueryChangedEvent, loadPageEvent] = useUnit([
-    pageMounted,
+  const [searchQueryChangedEvent, loadPageEvent] = useUnit([
     searchQueryChanged,
     loadPage,
   ]);
 
-  useEffect(() => {
-    pageMountedEvent();
-  }, [pageMountedEvent]);
+  const router = useRouter();
 
   return (
     <div className={classes['MainPage']}>
@@ -67,7 +87,6 @@ export function HomePage() {
         <div className={classes['products__header']}>
           <div className={classes['products__title']}>Products</div>
         </div>
-
         <form
           className={classes.SearchForm}
           onSubmit={(e) => {
@@ -111,6 +130,17 @@ export function HomePage() {
           </button>
         </form>
 
+        <ProductCategoriesTree
+          onCategorySelect={(categoryId) => {
+            if (categoryId === null) {
+              router.replace('/');
+            } else {
+              router.replace(`/?categoryId=${categoryId || 'null'}`);
+            }
+          }}
+          selectedCategoryId={categoryId || null}
+        />
+
         <Preloader isLoading={isPending}>
           <ProductsGrid>
             {products.map((product) => (
@@ -119,7 +149,14 @@ export function HomePage() {
           </ProductsGrid>
         </Preloader>
 
-        <button className={classes['more-products']}>Show more products</button>
+        {pageNumber + 1 < Math.ceil(productsCount / pageSize) && (
+          <button
+            className={classes['more-products']}
+            onClick={() => loadPageEvent(pageNumber + 1)}
+          >
+            Show more products
+          </button>
+        )}
 
         <Paginator
           pageSize={pageSize}
