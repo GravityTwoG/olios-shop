@@ -1,8 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-cd ./backend
-yarn lint-staged --relative
-
-cd ../frontend
-yarn lint-staged --relative
+yarn all:lint-staged
