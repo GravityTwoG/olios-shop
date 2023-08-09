@@ -15,7 +15,7 @@ export const assertFalsy = <T>(
   constructor: DomainExceptionConstructor<T>,
   ...args: T[]
 ) => {
-  if (!!test) {
+  if (test) {
     throw new constructor(...args);
   }
 };
