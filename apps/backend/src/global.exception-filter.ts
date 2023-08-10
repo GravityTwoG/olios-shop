@@ -15,6 +15,20 @@ import {
   DomainExceptionCodes,
 } from './lib/domain/domain.exception';
 
+type HttpExceptionData = {
+  message: string;
+  status: number;
+};
+
+const domainExceptionsMap = {
+  [DomainExceptionCodes.ALREADY_USED]: 400,
+  [DomainExceptionCodes.INVALID_PAYLOAD]: 400,
+  [DomainExceptionCodes.OUT_OF_DATE]: 400,
+  [DomainExceptionCodes.NOT_FOUND]: 404,
+  [DomainExceptionCodes.NO_PERMISSION]: 403,
+  [DomainExceptionCodes.UNKNOWN]: 500,
+};
+
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   logger = new Logger(GlobalExceptionFilter.name);
@@ -22,69 +36,100 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   constructor(private httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: any, host: ArgumentsHost) {
-    const { httpAdapter } = this.httpAdapterHost;
-
-    const ctx = host.switchToHttp();
-    let status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-
-    let message = exception.message;
+    let httpException = {
+      message: exception.message,
+      status:
+        exception instanceof HttpException
+          ? exception.getStatus()
+          : HttpStatus.INTERNAL_SERVER_ERROR,
+    };
 
     if (exception instanceof HttpException) {
       if (exception.getStatus() >= 500) {
         this.logger.error(exception.message);
       }
+
       if ((exception as any).response?.message) {
-        message = (exception as any).response?.message;
+        httpException.message = (exception as any).response?.message;
       }
     } else if (exception instanceof PrismaClientKnownRequestError) {
-      const isProduction = process.env.NODE_ENV === 'production';
-
-      // handle prisma errors
-      if (!isProduction) {
-        message = `code: ${exception.code},${JSON.stringify(exception.meta)}`;
-      }
-      this.logger.error(exception.meta);
+      httpException = this.handlePrismaException(exception);
     } else if (exception instanceof DomainException) {
-      message = exception.message;
-      if (exception.code === DomainExceptionCodes.ALREADY_USED) {
-        status = 400;
-      }
-      if (exception.code === DomainExceptionCodes.INVALID_PAYLOAD) {
-        status = 400;
-      }
-      if (exception.code === DomainExceptionCodes.NOT_FOUND) {
-        status = 404;
-      }
-      if (exception.code === DomainExceptionCodes.NO_PERMISSION) {
-        status = 403;
-      }
-      if (exception.code === DomainExceptionCodes.OUT_OF_DATE) {
-        status = 400;
-      }
-      if (exception.code === DomainExceptionCodes.UNKNOWN) {
-        status = 500;
-        message = 'Internal error.';
-        this.logger.error(exception.message);
-      }
+      httpException = this.handleDomainException(exception);
     } else {
       if (exception.response?.message) {
-        message = exception.response.message;
-        this.logger.error(message);
-      } else {
-        this.logger.error(exception);
+        httpException.message = exception.response.message;
       }
+
+      this.logger.error(exception);
     }
 
+    const { httpAdapter } = this.httpAdapterHost;
+    const ctx = host.switchToHttp();
+
     const responseBody = {
-      statusCode: status,
-      message,
+      statusCode: httpException.status,
+      message: httpException.message,
+
       timestamp: new Date().toISOString(),
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
     };
 
-    httpAdapter.reply(ctx.getResponse(), responseBody, status);
+    httpAdapter.reply(ctx.getResponse(), responseBody, httpException.status);
+  }
+
+  private handleDomainException(exception: DomainException): HttpExceptionData {
+    const httpException = {
+      message: exception.message,
+      status: domainExceptionsMap[exception.code],
+    };
+
+    if (exception.code === DomainExceptionCodes.UNKNOWN) {
+      httpException.message = 'Internal error.';
+      this.logger.error(exception.message);
+    }
+
+    return httpException;
+  }
+
+  // https://www.prisma.io/docs/reference/api-reference/error-reference
+  private handlePrismaException(
+    exception: PrismaClientKnownRequestError,
+  ): HttpExceptionData {
+    const httpException = {
+      message: 'Internal error',
+      status: 500,
+    };
+
+    if (
+      exception.code === 'P2007' ||
+      exception.code === 'P2011' ||
+      exception.code === 'P2012' ||
+      exception.code === 'P2013' ||
+      exception.code === 'P2019' ||
+      exception.code === 'P2020'
+    ) {
+      httpException.message = 'Invalid data';
+    } else if (exception.code === 'P2015' || exception.code === 'P2018') {
+      httpException.message = 'A related record could not be found.';
+    } else if (exception.code === 'P2028' || exception.code === 'P2034') {
+      httpException.message = 'Transaction failed.';
+    }
+
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    if (!isProduction) {
+      httpException.message = `code: ${exception.code}, meta: ${JSON.stringify(
+        exception.meta,
+      )}, message: ${exception.message}`;
+    }
+
+    this.logger.error(
+      `code: ${exception.code}, meta: ${JSON.stringify(
+        exception.meta,
+      )}, message: ${exception.message}`,
+    );
+
+    return httpException;
   }
 }
