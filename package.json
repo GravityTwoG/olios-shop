@@ -19,7 +19,11 @@
     "all:lint": "nx run-many -t lint",
     "all:lint-staged": "nx run-many -t lint-staged -- --relative",
     "all:build": "nx run-many -t build",
-    "all:deploy": "nx run-many -t deploy"
+    "all:deploy": "nx run-many -t deploy",
+    "affected:lint": "nx affected -t lint",
+    "affected:lint-staged": "nx affected -t lint-staged -- --relative",
+    "affected:build": "nx affected -t build",
+    "affected:deploy": "nx affected -t deploy"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
