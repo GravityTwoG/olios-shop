@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import classes from './product-page.module.scss';
+import { GetServerSidePropsContext } from 'next';
 
+import { allSettled, serialize, fork } from 'effector';
 import { useUnit } from 'effector-react';
 import {
   $areRecommendedProductsPending,
@@ -13,6 +14,7 @@ import {
   addToCart,
   amountInCartChanged,
   pageMounted,
+  pageStarted,
   removeFromCart,
 } from './model';
 
@@ -21,6 +23,21 @@ import { ImageViewer } from '@/src/ui/atoms/ImageViewer';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 import { ProductCategoryLinkLoader } from '@/src/shared/components/ProductCategoryLinkLoader';
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const scope = fork();
+
+  await allSettled(pageStarted, {
+    scope,
+    params: Number(ctx.query.productId),
+  });
+
+  return {
+    props: {
+      values: serialize(scope),
+    },
+  };
+};
 
 export default function ProductPageContainer() {
   const [
@@ -42,16 +59,13 @@ export default function ProductPageContainer() {
   const [
     addToCartEvent,
     amountInCartChangedEvent,
-    pageMountedEvent,
     removeFromCartEvent,
-  ] = useUnit([addToCart, amountInCartChanged, pageMounted, removeFromCart]);
+    pageMountedEvent,
+  ] = useUnit([addToCart, amountInCartChanged, removeFromCart, pageMounted]);
 
-  const { query } = useRouter();
   useEffect(() => {
-    if (typeof query.productId === 'string') {
-      pageMountedEvent(+query.productId);
-    }
-  }, [pageMountedEvent, query.productId]);
+    pageMountedEvent();
+  }, [pageMountedEvent]);
 
   return (
     <div className={classes['product']}>
@@ -105,7 +119,7 @@ export default function ProductPageContainer() {
                   onChange={(e) =>
                     amountInCartChangedEvent(Number(e.target.value))
                   }
-                  min="0"
+                  min="1"
                   disabled={cartItem.isInCart}
                 />
 

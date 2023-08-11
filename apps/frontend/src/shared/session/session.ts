@@ -31,6 +31,8 @@ const logoutFx = createEffect<void, void, ApiError>(() => authApi.logout());
 
 // Events
 export const appStarted = createEvent('App started');
+export const sessionAcquired = fetchSessionFx.done;
+export const sessionChecked = fetchSessionFx.finally;
 export const logout = createEvent('Logout');
 
 // Stores

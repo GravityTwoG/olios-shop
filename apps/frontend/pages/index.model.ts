@@ -30,7 +30,7 @@ const fetchProductsFx = createEffect<
 });
 
 // Events
-export const pageMounted = createEvent<number>('Page mounted');
+export const pageStarted = createEvent<number>('Page mounted');
 export const loadPage = createEvent<number>('Load page');
 export const searchQueryChanged = createEvent<string>('Search query changed');
 
@@ -48,7 +48,7 @@ export const $isPending = createStore(false);
 $searchQuery.on(searchQueryChanged, (_, newQuery) => newQuery);
 
 reset({
-  clock: pageMounted,
+  clock: pageStarted,
   target: [
     $products,
     $productsCount,
@@ -59,10 +59,10 @@ reset({
   ],
 });
 
-$categoryId.on(pageMounted, (_, newCategoryId) => newCategoryId);
+$categoryId.on(pageStarted, (_, newCategoryId) => newCategoryId);
 
 sample({
-  clock: pageMounted,
+  clock: pageStarted,
   source: {
     pageSize: $pageSize,
     pageNumber: $pageNumber,

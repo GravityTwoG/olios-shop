@@ -15,7 +15,7 @@ import {
   $productsCount,
   $searchQuery,
   loadPage,
-  pageMounted,
+  pageStarted,
   searchQueryChanged,
 } from './index.model';
 
@@ -30,7 +30,7 @@ import { ProductCategoriesTree } from '@/src/features/ProductCategory/components
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const scope = fork();
 
-  await allSettled(pageMounted, {
+  await allSettled(pageStarted, {
     scope,
     params: Number(ctx.query.categoryId),
   });
