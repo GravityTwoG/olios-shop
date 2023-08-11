@@ -16,6 +16,10 @@
   "main": " ",
   "scripts": {
     "prepare": "husky install",
+    "infra-up": "nx run olios-shop-backend:docker-compose-up",
+    "infra-setup": "nx run olios-shop-backend:db-setup",
+    "infra-down": "nx run olios-shop-backend:docker-compose-stop",
+    "all:dev": "nx run-many -t dev",
     "all:lint": "nx run-many -t lint",
     "all:lint-staged": "nx run-many -t lint-staged -- --relative",
     "all:build": "nx run-many -t build",
