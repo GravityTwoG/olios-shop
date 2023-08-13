@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { IUserRole } from '@/src/types/IUser';
+import { SessionUserRole } from '@/src/shared/session';
 import { OrderStatus } from '@/src/types/IOrder';
 
 import { useUnit } from 'effector-react';
@@ -16,12 +16,12 @@ import {
 import { PrivatePage } from '@/src/features/Auth';
 
 import { Paper } from '@/src/ui/atoms/Paper';
+import { Button } from '@/src/ui/atoms/Button';
 import { H1 } from '@/src/ui/atoms/Typography';
+import { NoResults } from '@/src/ui/atoms/NoResults';
 import { Container } from '@/src/ui/atoms/Container';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { Table } from '@/src/ui/molecules/Table';
-import { NoResults } from '@/src/ui/atoms/NoResults';
-import { Button } from '@/src/ui/atoms/Button';
 
 const headers = [
   {
@@ -105,4 +105,4 @@ const OrdersPaymentPage = () => {
   );
 };
 
-export default PrivatePage(OrdersPaymentPage, [IUserRole.MANAGER]);
+export default PrivatePage(OrdersPaymentPage, [SessionUserRole.MANAGER]);

@@ -17,7 +17,7 @@ import {
   selectedAsDefault,
 } from './model';
 
-import { IUserRole } from '@/src/types/IUser';
+import { SessionUserRole } from '@/src/shared/session';
 
 import { paths } from '@/src/paths';
 
@@ -30,6 +30,7 @@ import { StyledLink } from '@/src/ui/atoms/StyledLink';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { Form } from '@/src/ui/molecules/Form';
 import { Container } from '@/src/ui/atoms/Container';
+import { RoleGuard } from '@/src/shared/components/RoleGuard';
 
 function CartPage() {
   const [cart, isCartPending] = useUnit([$cart, $isCartPending]);
@@ -52,17 +53,22 @@ function CartPage() {
 
       <div className="mt-8 mb-4 flex flex-wrap justify-between items-center gap-6">
         <div className="flex gap-2">
-          {!cart.isDefault && (
-            <Button color="secondary" onClick={() => selectedAsDefaultEvent()}>
-              Select as default
-            </Button>
-          )}
+          <RoleGuard roles={SessionUserRole.CUSTOMER}>
+            {!cart.isDefault && (
+              <Button
+                color="secondary"
+                onClick={() => selectedAsDefaultEvent()}
+              >
+                Select as default
+              </Button>
+            )}
 
-          {!cart.isDefault && (
-            <Button color="danger" onClick={() => cartDeletedEvent()}>
-              Delete cart
-            </Button>
-          )}
+            {!cart.isDefault && (
+              <Button color="danger" onClick={() => cartDeletedEvent()}>
+                Delete cart
+              </Button>
+            )}
+          </RoleGuard>
         </div>
 
         <div>
@@ -105,7 +111,7 @@ function CartPage() {
                     Qty: {item.quantity}
                   </div>
                   <div className={classes['basket-item__price']}>
-                    {item.realPrice}
+                    Price: {item.realPrice}
                   </div>
                   <button
                     className={classes['basket-item__delete']}
@@ -153,24 +159,29 @@ const CartsList = () => {
           </li>
         ))}
 
-        <li className="bg-white py-3 px-4 w-[170px] snap-start">
-          <Form onSubmit={() => newCartFormSubmittedEvent()}>
-            <p className="mb-2">
-              <input
-                className="border-slate-950 border-[1px] px-2 py-1 w-full"
-                value={newCartName}
-                placeholder="cart name"
-                onChange={(e) => newCartNameChangedEvent(e.target.value)}
-              />
-            </p>
-            <Button className="w-full" type="submit">
-              Create new cart
-            </Button>
-          </Form>
-        </li>
+        <RoleGuard roles={SessionUserRole.CUSTOMER}>
+          <li className="bg-white py-3 px-4 w-[170px] snap-start">
+            <Form onSubmit={() => newCartFormSubmittedEvent()}>
+              <p className="mb-2">
+                <input
+                  className="border-slate-950 border-[1px] px-2 py-1 w-full"
+                  value={newCartName}
+                  placeholder="cart name"
+                  onChange={(e) => newCartNameChangedEvent(e.target.value)}
+                />
+              </p>
+              <Button className="w-full" type="submit">
+                Create new cart
+              </Button>
+            </Form>
+          </li>
+        </RoleGuard>
       </ul>
     </div>
   );
 };
 
-export default PrivatePage(CartPage, [IUserRole.CUSTOMER]);
+export default PrivatePage(CartPage, [
+  SessionUserRole.ANONYMOUS,
+  SessionUserRole.CUSTOMER,
+]);

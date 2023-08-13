@@ -11,7 +11,7 @@ import {
   pageMounted,
 } from './index.model';
 
-import { IUserRole } from '@/src/types/IUser';
+import { SessionUserRole } from '@/src/shared/session';
 import { paths } from '@/src/paths';
 
 import { PrivatePage } from '@/src/features/Auth';
@@ -96,4 +96,4 @@ const ManageOrdersPage = () => {
   );
 };
 
-export default PrivatePage(ManageOrdersPage, [IUserRole.MANAGER]);
+export default PrivatePage(ManageOrdersPage, [SessionUserRole.MANAGER]);

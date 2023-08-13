@@ -1,8 +1,10 @@
+import { useUnit } from 'effector-react';
+
 import { paths } from '@/src/paths';
-import { IUserRole } from '@/src/types/IUser';
 
 import {
   AuthStatus,
+  SessionUserRole,
   logout,
   useAuthStatus,
   useUser,
@@ -15,7 +17,6 @@ import { Container } from '@/src/ui/atoms/Container';
 import { AppLink } from '@/src/ui/atoms/AppLink';
 import { RoleGuard } from '@/src/shared/components/RoleGuard';
 import { UserCard } from '@/src/features/Auth';
-import { useUnit } from 'effector-react';
 
 function ProfilePage() {
   const authStatus = useAuthStatus();
@@ -27,19 +28,19 @@ function ProfilePage() {
     <Container className="py-8">
       <UserCard user={user} isLoaded={authStatus !== AuthStatus.Pending} />
 
-      <RoleGuard roles={IUserRole.CUSTOMER}>
+      <RoleGuard roles={SessionUserRole.CUSTOMER}>
         <div className="flex justify-center my-4">
           <AppLink href={paths.orders({})}>Orders</AppLink>
         </div>
       </RoleGuard>
 
-      <RoleGuard roles={IUserRole.CONTENT_MANAGER}>
+      <RoleGuard roles={SessionUserRole.CONTENT_MANAGER}>
         <div className="flex justify-center my-4">
           <AppLink href={paths.content({})}>Manage content</AppLink>
         </div>
       </RoleGuard>
 
-      <RoleGuard roles={IUserRole.MANAGER}>
+      <RoleGuard roles={SessionUserRole.MANAGER}>
         <div className="flex justify-center my-4">
           <AppLink href={paths.users({})}>Manage Users</AppLink>
         </div>
@@ -64,4 +65,8 @@ function ProfilePage() {
   );
 }
 
-export default PrivatePage(ProfilePage, []);
+export default PrivatePage(ProfilePage, [
+  SessionUserRole.CUSTOMER,
+  SessionUserRole.CONTENT_MANAGER,
+  SessionUserRole.MANAGER,
+]);

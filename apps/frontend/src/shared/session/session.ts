@@ -1,16 +1,29 @@
 import { createStore, createEffect, createEvent, sample } from 'effector';
 
 import { IUser, IUserRole } from '@/src/types/IUser';
-import { ApiError } from '../api';
-import * as authApi from '@/src/shared/api/auth';
 
-const defaultUser: IUser = {
+import * as authApi from '../api/auth';
+import { ApiError } from '../api';
+import { toast } from '../toasts';
+
+export enum SessionUserRole {
+  ANONYMOUS = 'ANONYMOUS',
+  CUSTOMER = IUserRole.CUSTOMER,
+  CONTENT_MANAGER = IUserRole.CONTENT_MANAGER,
+  MANAGER = IUserRole.MANAGER,
+}
+
+export type SessionUser = Omit<IUser, 'role'> & {
+  role: SessionUserRole;
+};
+
+const defaultUser: SessionUser = {
   id: '',
   email: '',
   firstName: '',
   lastName: '',
   patronymic: '',
-  role: IUserRole.CUSTOMER,
+  role: SessionUserRole.ANONYMOUS,
   birthDate: '',
   isActive: true,
 };
@@ -31,13 +44,21 @@ const logoutFx = createEffect<void, void, ApiError>(() => authApi.logout());
 
 // Events
 export const appStarted = createEvent('App started');
-export const sessionAcquired = fetchSessionFx.done;
 export const sessionChecked = fetchSessionFx.finally;
 export const logout = createEvent('Logout');
 
 // Stores
-export const $user = createStore<IUser>(defaultUser);
-export const $authStatus = createStore<AuthStatus>(AuthStatus.Initial);
+export const $user = createStore(defaultUser);
+export const $authStatus = createStore(AuthStatus.Initial);
+
+export const $isAuthenticated = $authStatus.map(
+  (state) => state === AuthStatus.Authenticated,
+);
+
+export const $isSessionChecked = $authStatus.map(
+  (state) =>
+    state === AuthStatus.Authenticated || state === AuthStatus.Anonymous,
+);
 
 sample({
   clock: appStarted,
@@ -50,7 +71,10 @@ $authStatus.on(fetchSessionFx, (status) => {
 });
 
 // fetch session
-$user.on(fetchSessionFx.doneData, (_, user) => user);
+$user.on(fetchSessionFx.doneData, (_, user) => ({
+  ...user,
+  role: mapToSessionUserRole(user.role),
+}));
 $authStatus.on(fetchSessionFx.doneData, () => AuthStatus.Authenticated);
 
 $user.on(fetchSessionFx.fail, () => defaultUser);
@@ -65,7 +89,25 @@ sample({ clock: logout, target: logoutFx });
 
 $authStatus.on(logoutFx, () => AuthStatus.Pending);
 $authStatus.on(logoutFx.done, () => AuthStatus.Anonymous);
+$user.on(logoutFx.done, () => defaultUser);
+
+$authStatus.on(logoutFx.fail, () => AuthStatus.Authenticated);
 
 logoutFx.failData.watch((error) => {
-  console.error(error);
+  toast.error(error.message);
 });
+
+// Utils
+function mapToSessionUserRole(role: IUserRole): SessionUserRole {
+  if (role === IUserRole.CUSTOMER) {
+    return SessionUserRole.CUSTOMER;
+  }
+  if (role === IUserRole.CONTENT_MANAGER) {
+    return SessionUserRole.CONTENT_MANAGER;
+  }
+  if (role === IUserRole.MANAGER) {
+    return SessionUserRole.MANAGER;
+  }
+
+  return SessionUserRole.ANONYMOUS;
+}

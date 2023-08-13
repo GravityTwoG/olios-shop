@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { IUserRole } from '@/src/types/IUser';
+import { SessionUserRole } from '@/src/shared/session';
 
 import { useUnit } from 'effector-react';
 import { $isOrderPending, $order, pageMounted } from './index.model';
@@ -62,4 +62,4 @@ const OrdersPaymentPage = () => {
   );
 };
 
-export default PrivatePage(OrdersPaymentPage, [IUserRole.CUSTOMER]);
+export default PrivatePage(OrdersPaymentPage, [SessionUserRole.CUSTOMER]);

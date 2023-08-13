@@ -2,20 +2,21 @@ import React from 'react';
 import clsx from 'clsx';
 import classes from './sidebar.module.scss';
 
+import { SessionUserRole } from '../../session';
+
 import { paths } from '@/src/paths';
+import { useHideOnScroll } from './useHideOnScroll';
 
 import Link from 'next/link';
 import Image from 'next/image';
 import { NavLink } from '../../../ui/atoms/NavLink';
 import { BurgerButton } from '../../../ui/molecules/BurgerButton';
+import { RoleGuard } from '../RoleGuard';
 
 import HomeIcon from './img/Home.svg';
 import BasketIcon from './img/Basket.svg';
 import AboutIcon from './img/About.svg';
 import ProfileIcon from './img/Profile.svg';
-import { RoleGuard } from '../RoleGuard';
-import { IUserRole } from '@/src/types/IUser';
-import { useHideOnScroll } from './useHideOnScroll';
 
 export type SidebarProps = {
   className?: string;
@@ -44,7 +45,9 @@ export const Sidebar = (props: SidebarProps) => {
           <HomeIcon />
         </NavLink>
 
-        <RoleGuard roles={IUserRole.CUSTOMER} allowAnonymous>
+        <RoleGuard
+          roles={[SessionUserRole.ANONYMOUS, SessionUserRole.CUSTOMER]}
+        >
           <NavLink
             href={paths.cart({})}
             className={classes.NavItem}

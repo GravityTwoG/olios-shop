@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 
-import { IUserRole } from '@/src/types/IUser';
+import { SessionUserRole } from '@/src/shared/session';
+import { paths } from '@/src/paths';
+import { OrderStatus } from '@/src/types/IOrder';
 
 import { useUnit } from 'effector-react';
 import {
@@ -15,15 +17,13 @@ import {
 
 import { PrivatePage } from '@/src/features/Auth';
 
+import Link from 'next/link';
 import { Paper } from '@/src/ui/atoms/Paper';
+import { H1 } from '@/src/ui/atoms/Typography';
 import { Container } from '@/src/ui/atoms/Container';
 import { NoResults } from '@/src/ui/atoms/NoResults';
-import { H1 } from '@/src/ui/atoms/Typography';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
-import Link from 'next/link';
-import { paths } from '@/src/paths';
-import { OrderStatus } from '@/src/types/IOrder';
 
 const headers = [
   {
@@ -104,4 +104,4 @@ const OrdersPage = () => {
   );
 };
 
-export default PrivatePage(OrdersPage, [IUserRole.CUSTOMER]);
+export default PrivatePage(OrdersPage, [SessionUserRole.CUSTOMER]);

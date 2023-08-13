@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { IUserRole } from '@/src/types/IUser';
+import { SessionUserRole } from '@/src/shared/session';
 import { paths } from '@/src/paths';
 
 import { useUnit } from 'effector-react';
@@ -135,4 +135,4 @@ export function InviteCodesPage() {
   );
 }
 
-export default PrivatePage(InviteCodesPage, [IUserRole.MANAGER]);
+export default PrivatePage(InviteCodesPage, [SessionUserRole.MANAGER]);

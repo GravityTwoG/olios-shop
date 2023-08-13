@@ -1,32 +1,23 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
-import { combineEvents, reset } from 'patronum';
+import { reset } from 'patronum';
 
 import { IProduct } from '@/src/types/IProduct';
 import { ICartItem } from '@/src/types/ICart';
-import { IUserRole } from '@/src/types/IUser';
 import { toast } from '@/src/shared/toasts';
 import * as productsApi from '@/src/shared/api/products';
 import * as cartApi from '@/src/shared/api/cart';
-import { $user, sessionChecked } from '@/src/shared/session';
+
+import {
+  $user,
+  $isSessionChecked,
+  $isAuthenticated,
+  sessionChecked,
+  SessionUserRole,
+} from '@/src/shared/session';
 
 // Effects
 const fetchProductFx = createEffect<number, IProduct>(async (productId) => {
   return productsApi.fetchProduct(productId);
-});
-
-const checkIsInCartFx = createEffect<number, ICartItem>(async (productId) => {
-  return cartApi.isInCart(productId);
-});
-
-const addToCartFx = createEffect<
-  { productId: number; quantity: number },
-  ICartItem
->(async (data) => {
-  return cartApi.addToCart(data);
-});
-
-const removeFromCartFx = createEffect<string, void>((cartItemId) => {
-  return cartApi.removeFromCart(cartItemId);
 });
 
 const fetchRecommendedProductsFx = createEffect<number, IProduct[]>(
@@ -41,19 +32,33 @@ const fetchRecommendedProductsFx = createEffect<number, IProduct[]>(
   },
 );
 
+const checkIsInCartFx = createEffect<
+  { isAuthenticated: boolean; productId: number },
+  ICartItem
+>(async (data) => {
+  return cartApi.isInCart(data);
+});
+
+const addToCartFx = createEffect<
+  { isAuthenticated: boolean; productId: number; quantity: number },
+  ICartItem
+>(async (data) => {
+  return cartApi.addToCart(data);
+});
+
+const removeFromCartFx = createEffect<
+  { isAuthenticated: boolean; cartItemId: string },
+  void
+>((data) => {
+  return cartApi.removeFromCart(data);
+});
+
 // Events
 export const pageStarted = createEvent<number>('Product page started');
 export const pageMounted = createEvent('Product page mounted');
 export const amountInCartChanged = createEvent<number>('Add to cart');
 export const addToCart = createEvent('Add to cart');
 export const removeFromCart = createEvent('Remove from cart');
-
-const pageMountedAndSessionChecked = combineEvents({
-  events: {
-    pageMounted,
-    sessionChecked,
-  },
-});
 
 // Stores
 export const $product = createStore<IProduct>({
@@ -70,6 +75,10 @@ export const $product = createStore<IProduct>({
 
 export const $isProductPending = createStore(false);
 
+export const $recommendedProducts = createStore<IProduct[]>([]);
+
+export const $areRecommendedProductsPending = createStore(false);
+
 export const $cartItem = createStore<ICartItem & { isInCart: boolean }>({
   isInCart: false,
   id: '',
@@ -84,18 +93,15 @@ export const $cartItem = createStore<ICartItem & { isInCart: boolean }>({
 
 export const $isProductInCartPending = createStore(false);
 
-export const $recommendedProducts = createStore<IProduct[]>([]);
-
-export const $areRecommendedProductsPending = createStore(false);
-
 reset({
   clock: pageStarted,
   target: [
     $product,
     $isProductPending,
     $recommendedProducts,
-    $cartItem,
     $areRecommendedProductsPending,
+    $cartItem,
+    $isProductInCartPending,
   ],
 });
 
@@ -130,23 +136,48 @@ $areRecommendedProductsPending.on(
   () => false,
 );
 
+// Cart logic
+reset({
+  clock: pageMounted,
+  target: [$cartItem, $isProductInCartPending],
+});
+
 sample({
-  clock: pageMountedAndSessionChecked,
-  source: { product: $product, user: $user },
-  filter: ({ product, user }) =>
-    product.id !== 0 && user.role === IUserRole.CUSTOMER,
-  fn: ({ product }) => product.id,
+  clock: [pageMounted, sessionChecked],
+  source: {
+    product: $product,
+    user: $user,
+    isAuthenticated: $isAuthenticated,
+    isSessionChecked: $isSessionChecked,
+  },
+  filter: ({ product, user, isSessionChecked }) =>
+    product.id !== 0 &&
+    isSessionChecked &&
+    (user.role === SessionUserRole.ANONYMOUS ||
+      user.role === SessionUserRole.CUSTOMER),
+  fn: ({ product, isAuthenticated }) => ({
+    isAuthenticated,
+    productId: product.id,
+  }),
   target: checkIsInCartFx,
 });
 
-// Check if product is in cart, Add to Cart, Remove from Cart
 sample({
   clock: addToCart,
   source: {
     product: $product,
     cartItem: $cartItem,
+    user: $user,
+    isAuthenticated: $isAuthenticated,
+    isSessionChecked: $isSessionChecked,
   },
-  fn: ({ product, cartItem }) => ({
+  filter: ({ product, user, isSessionChecked }) =>
+    product.id !== 0 &&
+    isSessionChecked &&
+    (user.role === SessionUserRole.ANONYMOUS ||
+      user.role === SessionUserRole.CUSTOMER),
+  fn: ({ product, cartItem, isAuthenticated }) => ({
+    isAuthenticated,
     productId: product.id,
     quantity: cartItem.quantity,
   }),
@@ -155,8 +186,20 @@ sample({
 
 sample({
   clock: removeFromCart,
-  source: { cartItem: $cartItem },
-  fn: ({ cartItem }) => cartItem.id,
+  source: {
+    cartItem: $cartItem,
+    user: $user,
+    isAuthenticated: $isAuthenticated,
+    isSessionChecked: $isSessionChecked,
+  },
+  filter: ({ user, isSessionChecked }) =>
+    isSessionChecked &&
+    (user.role === SessionUserRole.ANONYMOUS ||
+      user.role === SessionUserRole.CUSTOMER),
+  fn: ({ cartItem, isAuthenticated }) => ({
+    isAuthenticated,
+    cartItemId: cartItem.id,
+  }),
   target: removeFromCartFx,
 });
 

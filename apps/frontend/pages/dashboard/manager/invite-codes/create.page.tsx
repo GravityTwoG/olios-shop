@@ -1,13 +1,10 @@
-import { IUserRole } from '@/src/types/IUser';
+import { useEffect, useId } from 'react';
+import { useRouter } from 'next/router';
 
-import { PrivatePage } from '@/src/features/Auth';
+import { paths } from '@/src/paths';
 
-import { Container } from '@/src/ui/atoms/Container';
-import Head from 'next/head';
-import { H1 } from '@/src/ui/atoms/Typography';
-import { Form, FormError } from '@/src/ui/molecules/Form';
-import { Field, InputField } from '@/src/ui/molecules/Field';
-import { CTAButton } from '@/src/ui/atoms/CTAButton';
+import { SessionUserRole } from '@/src/shared/session';
+
 import { useUnit } from 'effector-react';
 import {
   $birthDate,
@@ -25,9 +22,15 @@ import {
   patronymicChanged,
   roleChanged,
 } from './create.model';
-import { useEffect, useId } from 'react';
-import { useRouter } from 'next/router';
-import { paths } from '@/src/paths';
+
+import { PrivatePage } from '@/src/features/Auth';
+
+import Head from 'next/head';
+import { H1 } from '@/src/ui/atoms/Typography';
+import { CTAButton } from '@/src/ui/atoms/CTAButton';
+import { Container } from '@/src/ui/atoms/Container';
+import { Form, FormError } from '@/src/ui/molecules/Form';
+import { Field, InputField } from '@/src/ui/molecules/Field';
 import { RoleSelect } from '@/src/shared/components/RoleSelect';
 
 const CreateInviteCodePage = () => {
@@ -116,4 +119,4 @@ const CreateInviteCodePage = () => {
   );
 };
 
-export default PrivatePage(CreateInviteCodePage, [IUserRole.MANAGER]);
+export default PrivatePage(CreateInviteCodePage, [SessionUserRole.MANAGER]);

@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 
-import { IUserRole } from '@/src/types/IUser';
-
 import { useUnit } from 'effector-react';
 import {
   $isBlockingOrUnblocking,
@@ -18,7 +16,7 @@ import {
   unblockUser,
 } from './index.model';
 
-import { useUser } from '@/src/shared/session';
+import { SessionUserRole, useUser } from '@/src/shared/session';
 import { PrivatePage } from '@/src/features/Auth';
 
 import Head from 'next/head';
@@ -137,4 +135,4 @@ export function UsersPage() {
   );
 }
 
-export default PrivatePage(UsersPage, [IUserRole.MANAGER]);
+export default PrivatePage(UsersPage, [SessionUserRole.MANAGER]);

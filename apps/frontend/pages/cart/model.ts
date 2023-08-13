@@ -1,20 +1,37 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import {
+  attach,
+  createEffect,
+  createEvent,
+  createStore,
+  sample,
+} from 'effector';
 
 import { ICart } from '@/src/types/ICart';
 import { toast } from '@/src/shared/toasts';
 import * as cartApi from '@/src/shared/api/cart';
+
+import { $isAuthenticated } from '@/src/shared/session';
 
 // Effects
 const createCartFx = createEffect<string, ICart>((name) => {
   return cartApi.createCart(name);
 });
 
-const fetchCartsFx = createEffect(() => {
-  return cartApi.fetchCarts();
+const fetchCartsFx = attach({
+  source: { isAuthenticated: $isAuthenticated },
+  effect: createEffect(async (data: { isAuthenticated: boolean }) => {
+    return cartApi.fetchCarts(data);
+  }),
 });
 
-const fetchCartFx = createEffect<string, ICart>((cartId) => {
-  return cartApi.fetchCartById(cartId);
+const fetchCartFx = createEffect<
+  {
+    isAuthenticated: boolean;
+    cartId: string;
+  },
+  ICart
+>((data) => {
+  return cartApi.fetchCartById(data);
 });
 
 const selectAsDefaultFx = createEffect<string, ICart>(async (cartId) => {
@@ -25,8 +42,14 @@ const deleteCartFx = createEffect<string, void>((cartId) => {
   return cartApi.deleteCart(cartId);
 });
 
-const removeFromCartFx = createEffect<string, void>((cartItemId) => {
-  return cartApi.removeFromCart(cartItemId);
+const removeFromCartFx = createEffect<
+  {
+    isAuthenticated: boolean;
+    cartItemId: string;
+  },
+  void
+>((data) => {
+  return cartApi.removeFromCart(data);
 });
 
 // Events
@@ -67,16 +90,21 @@ $isCartPending.on(fetchCartsFx.finally, () => false);
 //
 sample({
   clock: fetchCartsFx.doneData,
-  filter: ({ list }) => list.find((c) => c.isDefault) !== undefined,
-  fn: ({ list }) => {
+  source: { isAuthenticated: $isAuthenticated },
+  filter: (_, { list }) => list.find((c) => c.isDefault) !== undefined,
+  fn: ({ isAuthenticated }, { list }) => {
     const defaultCart = list.find((c) => c.isDefault);
-    return defaultCart ? defaultCart.id : '';
+    return { isAuthenticated, cartId: defaultCart ? defaultCart.id : '' };
   },
   target: fetchCartFx,
 });
 
 sample({
   clock: loadCart,
+  source: { isAuthenticated: $isAuthenticated },
+  fn: ({ isAuthenticated }, cartId) => {
+    return { isAuthenticated, cartId };
+  },
   target: fetchCartFx,
 });
 
@@ -107,6 +135,8 @@ sample({
 //
 sample({
   clock: removeFromCart,
+  source: { isAuthenticated: $isAuthenticated },
+  fn: ({ isAuthenticated }, cartItemId) => ({ isAuthenticated, cartItemId }),
   target: removeFromCartFx,
 });
 
@@ -118,8 +148,8 @@ $isRemoving.on(removeFromCartFx.finally, () => false);
 
 sample({
   clock: removeFromCartFx.done,
-  source: { cart: $cart },
-  fn: ({ cart }) => cart.id,
+  source: { cart: $cart, isAuthenticated: $isAuthenticated },
+  fn: ({ isAuthenticated, cart }) => ({ isAuthenticated, cartId: cart.id }),
   target: fetchCartFx,
 });
 

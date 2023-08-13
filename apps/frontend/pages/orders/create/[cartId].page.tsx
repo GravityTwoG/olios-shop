@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { IUserRole } from '@/src/types/IUser';
+import { SessionUserRole } from '@/src/shared/session';
 import { paths } from '@/src/paths';
 
 import { useUnit } from 'effector-react';
@@ -207,4 +207,4 @@ const CreateOrderPage = () => {
   );
 };
 
-export default PrivatePage(CreateOrderPage, [IUserRole.CUSTOMER]);
+export default PrivatePage(CreateOrderPage, [SessionUserRole.CUSTOMER]);

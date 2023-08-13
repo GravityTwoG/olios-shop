@@ -4,14 +4,14 @@ import { every } from 'patronum';
 import { ICart } from '@/src/types/ICart';
 import { toast } from '@/src/shared/toasts';
 import { ApiError } from '@/src/shared/api';
-import * as cartApi from '@/src/shared/api/cart';
+import * as cartApi from '@/src/shared/api/cart/cart';
 import * as ordersApi from '@/src/shared/api/orders';
 import { createField } from '@/src/shared/effector';
 import { IOrder } from '@/src/types/IOrder';
 
 // Effects
 const fetchCartFx = createEffect<string, ICart, ApiError>((cartId) => {
-  return cartApi.fetchCartById(cartId);
+  return cartApi.fetchCartById({ isAuthenticated: true, cartId });
 });
 
 // Events

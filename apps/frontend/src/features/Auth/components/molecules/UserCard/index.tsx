@@ -1,11 +1,11 @@
-import { IUser } from '@/src/types/IUser';
+import { SessionUser } from '@/src/shared/session';
 
 import classes from './user-card.module.scss';
 
 import { Skeleton } from '@/src/ui/atoms/Skeleton';
 
 export type UserCardProps = {
-  user: IUser;
+  user: SessionUser;
   isLoaded: boolean;
 };
 

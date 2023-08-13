@@ -1,13 +1,18 @@
 import { useStore } from 'effector-react';
 
-import { $authStatus, $user, AuthStatus } from '.';
-import { IUser, IUserRole } from '@/src/types/IUser';
+import {
+  $authStatus,
+  $user,
+  AuthStatus,
+  SessionUser,
+  SessionUserRole,
+} from './session';
 
-export const useUser = (): IUser => {
+export const useUser = (): SessionUser => {
   return useStore($user);
 };
 
-export const useUserRole = (): IUserRole => {
+export const useUserRole = (): SessionUserRole => {
   return useUser().role;
 };
 
