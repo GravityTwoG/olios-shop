@@ -9,6 +9,7 @@ import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { CartsMapper } from './carts.mapper';
 import { CartItemDTO } from './dto/cart.dto';
 import { CreateCartDTO } from './dto/create-cart.dto';
+import { ItemToConvertDTO } from './dto/items-to-convert.dto';
 
 const CartItemInclude = {
   product: {
@@ -150,6 +151,60 @@ export class CartsService {
         isDefault: false,
       },
     });
+  }
+
+  async convertToCartFromIds(items: ItemToConvertDTO[]) {
+    const products = await this.prisma.product.findMany({
+      where: { id: { in: items.map((item) => item.productId) } },
+      select: {
+        id: true,
+        name: true,
+        oldPrice: true,
+        realPrice: true,
+        productImages: true,
+      },
+    });
+
+    const itemProductIdMap: { [key: number]: ItemToConvertDTO } = {};
+    items.forEach((item) => {
+      itemProductIdMap[item.productId] = item;
+    });
+
+    const data = {
+      id: '',
+      name: '',
+      isDefault: true,
+      cartItems: products.map((product) => ({
+        id: itemProductIdMap[product.id].id,
+        productId: product.id,
+        quantity: itemProductIdMap[product.id].quantity,
+        product,
+      })),
+    };
+
+    return this.mapper.mapToCartDTO(data);
+  }
+
+  async convertToCartItemFromId({ productId, quantity, id }: ItemToConvertDTO) {
+    const product = await this.prisma.product.findUniqueOrThrow({
+      where: { id: productId },
+      select: {
+        id: true,
+        name: true,
+        oldPrice: true,
+        realPrice: true,
+        productImages: true,
+      },
+    });
+
+    const data = {
+      id,
+      productId,
+      quantity,
+      product,
+    };
+
+    return this.mapper.mapToCartItemDTO(data);
   }
 
   // Cart items

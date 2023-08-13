@@ -3,10 +3,13 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -25,6 +28,10 @@ import {
   CartsListResponseDTO,
 } from './dto/cart.dto';
 import { CreateCartDTO } from './dto/create-cart.dto';
+import {
+  ItemToConvertDTO,
+  ItemsToConvertDTO,
+} from './dto/items-to-convert.dto';
 
 @ApiTags('Cart')
 @Controller('/cart')
@@ -134,5 +141,26 @@ export class CartsController {
       cartItemId: cartItemId,
       userId: user.id,
     });
+  }
+
+  @ApiResponse({ type: CartResponseDTO })
+  @HttpCode(HttpStatus.OK)
+  @Post('/anonymous-cart/from-ids')
+  async convertToCartFromIds(
+    @Body() data: ItemsToConvertDTO,
+  ): Promise<CartResponseDTO> {
+    const cart = await this.cartsService.convertToCartFromIds(data.items);
+
+    return { data: cart };
+  }
+
+  @ApiResponse({ type: CartItemResponseDTO })
+  @Get('/anonymous-cart/item/from-id')
+  async convertToCartItemFromId(
+    @Query() item: ItemToConvertDTO,
+  ): Promise<CartItemResponseDTO> {
+    const cartItem = await this.cartsService.convertToCartItemFromId(item);
+
+    return { data: cartItem };
   }
 }
