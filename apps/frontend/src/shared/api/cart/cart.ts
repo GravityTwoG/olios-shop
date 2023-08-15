@@ -171,3 +171,15 @@ export const convertToCartItemFromId = async ({
 
   return IsInCartResponseSchema.parse(response.data).data;
 };
+
+export const addFromAnonymousCart = async (): Promise<ICart> => {
+  const items = AnonymousCart.getItems();
+
+  const response = await axiosInstance.post(`${BASE_ROUTE}/add-to-cart/many`, {
+    items,
+  });
+
+  AnonymousCart.clearCart();
+
+  return CartResponseSchema.parse(response.data).data;
+};

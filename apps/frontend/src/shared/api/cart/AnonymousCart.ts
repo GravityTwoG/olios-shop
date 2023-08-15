@@ -62,6 +62,12 @@ export class AnonymousCart {
     };
   }
 
+  static getItems() {
+    this.checkOrInit();
+
+    return this.cart.items;
+  }
+
   static async addToCart({
     productId,
     quantity,
@@ -127,6 +133,11 @@ export class AnonymousCart {
       ...this.cart,
       items: this.cart.items.filter((i) => i.id !== cartItemId),
     };
+    this.persist();
+  }
+
+  static clearCart() {
+    this.cart.items = [];
     this.persist();
   }
 }

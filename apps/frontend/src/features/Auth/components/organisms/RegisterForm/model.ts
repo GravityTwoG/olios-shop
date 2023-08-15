@@ -1,14 +1,19 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
+import { combineEvents } from 'patronum';
 
 import { IUser } from '@/src/types/IUser';
 import { ApiError } from '@/src/shared/api';
 import * as authApi from '@/src/shared/api/auth';
+import { addFromAnonymousCart } from '@/src/shared/api/cart';
 import { loginFx } from '@/src/shared/auth';
+import { toast } from '@/src/shared/toasts';
 
 // Effects
 const registerFx = createEffect<authApi.IRegisterCredentials, IUser, ApiError>(
   (credentials) => authApi.register(credentials),
 );
+
+const addFromAnonymousCartFx = createEffect(() => addFromAnonymousCart());
 
 // Events
 export const emailChanged = createEvent<string>('Email changed');
@@ -49,3 +54,17 @@ sample({
   },
   target: loginFx,
 });
+
+sample({
+  clock: combineEvents({
+    events: {
+      registered: registerFx.done,
+      loggedIn: loginFx.done,
+    },
+  }),
+  target: addFromAnonymousCartFx,
+});
+
+addFromAnonymousCartFx.failData.watch((err) =>
+  toast.error(`Error when uploading cart items: ${err.message}`),
+);
