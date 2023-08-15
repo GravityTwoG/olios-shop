@@ -1,13 +1,15 @@
 .product {
   width: 100%;
   display: flex;
+  position: relative;
 
   &__preview {
-    padding: 25px;
     width: 40%;
-    background-color: #fff;
+    height: 100vh;
+    padding: 25px;
     position: relative;
     z-index: 2;
+    background-color: #fff;
     box-shadow: 0px 0px 25px 0px rgba(219, 219, 219, 0.45);
     display: flex;
     justify-content: center;
@@ -161,7 +163,12 @@
   }
 
   @media screen and (min-width: 768px) {
-    height: 100vh;
+    min-height: 100vh;
+
+    .product__preview {
+      position: sticky;
+      top: 0;
+    }
   }
 
   @media screen and (max-width: 767px) {

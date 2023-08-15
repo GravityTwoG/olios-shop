@@ -86,22 +86,20 @@ export default function ProductPageContainer() {
           </div>
 
           <div className={classes['product__info']}>
-            <div className={classes['product__name']}>{product.name}</div>
+            <p className={classes['product__name']}>{product.name}</p>
 
-            <div className={classes['product__desc']}>
-              {product.description}
-            </div>
+            <p className={classes['product__desc']}>{product.description}</p>
 
             <div className={classes['product__line']}>
               <div className={classes['product__price']}>
                 <div className={classes['product__price-label']}>Cost</div>
                 <span>
                   <span className={classes['product__price-curr']}>
-                    {product.realPrice}
+                    ${product.realPrice}
                   </span>
                   {product.oldPrice !== product.realPrice && (
                     <span className={classes['product__price-prev']}>
-                      {product.oldPrice}
+                      ${product.oldPrice}
                     </span>
                   )}
                 </span>
@@ -144,12 +142,18 @@ export default function ProductPageContainer() {
             </div>
           </div>
         </div>
+
         <div className={classes['product__recomended']}>
           <div className={classes['product__recomended-title']}>Recomended</div>
+
           <Preloader isLoading={areRecommendedProductsPending}>
             <div className={classes['product__recomended-cont']}>
               {recommendedProducts.map((product) => (
-                <ProductCard product={product} key={product.id} />
+                <ProductCard
+                  product={product}
+                  key={product.id}
+                  className="max-w-[320px]"
+                />
               ))}
             </div>
           </Preloader>

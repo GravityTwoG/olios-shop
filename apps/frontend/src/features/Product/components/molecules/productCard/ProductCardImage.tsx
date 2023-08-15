@@ -23,7 +23,6 @@ export const ProductCardImage = React.memo((props: ImageViewerProps) => {
           maxWidth: '900px',
           height: '100%',
           aspectRatio: '3 / 2',
-          cursor: 'pointer',
         },
       }}
       render={{

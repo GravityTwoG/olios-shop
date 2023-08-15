@@ -10,9 +10,6 @@ import { ListDTO } from '@/src/shared/api/lib';
 import { fetchCategories } from '@/src/shared/api/product-categories';
 import { toast } from '@/src/shared/toasts';
 
-import { paths } from '@/src/paths';
-
-import { NavLink } from '../../../ui/atoms/NavLink';
 import { ProductCategoryLink } from '@/src/shared/components/ProductCategoryLink';
 import { ProductCategoryLinkSkeleton } from '../ProductCategoryLinkLoader';
 
@@ -61,10 +58,6 @@ export const Menu = React.forwardRef<HTMLDivElement, MenuProps>(
               />
             ))}
         </div>
-
-        <NavLink href={paths.home({})} className={classes.showAll}>
-          Show All Categories
-        </NavLink>
       </div>
     );
   },
