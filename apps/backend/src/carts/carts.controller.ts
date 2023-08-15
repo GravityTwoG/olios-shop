@@ -131,6 +131,21 @@ export class CartsController {
     };
   }
 
+  @ApiResponse({ type: CartResponseDTO })
+  @Roles(UserRole.CUSTOMER)
+  @Post('/add-to-cart/many')
+  async addToCartMany(
+    @Body() data: ItemsToConvertDTO,
+    @CurrentUser() user: RequestUser,
+  ): Promise<CartResponseDTO> {
+    const cart = await this.cartsService.addToCartMany({
+      userId: user.id,
+      items: data.items,
+    });
+
+    return { data: cart };
+  }
+
   @Roles(UserRole.CUSTOMER)
   @Delete('/remove-from-cart/:cartItemId')
   async removeFromCart(

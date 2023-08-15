@@ -253,6 +253,26 @@ export class CartsService {
     return cart;
   }
 
+  async addToCartMany({
+    userId,
+    items,
+  }: {
+    userId: string;
+    items: ItemToConvertDTO[];
+  }) {
+    const cart = await this.getCustomersDefaultCart(userId);
+
+    await this.prisma.cartItem.createMany({
+      data: items.map((i) => ({
+        cartId: cart.id,
+        productId: i.productId,
+        quantity: i.quantity,
+      })),
+    });
+
+    return this.findCustomersCartById({ userId, cartId: cart.id });
+  }
+
   async isInCart(data: {
     userId: string;
     productId: number;
