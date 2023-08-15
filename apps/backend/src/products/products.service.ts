@@ -97,26 +97,11 @@ export class ProductsService {
     return product;
   }
 
-  private async uploadImages(images: Express.Multer.File[]) {
-    const r: { url: string; path: string; objectName: string }[] = [];
-
-    const result = await Promise.allSettled(
-      images.map((image) => this.imagesService.upload(image, 'product-images')),
-    );
-    result.forEach((res) => {
-      if (res.status === 'fulfilled') {
-        r.push(res.value);
-      }
-    });
-
-    return r;
-  }
-
   async create(
     createProductDTO: CreateProductDTO,
     images: Express.Multer.File[],
   ) {
-    const r = await this.uploadImages(images);
+    const r = await this.imagesService.uploadMany(images, 'product-images');
 
     const { name, realPrice, description, categoryId } = createProductDTO;
 
@@ -159,7 +144,7 @@ export class ProductsService {
       });
     }
 
-    const r = await this.uploadImages(images);
+    const r = await this.imagesService.uploadMany(images, 'product-images');
 
     const product = this.prisma.product.update({
       where: { id },

@@ -5,7 +5,7 @@ import {
   InvalidPayloadException,
   UnknownException,
 } from '../domain/domain.exception';
-import { assertFalsy, assertTruthy } from '../domain/assertions';
+import { assertTruthy } from '../domain/assertions';
 
 import { InjectMinio, MinioClient } from '../minio';
 import { BucketName, buckets } from './buckets';
@@ -45,50 +45,59 @@ export class ImagesService implements OnModuleInit {
     }
   }
 
-  public async upload(file: Express.Multer.File, bucketName: BucketName) {
-    assertTruthy(
-      file.mimetype.match(/image\/*/),
-      InvalidPayloadException,
-      `This image type is not supported: ${file.mimetype}`,
+  async upload(file: Express.Multer.File, bucketName: BucketName) {
+    try {
+      assertTruthy(
+        file.mimetype.match(/image\/*/),
+        InvalidPayloadException,
+        `This image type is not supported: ${file.mimetype}`,
+      );
+
+      const timestamp = Date.now().toString();
+      const hash = crypto.createHash('md5').update(timestamp).digest('hex');
+
+      const metaData = {
+        'Content-Type': file.mimetype,
+        'Cache-Control': 'public, max-age=31536000',
+      };
+
+      const fileName = `${hash}_${crypto.randomBytes(6).toString('hex')}_${
+        file.originalname
+      }`;
+
+      await this.minioClient.putObject(
+        bucketName,
+        fileName,
+        file.buffer,
+        file.size,
+        metaData,
+      );
+
+      return {
+        url: `${process.env.MINIO_PROTOCOL}://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${bucketName}/${fileName}`,
+        path: `${bucketName}/${fileName}`,
+        objectName: `${fileName}`,
+      };
+    } catch (err) {
+      throw new UnknownException(
+        `Error while saving file: ${JSON.stringify(err)}`,
+      );
+    }
+  }
+
+  async uploadMany(images: Express.Multer.File[], bucketName: BucketName) {
+    const r: { url: string; path: string; objectName: string }[] = [];
+
+    const result = await Promise.allSettled(
+      images.map((image) => this.upload(image, bucketName)),
     );
+    result.forEach((res) => {
+      if (res.status === 'fulfilled') {
+        r.push(res.value);
+      }
+    });
 
-    const timestamp = Date.now().toString();
-    const hashedFileName = crypto
-      .createHash('md5')
-      .update(timestamp)
-      .digest('hex');
-    const extension = file.originalname.substring(
-      file.originalname.lastIndexOf('.'),
-      file.originalname.length,
-    );
-    const metaData = {
-      'Content-Type': file.mimetype,
-      'Cache-Control': 'public, max-age=31536000',
-    };
-
-    // We need to append the extension at the end otherwise Minio will save it as a generic file
-    const fileName = hashedFileName + extension;
-
-    this.minioClient.putObject(
-      bucketName,
-      fileName,
-      file.buffer,
-      file.size,
-      metaData,
-      function (err) {
-        assertFalsy(
-          err,
-          UnknownException,
-          `Error while saving file: ${JSON.stringify(err)}`,
-        );
-      },
-    );
-
-    return {
-      url: `${process.env.MINIO_PROTOCOL}://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${bucketName}/${fileName}`,
-      path: `${bucketName}/${fileName}`,
-      objectName: `${fileName}`,
-    };
+    return r;
   }
 
   async delete(objectName: string, bucketName: BucketName) {
