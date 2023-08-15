@@ -16,6 +16,69 @@ export class UsersService {
     private readonly prisma: PrismaService,
   ) {}
 
+  //
+  async createCustomer(
+    createUserDto: Omit<CreateUserDto, 'role'>,
+    prisma: Prisma.TransactionClient,
+  ): Promise<User> {
+    const {
+      email,
+      password,
+      passwordSalt,
+      birthDate,
+      firstName,
+      lastName,
+      patronymic,
+    } = createUserDto;
+    const user = await prisma.user.create({
+      data: {
+        role: UserRole.CUSTOMER,
+        email,
+        password,
+        passwordSalt,
+        birthDate,
+        firstName,
+        lastName,
+        patronymic,
+      },
+    });
+
+    await this.customerProfilesService.createProfile(user, prisma);
+
+    return user;
+  }
+
+  async createEmployee(
+    createUserDto: CreateUserDto,
+    prisma: Prisma.TransactionClient,
+  ): Promise<User> {
+    const {
+      email,
+      password,
+      passwordSalt,
+      birthDate,
+      firstName,
+      lastName,
+      patronymic,
+      role,
+    } = createUserDto;
+
+    const user = await prisma.user.create({
+      data: {
+        role,
+        email,
+        password,
+        passwordSalt,
+        birthDate,
+        firstName,
+        lastName,
+        patronymic,
+      },
+    });
+
+    return user;
+  }
+
   async getUsers(params: {
     skip?: number;
     take?: number;
@@ -42,55 +105,11 @@ export class UsersService {
     return user;
   }
 
-  //
-  async createUser(
-    createUserDto: CreateUserDto,
-    prisma: Prisma.TransactionClient,
-  ): Promise<User> {
-    const {
-      email,
-      password,
-      passwordSalt,
-      birthDate,
-      firstName,
-      lastName,
-      patronymic,
-      role,
-    } = createUserDto;
-    const user = await prisma.user.create({
-      data: {
-        role,
-        email,
-        password,
-        passwordSalt,
-        birthDate,
-        firstName,
-        lastName,
-        patronymic,
-      },
-    });
-
-    if (user.role == UserRole.CUSTOMER) {
-      // create customer profile
-      await this.customerProfilesService.createProfile(user, prisma);
-    }
-
-    return user;
-  }
-
   async updateUser(id: string, data: UpdateUserDTO): Promise<User> {
-    const update: Partial<UpdateUserDTO> & { [key: string]: any } = {};
-
-    for (const [key, value] of Object.entries(data)) {
-      if (value !== undefined && value !== null) {
-        update[key] = value;
-      }
-    }
-
     return this.prisma.user.update({
       where: { id },
       data: {
-        ...update,
+        ...data,
       },
     });
   }

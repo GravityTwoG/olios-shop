@@ -3,10 +3,14 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { User, UserRole } from '@prisma/client';
 import { Observable } from 'rxjs';
+
+import { UserRole } from '@prisma/client';
+
+import { Request } from '../types';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -21,13 +25,19 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.session.user as User;
+    const request: Request = context.switchToHttp().getRequest();
+    const user = request.session.user;
     if (!user) {
       throw new UnauthorizedException();
     }
 
-    return this.matchRoles(roles, user.role);
+    const matches = this.matchRoles(roles, user.role);
+
+    if (!matches) {
+      throw new ForbiddenException('Invalid role');
+    }
+
+    return true;
   }
 
   private matchRoles(requiredRoles: UserRole[], userRole: UserRole): boolean {

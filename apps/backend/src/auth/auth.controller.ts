@@ -35,25 +35,10 @@ export class AuthController {
     @Inject('PASSPORT') private readonly passport: Authenticator,
   ) {}
 
-  private handleRequest(err: any, user: User, info: any): User {
-    if (err || !user) {
-      if (info && info.message) {
-        throw new UnauthorizedException(info.message);
-      }
-
-      if (err) {
-        throw err;
-      }
-
-      throw new UnauthorizedException();
-    }
-    return user;
-  }
-
   @ApiCookieAuth()
   @Get('/me')
   @UseGuards(AuthGuard)
-  async me(@CurrentUser() user: RequestUser): Promise<UserResponseDTO> {
+  me(@CurrentUser() user: RequestUser): UserResponseDTO {
     return { data: mapUserToDto(user) };
   }
 
@@ -64,25 +49,51 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<UserResponseDTO> {
     const user = await new Promise<User>((resolve, reject) => {
-      this.passport.authenticate(
+      const authenticateReturn = this.passport.authenticate(
         'local',
-        {
-          session: true,
-        },
-        (err: string, user: User, info: string) => {
+        { session: true },
+        (err: string, user: User | false | null, info: string) => {
           try {
             req.authInfo = info;
-            return resolve(this.handleRequest(err, user, info));
+
+            const u = this.handleRequest(err, user, info);
+
+            return resolve(u);
           } catch (err) {
             reject(err);
           }
         },
-      )(req, res);
+      ) as (req: Request, res: Response) => void;
+
+      authenticateReturn(req, res);
     });
 
     req.user = user;
     req.session.user = user;
     return { data: mapUserToDto(user) };
+  }
+
+  private handleRequest(
+    err: string,
+    user: User | false | null,
+    info: undefined | string | { message: string },
+  ): User {
+    if (err || !user) {
+      if (typeof info === 'string') {
+        throw new UnauthorizedException(info);
+      }
+
+      if (info && 'message' in info) {
+        throw new UnauthorizedException(info.message);
+      }
+
+      if (err) {
+        throw err;
+      }
+
+      throw new UnauthorizedException();
+    }
+    return user;
   }
 
   @Post('/register-customer')
@@ -104,9 +115,10 @@ export class AuthController {
   @ApiCookieAuth()
   @Post('/logout')
   @UseGuards(AuthGuard)
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    await (req.session as any).destroy();
-    await res.clearCookie('connect.sid');
+  logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    req.session.destroy((err) => console.error(err));
+
+    res.clearCookie('connect.sid');
     return { message: 'Logged out' };
   }
 }

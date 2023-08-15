@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, User, UserRole } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 import { EntityAlreadyUsedException } from 'src/lib/domain/domain.exception';
 import { assertFalsy } from 'src/lib/domain/assertions';
@@ -60,7 +60,7 @@ export class AuthService {
     assertFalsy(inviteCode.isUsed, EntityAlreadyUsedException, 'Invite-code');
 
     return this.prisma.$transaction(async (prisma) => {
-      const user = await this.createUserInTransaction(
+      const user = await this.createEmployeeInTransaction(
         {
           email,
           password,
@@ -90,21 +90,25 @@ export class AuthService {
 
   async registerCustomer(registerUserDto: RegisterCustomerDto): Promise<User> {
     return this.prisma.$transaction((prisma) => {
-      return this.createUserInTransaction(
+      const { email, password } = registerUserDto;
+      const { salt, hash } = hashPassword(password);
+
+      return this.usersService.createCustomer(
         {
-          ...registerUserDto,
-          role: UserRole.CUSTOMER,
+          email,
+          passwordSalt: salt,
+          password: hash,
+          birthDate: null,
           firstName: '',
           lastName: '',
           patronymic: '',
-          birthDate: null,
         },
         prisma,
       );
     });
   }
 
-  async createUserInTransaction(
+  async createEmployeeInTransaction(
     registerUserDto: Omit<CreateUserDto, 'passwordSalt'>,
     prisma: Prisma.TransactionClient,
   ): Promise<User> {
@@ -119,7 +123,7 @@ export class AuthService {
     } = registerUserDto;
     const { salt, hash } = hashPassword(password);
 
-    return this.usersService.createUser(
+    return this.usersService.createEmployee(
       {
         role,
         email,
