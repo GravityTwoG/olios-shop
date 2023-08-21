@@ -1,64 +1,57 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 
 import { useUnit } from 'effector-react';
-import {
-  $email,
-  $error,
-  $inviteCode,
-  $isPending,
-  $password,
-  emailChanged,
-  formSubmitted,
-  inviteCodeChanged,
-  passwordChanged,
-} from './model';
+import { $isPending, $error, formSubmitted } from './model';
 
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { InputField } from '@/src/ui/molecules/Field';
 import { Form, FormError } from '@/src/ui/molecules/Form';
 
 export const RegisterEmployeeForm = () => {
-  const [email, password, inviteCode, isPending, error] = useUnit([
-    $email,
-    $password,
-    $inviteCode,
-    $isPending,
-    $error,
-  ]);
+  const [isPending, error] = useUnit([$isPending, $error]);
 
-  const [
-    formSubmittedEvent,
-    emailChangedEvent,
-    passwordChangedEvent,
-    inviteCodeChangedEvent,
-  ] = useUnit([
-    formSubmitted,
-    emailChanged,
-    passwordChanged,
-    inviteCodeChanged,
-  ]);
+  const formSubmittedEvent = useUnit(formSubmitted);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+      inviteCode: '',
+    },
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    formSubmittedEvent(data);
+  });
 
   return (
-    <Form className="py-2" onSubmit={() => formSubmittedEvent()}>
+    <Form className="py-2" onSubmit={onSubmit}>
       <InputField
         label="Email"
         placeholder="email"
-        value={email}
-        onChange={(e) => emailChangedEvent(e.target.value)}
+        {...register('email', { required: 'Email is required!' })}
       />
+      <FormError>{errors.email?.message}</FormError>
+
       <InputField
         label="Password"
         placeholder="password"
         type="password"
-        value={password}
-        onChange={(e) => passwordChangedEvent(e.target.value)}
+        {...register('password', { required: 'Password is required!' })}
       />
+      <FormError>{errors.password?.message}</FormError>
+
       <InputField
         label="Invite code"
         placeholder="invite-code"
-        value={inviteCode}
-        onChange={(e) => inviteCodeChangedEvent(e.target.value)}
+        {...register('inviteCode', { required: 'Invite code is required!' })}
       />
+      <FormError>{errors.inviteCode?.message}</FormError>
 
       <FormError>{error}</FormError>
 

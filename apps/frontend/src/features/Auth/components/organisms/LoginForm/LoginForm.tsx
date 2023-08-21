@@ -1,57 +1,54 @@
 import React from 'react';
-import { useUnit } from 'effector-react';
+import { useForm } from 'react-hook-form';
 
-import {
-  $email,
-  $emailError,
-  $loginError,
-  $isLoginPending,
-  $password,
-  $passwordError,
-  emailChanged,
-  formSubmitted,
-  passwordChanged,
-} from './model';
+import { useUnit } from 'effector-react';
+import { $loginError, $isLoginPending, formSubmitted } from './model';
 
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { InputField } from '@/src/ui/molecules/Field';
 import { Form, FormError } from '@/src/ui/molecules/Form';
 
 export const LoginForm = () => {
-  const [email, emailError, password, passwordError, error, isPending] =
-    useUnit([
-      $email,
-      $emailError,
-      $password,
-      $passwordError,
-      $loginError,
-      $isLoginPending,
-    ]);
+  const [error, isPending] = useUnit([$loginError, $isLoginPending]);
 
-  const [formSubmittedEvent, emailChangedEvent, passwordChangedEvent] = useUnit(
-    [formSubmitted, emailChanged, passwordChanged],
-  );
+  const formSubmittedEvent = useUnit(formSubmitted);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    formSubmittedEvent(data);
+  });
 
   return (
-    <Form className="py-2" onSubmit={() => formSubmittedEvent()}>
+    <Form className="py-2" onSubmit={onSubmit}>
       <InputField
         label="Email"
         placeholder="email"
-        value={email}
-        onChange={(e) => emailChangedEvent(e.target.value)}
+        {...register('email', { required: 'Email is required!' })}
       />
-      <FormError>{emailError}</FormError>
+      <FormError>{errors.email?.message}</FormError>
 
       <InputField
         label="Password"
         placeholder="password"
         type="password"
-        value={password}
-        onChange={(e) => passwordChangedEvent(e.target.value)}
+        {...register('password', {
+          required: 'Password is required!',
+          minLength: { value: 8, message: 'Min length is 8!' },
+        })}
       />
-      <FormError>{passwordError}</FormError>
+      <FormError>{errors.password?.message}</FormError>
 
-      <FormError>{error}</FormError>
+      <FormError>{error || errors.root?.message}</FormError>
 
       <CTAButton type="submit" isLoading={isPending}>
         Sign In

@@ -13,7 +13,7 @@ import { ApiError } from '../../api';
 
 export type CategoriesSelectProps = Pick<
   AsyncComboboxProps<string>,
-  'option' | 'onChange' | 'id'
+  'option' | 'onChange' | 'onBlur' | 'id'
 > & { excludeId?: number };
 
 const defaultCategory = { label: 'Not selected', value: '' };

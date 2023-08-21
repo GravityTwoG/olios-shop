@@ -1,12 +1,10 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
-import { every } from 'patronum';
 
 import { ICart } from '@/src/types/ICart';
 import { toast } from '@/src/shared/toasts';
 import { ApiError } from '@/src/shared/api';
 import * as cartApi from '@/src/shared/api/cart/cart';
 import * as ordersApi from '@/src/shared/api/orders';
-import { createField } from '@/src/shared/effector';
 import { IOrder } from '@/src/types/IOrder';
 
 // Effects
@@ -48,43 +46,15 @@ const createOrderFx = createEffect<ordersApi.CreateOrderDTO, IOrder, ApiError>(
   },
 );
 
-export const formSubmitted = createEvent('');
+export const formSubmitted = createEvent<ordersApi.CreateOrderDTO>('');
 export const orderCreated = createOrderFx.doneData;
-
-export const [$country, countryChanged] = createField('Country', '');
-export const [$city, cityChanged] = createField('City', '');
-export const [$street, streetChanged] = createField('Street', '');
-export const [$house, houseChanged] = createField('House', '');
-export const [$flat, flatChanged] = createField('Flat', '');
-export const [$floor, floorChanged] = createField('Floor', 0);
-export const [$phoneNumber, phoneNumberChanged] = createField(
-  'Phone Number',
-  '',
-);
-export const [$name, nameChanged] = createField('Name', '');
 
 export const $isCreating = createStore(false);
 
-const $isFormValid = every({
-  stores: [$country, $city, $street, $house, $flat, $name, $phoneNumber],
-  predicate: (store) => store.length > 0,
-});
-
 sample({
   clock: formSubmitted,
-  source: {
-    cart: $cart,
-    country: $country,
-    city: $city,
-    street: $street,
-    house: $house,
-    flat: $flat,
-    floor: $floor,
-    name: $name,
-    phoneNumber: $phoneNumber,
-  },
   fn: (data) => ({
-    cartId: data.cart.id,
+    cartId: data.cartId,
 
     country: data.country,
     city: data.city,
@@ -96,7 +66,6 @@ sample({
     name: data.name,
     phoneNumber: data.phoneNumber,
   }),
-  filter: $isFormValid,
   target: createOrderFx,
 });
 

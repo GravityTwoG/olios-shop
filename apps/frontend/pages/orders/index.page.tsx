@@ -45,10 +45,6 @@ const headers = [
 ];
 
 const OrdersPage = () => {
-  useEffect(() => {
-    pageMounted();
-  }, []);
-
   const [orders, ordersCount, isPending, pageSize, pageNumber] = useUnit([
     $orders,
     $ordersCount,
@@ -59,7 +55,11 @@ const OrdersPage = () => {
     $pageNumber,
   ]);
 
-  const [loadPageEvent] = useUnit([loadPage]);
+  const [loadPageEvent, pageMountedEvent] = useUnit([loadPage, pageMounted]);
+
+  useEffect(() => {
+    pageMountedEvent();
+  }, [pageMountedEvent]);
 
   return (
     <Container className="py-8">

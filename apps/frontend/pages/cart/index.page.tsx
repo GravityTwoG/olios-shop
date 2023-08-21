@@ -2,16 +2,18 @@ import React, { useEffect } from 'react';
 import classes from './cart.module.scss';
 import clsx from 'clsx';
 
+import { useForm } from 'react-hook-form';
+
 import { useUnit } from 'effector-react';
 import {
   $cart,
   $carts,
   $isCartPending,
-  $newCartName,
+  $isNewCartCreating,
+  cartCreated,
   cartDeleted,
   loadCart,
   newCartFormSubmitted,
-  newCartNameChanged,
   pageMounted,
   removeFromCart,
   selectedAsDefault,
@@ -28,7 +30,7 @@ import Image from 'next/image';
 import { Button } from '@/src/ui/atoms/Button';
 import { StyledLink } from '@/src/ui/atoms/StyledLink';
 import { Preloader } from '@/src/ui/molecules/Preloader';
-import { Form } from '@/src/ui/molecules/Form';
+import { Form, FormError } from '@/src/ui/molecules/Form';
 import { Container } from '@/src/ui/atoms/Container';
 import { RoleGuard } from '@/src/shared/components/RoleGuard';
 
@@ -133,14 +135,37 @@ function CartPage() {
 }
 
 const CartsList = () => {
-  const [carts, selectedCart, newCartName] = useUnit([
+  const [carts, selectedCart, isNewCartCreating] = useUnit([
     $carts,
     $cart,
-    $newCartName,
+    $isNewCartCreating,
   ]);
 
-  const [loadCartEvent, newCartFormSubmittedEvent, newCartNameChangedEvent] =
-    useUnit([loadCart, newCartFormSubmitted, newCartNameChanged]);
+  const [loadCartEvent, newCartFormSubmittedEvent] = useUnit([
+    loadCart,
+    newCartFormSubmitted,
+  ]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    defaultValues: {
+      name: '',
+    },
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    newCartFormSubmittedEvent(data.name);
+  });
+
+  useEffect(() => {
+    return cartCreated.watch(() => {
+      reset();
+    });
+  }, [reset]);
 
   return (
     <div className={clsx('mx-[-0.75rem]', classes.CartsList)}>
@@ -161,16 +186,21 @@ const CartsList = () => {
 
         <RoleGuard roles={SessionUserRole.CUSTOMER}>
           <li className="bg-white py-3 px-4 w-[170px] snap-start">
-            <Form onSubmit={() => newCartFormSubmittedEvent()}>
+            <Form onSubmit={onSubmit}>
               <p className="mb-2">
                 <input
                   className="border-slate-950 border-[1px] px-2 py-1 w-full"
-                  value={newCartName}
-                  placeholder="cart name"
-                  onChange={(e) => newCartNameChangedEvent(e.target.value)}
+                  placeholder="Cart name"
+                  {...register('name', { required: 'Enter name!' })}
                 />
               </p>
-              <Button className="w-full" type="submit">
+              <FormError>{errors.name?.message}</FormError>
+
+              <Button
+                className="w-full"
+                type="submit"
+                isLoading={isNewCartCreating}
+              >
                 Create new cart
               </Button>
             </Form>

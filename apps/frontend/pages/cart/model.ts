@@ -56,6 +56,7 @@ const removeFromCartFx = createEffect<
 export const pageMounted = createEvent('Cart page mounted');
 export const loadCart = createEvent<string>('Load cart');
 export const selectedAsDefault = createEvent('Selected as default');
+export const cartCreated = createCartFx.done;
 export const cartDeleted = createEvent('Cart deleted');
 
 export const removeFromCart = createEvent<string>('Remove from cart');
@@ -153,26 +154,24 @@ sample({
   target: fetchCartFx,
 });
 
-//
-
 // Events
-export const newCartNameChanged = createEvent<string>('New cart name changed');
-export const newCartFormSubmitted = createEvent('New cart form submitted');
+export const newCartFormSubmitted = createEvent<string>(
+  'New cart form submitted',
+);
 
 // Stores
-export const $newCartName = createStore('');
-
-$newCartName.on(newCartNameChanged, (_, value) => value);
+export const $isNewCartCreating = createStore(false);
 
 sample({
   clock: newCartFormSubmitted,
-  source: { name: $newCartName },
-  filter: ({ name }) => name.length > 0,
-  fn: ({ name }) => name,
   target: createCartFx,
 });
 
-$newCartName.on(createCartFx.done, () => '');
+$isNewCartCreating.on(createCartFx, () => true);
+
+createCartFx.failData.watch((e) => toast.error(e.message));
+
+$isNewCartCreating.on(createCartFx.finally, () => false);
 
 sample({
   clock: createCartFx.done,

@@ -2,7 +2,7 @@ import classes from './combobox.module.scss';
 import { themeFactory } from './theme';
 import { ComboboxOption } from './types';
 
-import AsyncSelect from 'react-select/async';
+import AsyncSelect, { AsyncProps } from 'react-select/async';
 
 export type LoadOptionsCallback<T> = (res: ComboboxOption<T>[]) => void;
 
@@ -11,6 +11,7 @@ export type AsyncComboboxProps<T> = {
   options: ComboboxOption<T>[];
 
   onChange?: (option: ComboboxOption<T>) => void;
+  onBlur?: AsyncProps<ComboboxOption<T>, false, any>['onBlur'];
   loadOptions:
     | ((inputValue: string) => Promise<ComboboxOption<T>[]>)
     | ((inputValue: string, cb: LoadOptionsCallback<T>) => void);
@@ -31,6 +32,7 @@ export const AsyncCombobox = function <T>(props: AsyncComboboxProps<T>) {
             props.onChange && props.onChange(v);
           }
         }}
+        onBlur={props.onBlur}
         placeholder={props.placeholder}
         id={props.id}
         cacheOptions

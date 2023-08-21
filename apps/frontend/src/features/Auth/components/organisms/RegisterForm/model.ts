@@ -1,40 +1,34 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
-import { combineEvents } from 'patronum';
+import { combineEvents, not } from 'patronum';
 
-import { IUser } from '@/src/types/IUser';
-import { ApiError } from '@/src/shared/api';
 import * as authApi from '@/src/shared/api/auth';
 import { addFromAnonymousCart } from '@/src/shared/api/cart';
 import { loginFx } from '@/src/shared/auth';
 import { toast } from '@/src/shared/toasts';
 
 // Effects
-const registerFx = createEffect<authApi.IRegisterCredentials, IUser, ApiError>(
-  (credentials) => authApi.register(credentials),
+const registerFx = createEffect(
+  async (credentials: authApi.IRegisterCredentials) => {
+    await authApi.register(credentials);
+
+    return credentials;
+  },
 );
 
 const addFromAnonymousCartFx = createEffect(() => addFromAnonymousCart());
 
 // Events
-export const emailChanged = createEvent<string>('Email changed');
-export const passwordChanged = createEvent<string>('Password changed');
-export const formSubmitted = createEvent('Register form submitted');
+export const formSubmitted = createEvent<authApi.IRegisterCredentials>(
+  'Register form submitted',
+);
 
 // Stores
-export const $email = createStore('');
-export const $password = createStore('');
 export const $error = createStore('');
 export const $isPending = createStore(false);
 
-$email.on(emailChanged, (_, value) => value);
-$password.on(passwordChanged, (_, value) => value);
-
 sample({
   clock: formSubmitted,
-  source: {
-    email: $email,
-    password: $password,
-  },
+  filter: not($isPending),
   target: registerFx,
 });
 
@@ -47,11 +41,7 @@ $isPending.on(registerFx.finally, () => false);
 $error.on(registerFx.failData, (_, err) => err.message);
 
 sample({
-  clock: registerFx.done,
-  source: {
-    email: $email,
-    password: $password,
-  },
+  clock: registerFx.doneData,
   target: loginFx,
 });
 

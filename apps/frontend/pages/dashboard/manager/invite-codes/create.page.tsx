@@ -1,26 +1,19 @@
 import { useEffect, useId } from 'react';
 import { useRouter } from 'next/router';
 
+import { useForm, Controller } from 'react-hook-form';
+
+import { IEmployeeRole } from '@/src/types/IUser';
 import { paths } from '@/src/paths';
 
 import { SessionUserRole } from '@/src/shared/session';
 
 import { useUnit } from 'effector-react';
 import {
-  $birthDate,
   $error,
-  $firstName,
   $isPending,
-  $lastName,
-  $patronymic,
-  $role,
-  birthDateChanged,
-  firstNameChanged,
   formSubmitted,
   inviteCodeCreated,
-  lastNameChanged,
-  patronymicChanged,
-  roleChanged,
 } from './create.model';
 
 import { PrivatePage } from '@/src/features/Auth';
@@ -34,37 +27,37 @@ import { Field, InputField } from '@/src/ui/molecules/Field';
 import { RoleSelect } from '@/src/shared/components/RoleSelect';
 
 const CreateInviteCodePage = () => {
-  const [firstName, lastName, patronymic, role, birthDate, isPending, error] =
-    useUnit([
-      $firstName,
-      $lastName,
-      $patronymic,
-      $role,
-      $birthDate,
-      $isPending,
-      $error,
-    ]);
+  const [isPending, error] = useUnit([$isPending, $error]);
 
-  const [
-    birthDateChangedEvent,
-    firstNameChangedEvent,
-    formSubmittedEvent,
-    lastNameChangedEvent,
-    patronymicChangedEvent,
-    roleChangedEvent,
-  ] = useUnit([
-    birthDateChanged,
-    firstNameChanged,
-    formSubmitted,
-    lastNameChanged,
-    patronymicChanged,
-    roleChanged,
-  ]);
+  const [formSubmittedEvent] = useUnit([formSubmitted]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    reset,
+  } = useForm({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      patronymic: '',
+      role: IEmployeeRole.CONTENT_MANAGER,
+      birthDate: '1980-01-01',
+    },
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    formSubmittedEvent(data);
+  });
 
   const router = useRouter();
   useEffect(() => {
-    return inviteCodeCreated.watch(() => router.push(paths.inviteCodes({})));
-  }, [router]);
+    return inviteCodeCreated.watch(() => {
+      reset();
+      router.push(paths.inviteCodes({}));
+    });
+  }, [router, reset]);
 
   const rolesId = useId();
 
@@ -75,39 +68,50 @@ const CreateInviteCodePage = () => {
       </Head>
       <H1>Create Invite Code</H1>
 
-      <Form onSubmit={() => formSubmittedEvent()}>
+      <Form onSubmit={onSubmit}>
         <InputField
           label="First Name"
           placeholder="First Name"
-          value={firstName}
-          onChange={(e) => firstNameChangedEvent(e.target.value)}
+          {...register('firstName', { required: 'First Name is required!' })}
         />
+        <FormError>{errors.firstName?.message}</FormError>
+
         <InputField
           label="Last Name"
           placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => lastNameChangedEvent(e.target.value)}
+          {...register('lastName', { required: 'Last Name is required!' })}
         />
+        <FormError>{errors.lastName?.message}</FormError>
+
         <InputField
           label="Patronymic"
           placeholder="Patronymic"
-          value={patronymic}
-          onChange={(e) => patronymicChangedEvent(e.target.value)}
+          {...register('patronymic', { required: 'Patronymic is required!' })}
         />
+        <FormError>{errors.patronymic?.message}</FormError>
+
         <Field label="Role" htmlFor={rolesId}>
-          <RoleSelect
-            role={role}
-            onChange={(r) => roleChangedEvent(r)}
-            id={rolesId}
+          <Controller
+            name="role"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <RoleSelect
+                role={value}
+                onChange={(r) => onChange(r)}
+                id={rolesId}
+              />
+            )}
           />
         </Field>
+        <FormError>{errors.role?.message}</FormError>
+
         <InputField
           label="Birth Date"
           placeholder="Birth Date"
           type="date"
-          value={birthDate}
-          onChange={(e) => birthDateChangedEvent(e.target.value)}
+          {...register('birthDate', { required: 'Birth Date is required!' })}
         />
+        <FormError>{errors.birthDate?.message}</FormError>
 
         <FormError>{error}</FormError>
 
