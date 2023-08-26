@@ -39,7 +39,7 @@ export function AddNewCategory() {
     formSubmittedEvent({
       name: data.name,
       categoryIcon: data.icon.raw,
-      parentId: Number(data.parentCategory.value),
+      parentId: Number(data.parentCategory.value) || null,
     });
   });
 
