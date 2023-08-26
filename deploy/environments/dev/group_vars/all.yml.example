@@ -10,9 +10,10 @@ container_registry_password: PAT
 domain_name: example.com
 domain_email: email@gmail.com
 
-# Minio
-minio_root_user: minio-root-user
-minio_root_password: minio-root-password
+# S3
+s3_endpoint: http://minio:9000
+s3_access_key_id: minio-root-user
+s3_secret_access_key: minio-root-password
 
 # Postgres
 postgres_user: olios-backend

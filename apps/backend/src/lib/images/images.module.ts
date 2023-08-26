@@ -2,28 +2,30 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { AppConfigService } from 'src/config/configuration.schema';
-import { MinioModule } from '../minio';
+import { S3ClientModule } from '../s3Client';
 
 import { ImagesService } from './images.service';
 
 @Module({
   imports: [
-    MinioModule.registerAsync({
+    S3ClientModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: AppConfigService) => {
         return {
-          endPoint: configService.get('MINIO_ENDPOINT', {
+          endpoint: configService.get('S3_ENDPOINT', {
             infer: true,
           }),
-          port: configService.get('MINIO_PORT', { infer: true }),
-          useSSL: false,
-          accessKey: configService.get('MINIO_ACCESS_KEY', {
-            infer: true,
-          }),
-          secretKey: configService.get('MINIO_SECRET_KEY', {
-            infer: true,
-          }),
+          forcePathStyle: true, // url formed as https://customendpoint.com/bucketname when true
+          credentials: {
+            accessKeyId: configService.get('S3_ACCESS_KEY_ID', {
+              infer: true,
+            }),
+            secretAccessKey: configService.get('S3_SECRET_ACCESS_KEY', {
+              infer: true,
+            }),
+          },
+          region: 'global',
         };
       },
     }),

@@ -7,7 +7,7 @@ import {
 } from '../domain/domain.exception';
 import { assertTruthy } from '../domain/assertions';
 
-import { InjectMinio, MinioClient } from '../minio';
+import { S3ClientService } from '../s3Client';
 import { BucketName, buckets } from './buckets';
 import { createPolicy } from './create-policy';
 
@@ -15,34 +15,40 @@ import { createPolicy } from './create-policy';
 export class ImagesService implements OnModuleInit {
   private readonly logger = new Logger(ImagesService.name);
 
-  constructor(@InjectMinio() private readonly minioClient: MinioClient) {}
+  constructor(private readonly s3ClientService: S3ClientService) {}
 
   async onModuleInit() {
     try {
       await this.initializeBuckets();
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(
+        `Error while initializing buckets: ${JSON.stringify(error)}`,
+      );
     }
   }
 
   private async initializeBuckets() {
-    for (const bucketName of buckets) {
-      const bucketExists = await this.minioClient.bucketExists(bucketName);
+    await Promise.all(
+      buckets.map(async (bucketName) => {
+        const bucket = await this.s3ClientService.getBucket(bucketName);
 
-      if (!bucketExists) {
-        await this.minioClient.makeBucket(bucketName, 'eu-west-1');
-      }
-
-      this.minioClient.setBucketPolicy(
-        bucketName,
-        JSON.stringify(createPolicy(bucketName)),
-        (err) => {
-          if (err) throw err;
-
-          this.logger.log('Bucket policy was set.');
-        },
-      );
-    }
+        if (bucket) {
+          const existingPolicy = await this.s3ClientService.getBucketPolicy(
+            bucketName,
+          );
+          const newPolicy = JSON.stringify(createPolicy(bucketName));
+          if (!existingPolicy || existingPolicy !== newPolicy) {
+            await this.s3ClientService.setBucketPolicy(bucketName, newPolicy);
+          }
+        } else {
+          await this.s3ClientService.createBucket(bucketName);
+          await this.s3ClientService.setBucketPolicy(
+            bucketName,
+            JSON.stringify(createPolicy(bucketName)),
+          );
+        }
+      }),
+    );
   }
 
   async upload(file: Express.Multer.File, bucketName: BucketName) {
@@ -56,25 +62,20 @@ export class ImagesService implements OnModuleInit {
       const timestamp = Date.now().toString();
       const hash = crypto.createHash('md5').update(timestamp).digest('hex');
 
-      const metaData = {
-        'Content-Type': file.mimetype,
-        'Cache-Control': 'public, max-age=31536000',
-      };
-
       const fileName = `${hash}_${crypto.randomBytes(6).toString('hex')}_${
         file.originalname
       }`;
 
-      await this.minioClient.putObject(
+      await this.s3ClientService.putObject({
         bucketName,
-        fileName,
-        file.buffer,
-        file.size,
-        metaData,
-      );
+        objectName: fileName,
+        file,
+        ContentType: file.mimetype,
+        CacheControl: 'public, max-age=31536000',
+      });
 
       return {
-        url: `${process.env.MINIO_PROTOCOL}://${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${bucketName}/${fileName}`,
+        url: `${process.env.S3_ENDPOINT}/${bucketName}/${fileName}`,
         path: `${bucketName}/${fileName}`,
         objectName: `${fileName}`,
       };
@@ -100,7 +101,7 @@ export class ImagesService implements OnModuleInit {
     return r;
   }
 
-  async delete(objectName: string, bucketName: BucketName) {
-    return this.minioClient.removeObject(bucketName, objectName);
+  delete(objectName: string, bucketName: BucketName) {
+    return this.s3ClientService.removeObject(bucketName, objectName);
   }
 }

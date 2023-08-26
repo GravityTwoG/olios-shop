@@ -22,18 +22,13 @@ export class EnvironmentVariables {
   REDIS_URI: string;
 
   @IsString()
-  MINIO_PROTOCOL: string;
+  S3_ENDPOINT: string;
 
   @IsString()
-  MINIO_ENDPOINT: string;
-
-  @IsInt()
-  MINIO_PORT: number;
-  @IsString()
-  MINIO_ACCESS_KEY: string;
+  S3_ACCESS_KEY_ID: string;
 
   @IsString()
-  MINIO_SECRET_KEY: string;
+  S3_SECRET_ACCESS_KEY: string;
 
   @IsString()
   FILE_STORAGE_URL: string;

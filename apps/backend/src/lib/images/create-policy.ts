@@ -3,30 +3,25 @@ export const createPolicy = (bucketName: string) => {
     Version: '2012-10-17',
     Statement: [
       {
+        Sid: `${bucketName}-1`,
         Effect: 'Allow',
         Principal: {
-          AWS: ['*'],
+          AWS: '*',
         },
         Action: [
-          's3:ListBucketMultipartUploads',
           's3:GetBucketLocation',
-          's3:ListBucket',
-        ],
-        Resource: [`arn:aws:s3:::${bucketName}`], // Change this according to your bucket name
-      },
-      {
-        Effect: 'Allow',
-        Principal: {
-          AWS: ['*'],
-        },
-        Action: [
+          's3:PutBucketAcl',
+          's3:ListBuckets',
           's3:PutObject',
           's3:AbortMultipartUpload',
           's3:DeleteObject',
           's3:GetObject',
-          's3:ListMultipartUploadParts',
         ],
-        Resource: [`arn:aws:s3:::${bucketName}/*`], // Change this according to your bucket name
+        Resource: [
+          `arn:aws:s3:::${bucketName}`,
+          `arn:aws:s3:::${bucketName}/*`,
+        ],
+        Condition: {},
       },
     ],
   };
