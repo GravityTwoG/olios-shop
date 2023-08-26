@@ -1,5 +1,7 @@
-node_modules/ # Installed inside container
-.next/        # Existing Next.js builds
+# Installed inside container
+node_modules
+# Existing Next.js builds
+.next
 
 .husky/
 .git/
