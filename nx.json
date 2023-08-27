@@ -1,9 +1,16 @@
 {
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "workspaceLayout": {
+    "appsDir": "apps"
+  },
+  "cli": {
+    "packageManager": "npm"
+  },
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["lint"]
+        "cacheableOperations": ["lint", "build"]
       }
     }
   },

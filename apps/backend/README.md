@@ -4,10 +4,6 @@ Run Redis and Postgres
 docker-compose up
 ```
 
-![img.png](img.png)
-
-![img_1.png](img_1.png)
-
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>

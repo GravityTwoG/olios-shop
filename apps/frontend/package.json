@@ -2,6 +2,7 @@
   "name": "olios-shop-frontend",
   "version": "0.1.0",
   "private": true,
+  "prefix": "./",
   "scripts": {
     "dev": "next dev",
     "build": "env-cmd -f ./.env.prod next build",
@@ -59,5 +60,9 @@
       "eslint --fix"
     ],
     "*.{css,scss,md}": "prettier --ignore-unknown --write"
+  },
+  "volta": {
+    "node": "16.19.0",
+    "npm": "9.8.1"
   }
 }

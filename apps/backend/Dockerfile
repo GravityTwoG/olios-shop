@@ -9,10 +9,10 @@ WORKDIR /usr/src/app
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
 # Copying this first prevents re-running npm install on every code change.
-COPY --chown=node:node package.json yarn.lock ./
+COPY --chown=node:node package.json package-lock.json ./
 
 # Install dependencies
-RUN yarn install --frozen-lockfile && yarn cache clean
+RUN npm ci
 
 # Use the node user from the image (instead of the root user)
 USER node
@@ -32,7 +32,7 @@ ENV NODE_ENV production
 # generate prisma client
 RUN npx prisma generate
 # Run the build command which creates the production bundle
-RUN yarn build
+RUN npm run build
 
 
 USER node
@@ -54,4 +54,4 @@ ENV NODE_ENV production
 ENV PORT 5000
 
 # Start the server using the production build
-CMD [ "yarn", "start:prod" ]
+CMD [ "npm", "run", "start:prod" ]
