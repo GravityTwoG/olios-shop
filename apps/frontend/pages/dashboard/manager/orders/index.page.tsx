@@ -21,6 +21,7 @@ import { Paper } from '@/src/ui/atoms/Paper';
 import { H1 } from '@/src/ui/atoms/Typography';
 import { Container } from '@/src/ui/atoms/Container';
 import { NoResults } from '@/src/ui/atoms/NoResults';
+import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
 
@@ -79,7 +80,7 @@ const ManageOrdersPage = () => {
               </Link>,
               order.status,
               order.items.length,
-              order.total,
+              <MonetaryValue value={order.total} />,
             ],
           }))}
           emptyComponent={<NoResults>No orders</NoResults>}

@@ -12,6 +12,7 @@ import { Paper } from '@/src/ui/atoms/Paper';
 import { H1 } from '@/src/ui/atoms/Typography';
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Container } from '@/src/ui/atoms/Container';
+import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { Form } from '@/src/ui/molecules/Form';
 import { InputField } from '@/src/ui/molecules/Field';
@@ -46,7 +47,9 @@ const OrdersPaymentPage = () => {
           <p>Name: {order.name}</p>
           <p>phoneNumber: {order.phoneNumber}</p>
 
-          <p>Total: {order.total}</p>
+          <p>
+            Total: <MonetaryValue value={order.total} />
+          </p>
 
           <Form>
             <InputField label="Card number" />

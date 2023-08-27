@@ -23,6 +23,7 @@ import { H1, H2 } from '@/src/ui/atoms/Typography';
 import { Container } from '@/src/ui/atoms/Container';
 import { NoResults } from '@/src/ui/atoms/NoResults';
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
+import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Table } from '@/src/ui/molecules/Table';
 import { Form, FormError } from '@/src/ui/molecules/Form';
 import { InputField } from '@/src/ui/molecules/Field';
@@ -109,8 +110,8 @@ const CreateOrderPage = () => {
             cols: [
               cartItem.productName,
               cartItem.quantity,
-              cartItem.realPrice,
-              cartItem.sum,
+              <MonetaryValue value={cartItem.realPrice} />,
+              <MonetaryValue value={cartItem.sum} />,
             ],
           }))}
           emptyComponent={<NoResults>No products</NoResults>}

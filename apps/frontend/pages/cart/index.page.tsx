@@ -29,9 +29,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/src/ui/atoms/Button';
 import { StyledLink } from '@/src/ui/atoms/StyledLink';
+import { Container } from '@/src/ui/atoms/Container';
+import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { Form, FormError } from '@/src/ui/molecules/Form';
-import { Container } from '@/src/ui/atoms/Container';
 import { RoleGuard } from '@/src/shared/components/RoleGuard';
 
 function CartPage() {
@@ -74,7 +75,7 @@ function CartPage() {
         </div>
 
         <div>
-          Total: {cart.total}
+          Total: <MonetaryValue value={cart.total} />
           {cart.items.length > 0 && (
             <span className="ml-4">
               <StyledLink href={`${paths.ordersCreate({ cartId: cart.id })}`}>
@@ -113,7 +114,7 @@ function CartPage() {
                     Qty: {item.quantity}
                   </div>
                   <div className={classes['basket-item__price']}>
-                    Price: {item.realPrice}
+                    Price: <MonetaryValue value={item.realPrice} />
                   </div>
                   <button
                     className={classes['basket-item__delete']}

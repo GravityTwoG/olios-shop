@@ -20,6 +20,7 @@ import {
 
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { ImageViewer } from '@/src/ui/atoms/ImageViewer';
+import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 import { ProductCategoryLinkLoader } from '@/src/shared/components/ProductCategoryLinkLoader';
@@ -95,11 +96,11 @@ export default function ProductPageContainer() {
                 <div className={classes['product__price-label']}>Cost</div>
                 <span>
                   <span className={classes['product__price-curr']}>
-                    ${product.realPrice}
+                    <MonetaryValue value={product.realPrice} />
                   </span>
                   {product.oldPrice !== product.realPrice && (
                     <span className={classes['product__price-prev']}>
-                      ${product.oldPrice}
+                      <MonetaryValue value={product.oldPrice} />
                     </span>
                   )}
                 </span>

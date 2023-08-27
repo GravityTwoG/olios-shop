@@ -40,7 +40,7 @@ export default function ProductsManagementPage() {
     formSubmittedEvent({
       name: data.name,
       description: data.description,
-      price: data.price,
+      price: Math.round(data.price * 100),
       categoryId: Number(data.category.value),
       images: data.images.map((image) => image.raw),
     });
@@ -72,20 +72,19 @@ export default function ProductsManagementPage() {
           <TextAreaField
             label="Description"
             placeholder="description"
-            {...register('description', {
-              required: 'Description is required!',
-            })}
+            {...register('description')}
           />
           <FormError>{errors.description?.message}</FormError>
 
           <InputField
             label="Price"
-            placeholder="price"
+            placeholder="0.00"
             type="number"
+            step=".01"
             {...register('price', {
               required: 'Price is required!',
               valueAsNumber: true,
-              min: { value: 1, message: 'Price must be greater than 0' },
+              min: { value: 0.01, message: 'Price must be positive' },
             })}
           />
           <FormError>{errors.price?.message}</FormError>

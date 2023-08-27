@@ -20,6 +20,7 @@ import { Button } from '@/src/ui/atoms/Button';
 import { H1 } from '@/src/ui/atoms/Typography';
 import { NoResults } from '@/src/ui/atoms/NoResults';
 import { Container } from '@/src/ui/atoms/Container';
+import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { Table } from '@/src/ui/molecules/Table';
 
@@ -81,14 +82,16 @@ const OrdersPaymentPage = () => {
               cols: [
                 orderItem.name,
                 orderItem.quantity,
-                orderItem.price,
-                orderItem.sum,
+                <MonetaryValue value={orderItem.price} />,
+                <MonetaryValue value={orderItem.sum} />,
               ],
             }))}
             emptyComponent={<NoResults>No products</NoResults>}
           />
 
-          <p>Total: {order.total}</p>
+          <p>
+            Total: <MonetaryValue value={order.total} />
+          </p>
 
           <p>Country: {order.country}</p>
           <p>City: {order.city}</p>

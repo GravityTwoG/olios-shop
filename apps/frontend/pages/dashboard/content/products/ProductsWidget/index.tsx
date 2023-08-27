@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import { IProduct } from '@/src/types/IProduct';
+
 import { useUnit } from 'effector-react';
 
 import {
@@ -21,10 +23,10 @@ import { Paper } from '@/src/ui/atoms/Paper';
 import { Input } from '@/src/ui/atoms/Input';
 import { Button } from '@/src/ui/atoms/Button';
 import { H2 } from '@/src/ui/atoms/Typography';
-import { Paginator } from '@/src/ui/molecules/Paginator';
 import { NoResults } from '@/src/ui/atoms/NoResults';
+import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
+import { Paginator } from '@/src/ui/molecules/Paginator';
 import { Preloader } from '@/src/ui/molecules/Preloader';
-import { IProduct } from '@/src/types/IProduct';
 
 export const ProductsWidget = () => {
   const [
@@ -96,7 +98,9 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
     <li className="flex items-center py-4 gap-2">
       <Image src={product.thumbUrl} alt={product.name} width={60} height={60} />
       <div>{product.name}</div>
-      <div>{product.realPrice}</div>
+      <div>
+        <MonetaryValue value={product.realPrice} />
+      </div>
 
       <div className="ml-auto">
         <Button

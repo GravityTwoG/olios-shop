@@ -22,6 +22,7 @@ import { Paper } from '@/src/ui/atoms/Paper';
 import { H1 } from '@/src/ui/atoms/Typography';
 import { Container } from '@/src/ui/atoms/Container';
 import { NoResults } from '@/src/ui/atoms/NoResults';
+import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
 
@@ -78,7 +79,7 @@ const OrdersPage = () => {
               order.status,
               order.items.length,
               <div key="total" className="flex justify-between gap-4 w-full">
-                {order.total}{' '}
+                <MonetaryValue value={order.total} />{' '}
                 {order.status === OrderStatus.CREATED && (
                   <Link
                     href={paths.ordersPayment({ orderId: order.id })}
