@@ -15,6 +15,7 @@
     display: block;
     margin: 0 auto;
     height: 190px;
+    position: relative;
     img {
       margin: 0 auto;
       display: block;
@@ -24,7 +25,7 @@
   }
 
   &__info {
-    margin-top: 1rem;
+    padding-top: 1rem;
     display: block;
   }
 

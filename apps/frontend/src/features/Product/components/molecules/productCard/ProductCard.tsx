@@ -15,6 +15,8 @@ export type ProductCartProps = {
 };
 
 export function ProductCard({ product, className }: ProductCartProps) {
+  const productLink = paths.product({ id: product.id.toString() });
+
   return (
     <div className={clsx(classes['product-card'], className)}>
       <div className={classes['product-card__photo']}>
@@ -22,13 +24,11 @@ export function ProductCard({ product, className }: ProductCartProps) {
           images={product.images.map((url) => ({
             src: url,
           }))}
+          link={productLink}
         />
       </div>
 
-      <Link
-        href={paths.product({ id: product.id.toString() })}
-        className={classes['product-card__info']}
-      >
+      <Link href={productLink} className={classes['product-card__info']}>
         <p className={classes['product-card__name']}>{product.name}</p>
 
         <p className={classes['product-card__desc']}>{product.description}</p>
