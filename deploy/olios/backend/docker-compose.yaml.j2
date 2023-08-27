@@ -23,7 +23,7 @@ services:
     environment:
       NODE_ENV: production
       SESSION_SECRET: {{ session_secret }}
-      DATABASE_URL: 'postgresql://{{ postgres_user }}:{{ postgres_password }}@postgres:5432/{{ postgres_db }}?schema=public'
+      DATABASE_URL: {{ database_url }}
       REDIS_URI: redis://redis
       S3_ENDPOINT: {{ s3_endpoint }}
       S3_ACCESS_KEY_ID: {{ s3_access_key_id }}

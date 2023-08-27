@@ -6,8 +6,8 @@
 
   vars:
     home_dir: '/home/{{ user }}'
-    app_folder: olios-monolith
-    app_dir: '{{ home_dir }}/{{ app_folder }}'
+    app_folder: olios
+    app_dir: '{{ home_dir }}/olios-monolith'
 
   tasks:
     - name: Copy folder structure

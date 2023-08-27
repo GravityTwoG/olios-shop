@@ -11,11 +11,6 @@ upstream nestjs_upstream {
   keepalive 8;
 }
 
-upstream minio_upstream {
-  server minio:9000;
-  keepalive 8;
-}
-
 server {
     listen 80;
     listen [::]:80;
@@ -111,10 +106,4 @@ server {
   }
 
   ignore_invalid_headers off;
-  location /storage/ {
-    client_max_body_size 0;
-    proxy_buffering off;
-    chunked_transfer_encoding off;
-    proxy_pass http://minio_upstream/;
-  }
 }
