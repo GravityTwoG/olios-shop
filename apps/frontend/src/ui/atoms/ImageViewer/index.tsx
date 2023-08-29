@@ -27,6 +27,10 @@ export const ImageViewer = React.memo((props: ImageViewerProps) => {
           style: { width: '100%', maxWidth: '900px', aspectRatio: '3 / 2' },
         }}
         plugins={[Inline]}
+        render={{
+          buttonPrev: images.length <= 1 ? () => null : undefined,
+          buttonNext: images.length <= 1 ? () => null : undefined,
+        }}
       />
 
       <Lightbox
@@ -36,6 +40,10 @@ export const ImageViewer = React.memo((props: ImageViewerProps) => {
         carousel={{ padding: '4px' }}
         animation={{ swipe: 200 }}
         plugins={[Zoom]}
+        render={{
+          buttonPrev: images.length <= 1 ? () => null : undefined,
+          buttonNext: images.length <= 1 ? () => null : undefined,
+        }}
       />
     </Fragment>
   );

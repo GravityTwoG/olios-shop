@@ -31,7 +31,16 @@ export const Sidebar = (props: SidebarProps) => {
   const headerRef = useHideOnScroll({ scrollHeight: headerHeight });
 
   return (
-    <aside className={clsx(classes.sidebar, props.className)} ref={headerRef}>
+    <aside
+      className={clsx(
+        classes.sidebar,
+        props.className,
+        // yarl gallery affects app layout
+        // https://github.com/igordanchenko/yet-another-react-lightbox/blob/main/src/modules/NoScroll.tsx
+        `yarl__no_scroll_padding`,
+      )}
+      ref={headerRef}
+    >
       <Link href={paths.home({})} className={classes.SidebarLogo}>
         <Image width={100} height={100} src="/LOGO.png" alt="Olios Shop" />
       </Link>

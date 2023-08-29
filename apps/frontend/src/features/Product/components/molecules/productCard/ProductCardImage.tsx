@@ -43,6 +43,10 @@ export const ProductCardImage = React.memo((props: ImageViewerProps) => {
         carousel={{ padding: '4px' }}
         animation={{ swipe: 200 }}
         plugins={[Zoom]}
+        render={{
+          buttonPrev: images.length <= 1 ? () => null : undefined,
+          buttonNext: images.length <= 1 ? () => null : undefined,
+        }}
       />
     </div>
   );
