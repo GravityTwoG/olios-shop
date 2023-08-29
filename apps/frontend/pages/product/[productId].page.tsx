@@ -13,8 +13,8 @@ import {
   $recommendedProducts,
   addToCart,
   amountInCartChanged,
-  pageMounted,
   pageStarted,
+  productChanged,
   removeFromCart,
 } from './model';
 
@@ -30,7 +30,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   await allSettled(pageStarted, {
     scope,
-    params: Number(ctx.query.productId),
+    params: {
+      productId: Number(ctx.query.productId),
+      cookie: ctx.req.headers.cookie || '',
+    },
   });
 
   return {
@@ -61,12 +64,12 @@ export default function ProductPageContainer() {
     addToCartEvent,
     amountInCartChangedEvent,
     removeFromCartEvent,
-    pageMountedEvent,
-  ] = useUnit([addToCart, amountInCartChanged, removeFromCart, pageMounted]);
+    productChangedEvent,
+  ] = useUnit([addToCart, amountInCartChanged, removeFromCart, productChanged]);
 
   useEffect(() => {
-    pageMountedEvent();
-  }, [pageMountedEvent]);
+    productChangedEvent();
+  }, [product, productChangedEvent]);
 
   return (
     <div className={classes['product']}>
@@ -144,7 +147,7 @@ export default function ProductPageContainer() {
           </div>
         </div>
 
-        <div className={classes['product__recomended']}>
+        <div className={classes['product__recomended']} key={product.id}>
           <div className={classes['product__recomended-title']}>Recomended</div>
 
           <Preloader isLoading={areRecommendedProductsPending}>

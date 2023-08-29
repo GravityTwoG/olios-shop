@@ -33,7 +33,7 @@ const fetchRecommendedProductsFx = createEffect<number, IProduct[]>(
 );
 
 const checkIsInCartFx = createEffect<
-  { isAuthenticated: boolean; productId: number },
+  { isAuthenticated: boolean; productId: number; cookie: string },
   ICartItem
 >(async (data) => {
   return cartApi.isInCart(data);
@@ -54,8 +54,10 @@ const removeFromCartFx = createEffect<
 });
 
 // Events
-export const pageStarted = createEvent<number>('Product page started');
-export const pageMounted = createEvent('Product page mounted');
+export const pageStarted = createEvent<{ productId: number; cookie: string }>(
+  'Product page started',
+);
+export const productChanged = createEvent('Product changed');
 export const amountInCartChanged = createEvent<number>('Add to cart');
 export const addToCart = createEvent('Add to cart');
 export const removeFromCart = createEvent('Remove from cart');
@@ -107,6 +109,7 @@ reset({
 
 sample({
   clock: pageStarted,
+  fn: ({ productId }) => productId,
   target: [fetchProductFx, fetchRecommendedProductsFx],
 });
 
@@ -137,27 +140,48 @@ $areRecommendedProductsPending.on(
 );
 
 // Cart logic
-reset({
-  clock: pageMounted,
-  target: [$cartItem, $isProductInCartPending],
+// must executed on server
+sample({
+  clock: pageStarted,
+  fn: ({ cookie, productId }) => ({
+    // we assume that user is logged, so we can check cart on backend
+    isAuthenticated: true,
+    productId,
+    cookie,
+  }),
+  target: checkIsInCartFx,
+});
+
+// must executed on client and only for anonymous user
+// because cart for anonymous user is stored in localStorage
+sample({
+  clock: sessionChecked,
+  source: {
+    product: $product,
+    isAuthenticated: $isAuthenticated,
+  },
+  filter: ({ isAuthenticated }) => !isAuthenticated,
+  fn: ({ product }) => ({
+    isAuthenticated: false,
+    productId: product.id,
+    cookie: '',
+  }),
+  target: checkIsInCartFx,
 });
 
 sample({
-  clock: [pageMounted, sessionChecked],
+  clock: productChanged,
   source: {
     product: $product,
-    user: $user,
     isAuthenticated: $isAuthenticated,
     isSessionChecked: $isSessionChecked,
   },
-  filter: ({ product, user, isSessionChecked }) =>
-    product.id !== 0 &&
-    isSessionChecked &&
-    (user.role === SessionUserRole.ANONYMOUS ||
-      user.role === SessionUserRole.CUSTOMER),
-  fn: ({ product, isAuthenticated }) => ({
-    isAuthenticated,
+  filter: ({ isAuthenticated, isSessionChecked }) =>
+    isSessionChecked && !isAuthenticated,
+  fn: ({ product }) => ({
+    isAuthenticated: false,
     productId: product.id,
+    cookie: '',
   }),
   target: checkIsInCartFx,
 });

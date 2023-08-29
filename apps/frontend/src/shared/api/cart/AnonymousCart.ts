@@ -89,7 +89,11 @@ export class AnonymousCart {
         ...this.cart.items.filter(
           (item) => item.productId !== newItem.productId,
         ),
-        newItem,
+        {
+          id: newItem.id,
+          productId: newItem.productId,
+          quantity: newItem.quantity,
+        },
       ],
     };
     this.persist();

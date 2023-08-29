@@ -110,9 +110,11 @@ export const addToCart = async ({
 export const isInCart = async ({
   isAuthenticated,
   productId,
+  cookie,
 }: {
   isAuthenticated: boolean;
   productId: number;
+  cookie: string;
 }): Promise<ICartItem> => {
   if (!isAuthenticated) {
     return AnonymousCart.checkIsInCart(productId);
@@ -120,6 +122,7 @@ export const isInCart = async ({
 
   const response = await axiosInstance.get(
     `${BASE_ROUTE}/is-in-cart/${productId}`,
+    { headers: { Cookie: cookie } },
   );
 
   return IsInCartResponseSchema.parse(response.data).data;
