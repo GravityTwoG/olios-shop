@@ -7,7 +7,7 @@ export const Container = (props: ContainerProps) => {
   return (
     <div
       {...props}
-      className={clsx(props.className, 'max-w-6xl m-auto px-3')}
+      className={clsx(props.className, 'max-w-6xl m-auto px-4')}
     />
   );
 };

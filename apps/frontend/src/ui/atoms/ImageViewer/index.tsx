@@ -24,7 +24,12 @@ export const ImageViewer = React.memo((props: ImageViewerProps) => {
         carousel={{ padding: '0px' }}
         animation={{ swipe: 200 }}
         inline={{
-          style: { width: '100%', maxWidth: '900px', aspectRatio: '3 / 2' },
+          style: {
+            width: '100%',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            aspectRatio: '3 / 2',
+          },
         }}
         plugins={[Inline]}
         render={{
