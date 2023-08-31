@@ -77,6 +77,9 @@ const nextConfig = {
   pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
   images: {
     remotePatterns: nextImageRemotes,
+    imageSizes: [128, 256, 384],
+    minimumCacheTTL: 3600,
+    formats: ['image/webp'],
   },
 };
 
