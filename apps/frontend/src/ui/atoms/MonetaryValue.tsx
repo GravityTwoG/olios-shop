@@ -11,9 +11,13 @@ const dollarFormat = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-export const MonetaryValue = memo((props: MonetaryValueProps) => {
-  const formattedValue = dollarFormat.format(props.value / 100);
+export const toDollars = (value: number) => {
+  const formattedValue = dollarFormat.format(value / 100);
   const withoutCommas = formattedValue.replace(/,/g, ' ');
 
   return withoutCommas;
+};
+
+export const MonetaryValue = memo((props: MonetaryValueProps) => {
+  return toDollars(props.value);
 });

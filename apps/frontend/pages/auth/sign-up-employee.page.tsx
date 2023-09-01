@@ -9,6 +9,7 @@ import { AnonymousPage } from '@/src/features/Auth';
 
 import { Paper } from '@/src/ui/atoms/Paper';
 import { NavLink } from '@/src/ui/atoms/NavLink';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 import { RegisterEmployeeForm } from '@/src/features/Auth';
 
 function SignUpPageEmployee() {
@@ -23,6 +24,8 @@ function SignUpPageEmployee() {
 
   return (
     <div className={classes.page}>
+      <MetaTags title="Sign Up for employees" />
+
       <Paper className={classes['card']}>
         <nav className={classes['local_nav']}>
           <NavLink

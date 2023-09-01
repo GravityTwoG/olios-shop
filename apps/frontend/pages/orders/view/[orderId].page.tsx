@@ -15,6 +15,7 @@ import { NoResults } from '@/src/ui/atoms/NoResults';
 import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Table } from '@/src/ui/molecules/Table';
 import { Preloader } from '@/src/ui/molecules/Preloader';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 const headers = [
   {
@@ -53,6 +54,8 @@ const OrdersPaymentPage = () => {
 
   return (
     <Container className="py-8">
+      <MetaTags title={`Order ${order.id}`} />
+
       <H1>Order {order.id}</H1>
 
       <Preloader isLoading={isOrderPending}>

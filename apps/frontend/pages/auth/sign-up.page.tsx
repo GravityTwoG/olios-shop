@@ -9,6 +9,7 @@ import { AnonymousPage } from '@/src/features/Auth';
 
 import { Paper } from '@/src/ui/atoms/Paper';
 import { NavLink } from '@/src/ui/atoms/NavLink';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 import { RegisterForm } from '@/src/features/Auth';
 
 function SignUpPage() {
@@ -23,6 +24,8 @@ function SignUpPage() {
 
   return (
     <div className={classes.page}>
+      <MetaTags title="Sign Up" />
+
       <Paper className={classes['card']}>
         <nav className={classes['local_nav']}>
           <NavLink

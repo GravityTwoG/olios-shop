@@ -19,10 +19,10 @@ import {
   searchQueryChanged,
 } from './index.model';
 
-import Head from 'next/head';
 import { Container } from '@/src/ui/atoms/Container';
 import { Paginator } from '@/src/ui/molecules/Paginator';
 import { Preloader } from '@/src/ui/molecules/Preloader';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 import { ProductsGrid } from '@/src/features/Product/components/molecules/productsGrid/ProductsGrid';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 import { ProductCategoriesTree } from '@/src/features/ProductCategory/components/organisms/ProductCategoriesTree';
@@ -70,9 +70,7 @@ export function HomePage() {
 
   return (
     <div className={classes['MainPage']}>
-      <Head>
-        <title>Olios Shop | Home</title>
-      </Head>
+      <MetaTags title="Home" />
 
       <Container>
         <section className={classes.HeroSection}>

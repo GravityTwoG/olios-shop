@@ -34,6 +34,7 @@ import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { Form, FormError } from '@/src/ui/molecules/Form';
 import { RoleGuard } from '@/src/shared/components/RoleGuard';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 function CartPage() {
   const [cart, isCartPending] = useUnit([$cart, $isCartPending]);
@@ -50,7 +51,9 @@ function CartPage() {
 
   return (
     <Container className={clsx(classes['basket-page'], 'my-8')}>
-      <div className={classes['basket-page__title']}>Basket</div>
+      <MetaTags title="Cart" />
+
+      <div className={classes['basket-page__title']}>Cart</div>
 
       <CartsList />
 

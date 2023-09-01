@@ -24,6 +24,7 @@ import { NoResults } from '@/src/ui/atoms/NoResults';
 import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 const headers = [
   {
@@ -63,6 +64,8 @@ const ManageOrdersPage = () => {
 
   return (
     <Container className="py-8">
+      <MetaTags title="Manage orders" />
+
       <H1>Manage Orders</H1>
 
       <Paper>

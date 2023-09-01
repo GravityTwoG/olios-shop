@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import classes from './product-page.module.scss';
 import { GetServerSidePropsContext } from 'next';
+import classes from './product-page.module.scss';
 
 import { allSettled, serialize, fork } from 'effector';
 import { useUnit } from 'effector-react';
@@ -20,10 +20,11 @@ import {
 
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { ImageViewer } from '@/src/ui/atoms/ImageViewer';
-import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
+import { MonetaryValue, toDollars } from '@/src/ui/atoms/MonetaryValue';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 import { ProductCategoryLinkLoader } from '@/src/shared/components/ProductCategoryLinkLoader';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const scope = fork();
@@ -73,6 +74,13 @@ export default function ProductPageContainer() {
 
   return (
     <div className={classes['product']}>
+      <MetaTags
+        title={product.name}
+        description={product.description}
+        imageURL={product.images[0]}
+        price={{ amount: product.realPrice, currency: 'USD' }}
+      />
+
       <div className={classes['product__preview']}>
         <ImageViewer
           images={product.images.map((i) => ({ src: i }))}

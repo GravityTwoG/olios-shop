@@ -27,6 +27,7 @@ import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Table } from '@/src/ui/molecules/Table';
 import { Form, FormError } from '@/src/ui/molecules/Form';
 import { InputField } from '@/src/ui/molecules/Field';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 const headers = [
   {
@@ -97,6 +98,8 @@ const CreateOrderPage = () => {
 
   return (
     <Container>
+      <MetaTags title="New order" />
+
       <H1>Create Order</H1>
 
       <Paper>

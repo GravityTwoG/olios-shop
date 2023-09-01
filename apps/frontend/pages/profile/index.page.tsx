@@ -16,6 +16,7 @@ import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Container } from '@/src/ui/atoms/Container';
 import { AppLink } from '@/src/ui/atoms/AppLink';
 import { RoleGuard } from '@/src/shared/components/RoleGuard';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 import { UserCard } from '@/src/features/Auth';
 
 function ProfilePage() {
@@ -26,6 +27,8 @@ function ProfilePage() {
 
   return (
     <Container className="py-8">
+      <MetaTags title="Profile" />
+
       <UserCard user={user} isLoaded={authStatus !== AuthStatus.Pending} />
 
       <RoleGuard roles={SessionUserRole.CUSTOMER}>

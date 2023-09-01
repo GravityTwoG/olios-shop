@@ -2,10 +2,13 @@ import React from 'react';
 
 import { Container } from '@/src/ui/atoms/Container';
 import { H1, H2 } from '@/src/ui/atoms/Typography';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 export default function AboutPage() {
   return (
     <Container className="my-20">
+      <MetaTags title="About" />
+
       <H1>About</H1>
 
       <H2>Design</H2>

@@ -16,6 +16,7 @@ import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Preloader } from '@/src/ui/molecules/Preloader';
 import { Form } from '@/src/ui/molecules/Form';
 import { InputField } from '@/src/ui/molecules/Field';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 const OrdersPaymentPage = () => {
   const router = useRouter();
@@ -35,6 +36,8 @@ const OrdersPaymentPage = () => {
 
   return (
     <Container className="py-8">
+      <MetaTags title={`Order payment ${order.id}`} />
+
       <H1>Payment</H1>
 
       <Preloader isLoading={isOrderPending}>

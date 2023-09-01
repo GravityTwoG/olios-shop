@@ -19,7 +19,6 @@ import {
 import { SessionUserRole, useUser } from '@/src/shared/session';
 import { PrivatePage } from '@/src/features/Auth';
 
-import Head from 'next/head';
 import { Input } from '@/src/ui/atoms/Input';
 import { Paper } from '@/src/ui/atoms/Paper';
 import { Button } from '@/src/ui/atoms/Button';
@@ -29,6 +28,7 @@ import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
 import { NoResults } from '@/src/ui/atoms/NoResults';
 import { RoleBadge } from '@/src/shared/components/RoleBadge';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 const headers = [
   {
@@ -81,9 +81,8 @@ export function UsersPage() {
 
   return (
     <Container className="py-8">
-      <Head>
-        <title>Olios Shop | Users</title>
-      </Head>
+      <MetaTags title="Users" />
+
       <H1>Users</H1>
 
       <Paper>

@@ -18,13 +18,13 @@ import {
 
 import { PrivatePage } from '@/src/features/Auth';
 
-import Head from 'next/head';
 import { H1 } from '@/src/ui/atoms/Typography';
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Container } from '@/src/ui/atoms/Container';
 import { Form, FormError } from '@/src/ui/molecules/Form';
 import { Field, InputField } from '@/src/ui/molecules/Field';
 import { RoleSelect } from '@/src/shared/components/RoleSelect';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 const CreateInviteCodePage = () => {
   const [isPending, error] = useUnit([$isPending, $error]);
@@ -63,9 +63,8 @@ const CreateInviteCodePage = () => {
 
   return (
     <Container className="py-8">
-      <Head>
-        <title>Olios Shop | Create Invite Code</title>
-      </Head>
+      <MetaTags title="Create Invite Code" />
+
       <H1>Create Invite Code</H1>
 
       <Form onSubmit={onSubmit}>

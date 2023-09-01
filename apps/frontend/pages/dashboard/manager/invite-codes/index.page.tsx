@@ -20,7 +20,6 @@ import {
 
 import { PrivatePage } from '@/src/features/Auth';
 
-import Head from 'next/head';
 import { Paper } from '@/src/ui/atoms/Paper';
 import { Input } from '@/src/ui/atoms/Input';
 import { Button } from '@/src/ui/atoms/Button';
@@ -31,6 +30,7 @@ import { AppLink } from '@/src/ui/atoms/AppLink';
 import { Table } from '@/src/ui/molecules/Table';
 import { Paginator } from '@/src/ui/molecules/Paginator';
 import { RoleBadge } from '@/src/shared/components/RoleBadge';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 
 const headers = [
   { key: 'name', node: 'Name' },
@@ -78,9 +78,8 @@ export function InviteCodesPage() {
 
   return (
     <Container className="py-8">
-      <Head>
-        <title>Olios Shop | Invite Codes</title>
-      </Head>
+      <MetaTags title="Invite Codes" />
+
       <H1>Invite Codes</H1>
 
       <div className="flex justify-center my-4">

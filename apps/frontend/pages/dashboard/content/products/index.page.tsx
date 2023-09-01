@@ -12,6 +12,7 @@ import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Form, FormError } from '@/src/ui/molecules/Form';
 import { Field, InputField, TextAreaField } from '@/src/ui/molecules/Field';
 import { MultipleImagesInput } from '@/src/ui/molecules/MultipleImagesInput';
+import { MetaTags } from '@/src/shared/components/MetaTags';
 import { ProductCategoriesSelect } from '@/src/shared/components/ProductCategoriesSelect';
 import { ProductsWidget } from './ProductsWidget';
 
@@ -57,6 +58,8 @@ export default function ProductsManagementPage() {
 
   return (
     <Container className="py-8">
+      <MetaTags title="Manage products" />
+
       <H1>Manage products</H1>
       <H2>Add new product</H2>
 
