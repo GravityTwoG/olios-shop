@@ -110,8 +110,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception.code === 'P2020'
     ) {
       httpException.message = 'Invalid data';
-    } else if (exception.code === 'P2015' || exception.code === 'P2018') {
+      httpException.status = 400;
+    } else if (
+      exception.code === 'P2015' ||
+      exception.code === 'P2018' ||
+      exception.code === 'P2025'
+    ) {
       httpException.message = 'A related record could not be found.';
+      httpException.status = 404;
     } else if (exception.code === 'P2028' || exception.code === 'P2034') {
       httpException.message = 'Transaction failed.';
     }
