@@ -6,6 +6,7 @@ import { ICartItem } from '@/src/types/ICart';
 import { toast } from '@/src/shared/toasts';
 import * as productsApi from '@/src/shared/api/products';
 import * as cartApi from '@/src/shared/api/cart';
+import { ApiError } from '@/src/shared/api';
 
 import {
   $user,
@@ -16,9 +17,11 @@ import {
 } from '@/src/shared/session';
 
 // Effects
-const fetchProductFx = createEffect<number, IProduct>(async (productId) => {
-  return productsApi.fetchProduct(productId);
-});
+const fetchProductFx = createEffect<number, IProduct, ApiError>(
+  async (productId) => {
+    return productsApi.fetchProduct(productId);
+  },
+);
 
 const fetchRecommendedProductsFx = createEffect<number, IProduct[]>(
   async (productId) => {
@@ -63,7 +66,7 @@ export const addToCart = createEvent('Add to cart');
 export const removeFromCart = createEvent('Remove from cart');
 
 // Stores
-export const $product = createStore<IProduct>({
+export const $product = createStore<IProduct & { isFound: boolean }>({
   id: 0,
   name: 'Product name',
   description: 'Product description',
@@ -73,13 +76,12 @@ export const $product = createStore<IProduct>({
   oldPrice: 0,
   thumbUrl: 'https://via.placeholder.com/200',
   images: ['https://via.placeholder.com/200'],
+  isFound: false,
 });
 
-export const $isProductPending = createStore(false);
+export const $productNotFound = createStore(false);
 
 export const $recommendedProducts = createStore<IProduct[]>([]);
-
-export const $areRecommendedProductsPending = createStore(false);
 
 export const $cartItem = createStore<ICartItem & { isInCart: boolean }>({
   isInCart: false,
@@ -97,14 +99,7 @@ export const $isProductInCartPending = createStore(false);
 
 reset({
   clock: pageStarted,
-  target: [
-    $product,
-    $isProductPending,
-    $recommendedProducts,
-    $areRecommendedProductsPending,
-    $cartItem,
-    $isProductInCartPending,
-  ],
+  target: [$product, $recommendedProducts, $cartItem, $isProductInCartPending],
 });
 
 sample({
@@ -114,30 +109,28 @@ sample({
 });
 
 // Fetch product
-$isProductPending.on(fetchProductFx, () => true);
+$product.on(fetchProductFx.doneData, (_, product) => ({
+  ...product,
+  isFound: true,
+}));
 
-$product.on(fetchProductFx.doneData, (_, product) => product);
+$productNotFound.on(fetchProductFx.failData, (_, err) => {
+  return err.statusCode === 404;
+});
 
-fetchProductFx.failData.watch((error) => toast.error(error.message));
-
-$isProductPending.on(fetchProductFx.finally, () => false);
+fetchProductFx.failData.watch((err) => {
+  console.error(err);
+});
 
 // Fetch recommended products
-$areRecommendedProductsPending.on(fetchRecommendedProductsFx, () => true);
-
 $recommendedProducts.on(
   fetchRecommendedProductsFx.doneData,
   (_, result) => result,
 );
 
-fetchRecommendedProductsFx.failData.watch((error) =>
-  toast.error(error.message),
-);
-
-$areRecommendedProductsPending.on(
-  fetchRecommendedProductsFx.finally,
-  () => false,
-);
+fetchRecommendedProductsFx.failData.watch((err) => {
+  console.error(err);
+});
 
 // Cart logic
 // must executed on server

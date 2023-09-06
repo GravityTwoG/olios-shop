@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 import { GetServerSidePropsContext } from 'next';
+import clsx from 'clsx';
 import classes from './product-page.module.scss';
 
 import { allSettled, serialize, fork } from 'effector';
 import { useUnit } from 'effector-react';
 import {
-  $areRecommendedProductsPending,
   $cartItem,
   $isProductInCartPending,
-  $isProductPending,
   $product,
+  $productNotFound,
   $recommendedProducts,
   addToCart,
   amountInCartChanged,
@@ -20,12 +20,10 @@ import {
 
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { ImageViewer } from '@/src/ui/atoms/ImageViewer';
-import { MonetaryValue, toDollars } from '@/src/ui/atoms/MonetaryValue';
-import { Preloader } from '@/src/ui/molecules/Preloader';
-import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
+import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { ProductCategoryLinkLoader } from '@/src/shared/components/ProductCategoryLinkLoader';
+import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 import { MetaTags } from '@/src/shared/components/MetaTags';
-import clsx from 'clsx';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const scope = fork();
@@ -38,6 +36,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     },
   });
 
+  if (scope.getState($productNotFound)) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
     props: {
       values: serialize(scope),
@@ -46,21 +50,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 };
 
 export default function ProductPageContainer() {
-  const [
-    product,
-    cartItem,
-    recommendedProducts,
-    isProductPending,
-    isProductInCartPending,
-    areRecommendedProductsPending,
-  ] = useUnit([
-    $product,
-    $cartItem,
-    $recommendedProducts,
-    $isProductPending,
-    $isProductInCartPending,
-    $areRecommendedProductsPending,
-  ]);
+  const [product, cartItem, recommendedProducts, isProductInCartPending] =
+    useUnit([
+      $product,
+      $cartItem,
+      $recommendedProducts,
+      $isProductInCartPending,
+    ]);
 
   const [
     addToCartEvent,
@@ -83,10 +79,7 @@ export default function ProductPageContainer() {
       />
 
       <div className={classes['product__preview']}>
-        <ImageViewer
-          images={product.images.map((i) => ({ src: i }))}
-          isLoading={isProductPending}
-        />
+        <ImageViewer images={product.images.map((i) => ({ src: i }))} />
         <div className={classes['product__preview-like']}>
           <span>409</span> ❤
         </div>
@@ -164,21 +157,16 @@ export default function ProductPageContainer() {
             Recommended
           </div>
 
-          <Preloader
-            isLoading={areRecommendedProductsPending}
-            className="h-full"
-          >
-            <div className={classes['product__recomended-cont']}>
-              {recommendedProducts.map((product) => (
-                <ProductCard
-                  product={product}
-                  key={product.id}
-                  className="w-[260px] flex-grow-0 flex-shrink-0"
-                />
-              ))}
-              <div className="w-[1px] h-[1rem] flex-shrink-0 flex-grow-0"></div>
-            </div>
-          </Preloader>
+          <div className={classes['product__recomended-cont']}>
+            {recommendedProducts.map((product) => (
+              <ProductCard
+                product={product}
+                key={product.id}
+                className="w-[260px] flex-grow-0 flex-shrink-0"
+              />
+            ))}
+            <div className="w-[1px] h-[1rem] flex-shrink-0 flex-grow-0"></div>
+          </div>
         </div>
       </div>
     </div>

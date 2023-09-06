@@ -12,11 +12,12 @@ import { appStarted } from '@/src/shared/session';
 
 import { useOnClickOutside } from '@/src/ui/hooks/useOnClickOutside';
 
+import { NextProgressBar } from '@/src/ui/atoms/NextProgressBar';
+import { AppErrorBoundary } from '@/src/ui/molecules/AppErrorBoundary';
 import { BurgerButton } from '@/src/ui/molecules/BurgerButton';
 import { Menu } from '@/src/shared/components/Menu';
 import { Sidebar } from '@/src/shared/components/Sidebar';
 import { AppToaster } from '@/src/shared/toasts';
-import { NextProgressBar } from '@/src/ui/atoms/NextProgressBar';
 
 const App = ({ children }: { children: ReactNode }) => {
   const [appStartedEvent] = useUnit([appStarted]);
@@ -84,10 +85,12 @@ export default function AppWrapper<T extends PageProps>({
   pageProps,
 }: AppProps<T>) {
   return (
-    <EffectorNext values={pageProps.values}>
-      <App>
-        <Component {...pageProps} />
-      </App>
-    </EffectorNext>
+    <AppErrorBoundary>
+      <EffectorNext values={pageProps.values}>
+        <App>
+          <Component {...pageProps} />
+        </App>
+      </EffectorNext>
+    </AppErrorBoundary>
   );
 }
