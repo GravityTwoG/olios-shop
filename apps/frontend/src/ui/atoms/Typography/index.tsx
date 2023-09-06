@@ -4,7 +4,10 @@ export type TypographyProps = React.ButtonHTMLAttributes<HTMLHeadingElement>;
 
 export const H1 = (props: TypographyProps) => {
   return (
-    <h1 {...props} className={clsx(props.className, 'text-6xl font-light')} />
+    <h1
+      {...props}
+      className={clsx(props.className, 'text-6xl font-light leading-[1.25]')}
+    />
   );
 };
 

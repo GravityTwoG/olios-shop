@@ -28,7 +28,7 @@ export const ProductCategoriesTree = (props: ProductCategoriesTreeProps) => {
 
       <div
         className={clsx(
-          'mb-2 cursor-pointer',
+          'mb-2 cursor-pointer min-w-[100px]',
           props.selectedCategoryId === null &&
             'border-b-2 border-blue-800 text-blue-800',
         )}
@@ -70,7 +70,7 @@ const ProductCategoriesChildren = (props: ProductCategoriesChildrenProps) => {
   }
 
   return (
-    <ul className="pl-4 my-2 flex flex-col gap-2 w-[max-content]">
+    <ul className="pl-4 mt-2 flex flex-col gap-2 w-[max-content]">
       {isLoading && (
         <li className="flex gap-2 items-center">
           <Skeleton width={20} height={20} />
@@ -106,7 +106,7 @@ const ProductCategoriesTreeNode = ({
     <li>
       <div
         className={clsx(
-          'flex gap-4 items-center w-[max-content]',
+          'flex gap-4 items-center w-[max-content]  min-w-[100px] pb-1',
           props.selectedCategoryId === category.id &&
             'border-b-2 border-blue-800 text-blue-800',
         )}

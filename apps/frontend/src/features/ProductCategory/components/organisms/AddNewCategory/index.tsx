@@ -83,7 +83,7 @@ export function AddNewCategory() {
         </Field>
         <FormError>{errors.icon?.message}</FormError>
 
-        <Field label="Category" htmlFor={categoriesId}>
+        <Field label="Parent category" htmlFor={categoriesId}>
           <Controller
             name="parentCategory"
             control={control}

@@ -59,3 +59,24 @@ body {
   font-weight: 400;
   min-width: 320px;
 }
+
+@media (pointer: fine) {
+  .custom-scrollbar {
+    scrollbar-width: auto;
+    scrollbar-color: var(--accent-color) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 10px;
+    cursor: pointer;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-hover-color);
+  }
+}

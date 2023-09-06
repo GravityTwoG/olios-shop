@@ -11,11 +11,11 @@ export default function CategoriesManagementPage() {
 
       <H1>Manage categories</H1>
 
-      <div className="my-10">
+      <div className="my-8">
         <AddNewCategory />
       </div>
 
-      <div className="my-10">
+      <div className="my-8">
         <CategoriesWidget />
       </div>
     </Container>

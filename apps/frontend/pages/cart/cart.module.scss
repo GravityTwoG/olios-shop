@@ -1,9 +1,4 @@
 .basket-page {
-  &__title {
-    font-size: 64px;
-    font-weight: 300;
-  }
-
   .basket-item {
     margin-bottom: 1rem;
     display: flex;
@@ -94,27 +89,6 @@
       &::after {
         transform: translate(-50%, -50%) rotate(-45deg);
       }
-    }
-  }
-}
-
-@media (pointer: fine) {
-  .CartsList > ul {
-    scrollbar-width: auto;
-    scrollbar-color: var(--accent-color) transparent;
-
-    &::-webkit-scrollbar {
-      height: 10px;
-      cursor: pointer;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: var(--accent-color);
-      border-radius: 6px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: var(--accent-hover-color);
     }
   }
 }

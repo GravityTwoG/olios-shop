@@ -15,6 +15,7 @@ import { PrivatePage } from '@/src/features/Auth';
 import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Container } from '@/src/ui/atoms/Container';
 import { AppLink } from '@/src/ui/atoms/AppLink';
+import { H1 } from '@/src/ui/atoms/Typography';
 import { RoleGuard } from '@/src/shared/components/RoleGuard';
 import { MetaTags } from '@/src/shared/components/MetaTags';
 import { UserCard } from '@/src/features/Auth';
@@ -28,6 +29,8 @@ function ProfilePage() {
   return (
     <Container className="py-8">
       <MetaTags title="Profile" />
+
+      <H1>Profile</H1>
 
       <UserCard user={user} isLoaded={authStatus !== AuthStatus.Pending} />
 

@@ -57,7 +57,8 @@ export const ProductsWidget = () => {
 
   return (
     <Paper>
-      <H2>Product products</H2>
+      <H2>Products</H2>
+
       <Input
         value={searchQuery}
         onChange={(e) => searchQueryChangedEvent(e.target.value)}

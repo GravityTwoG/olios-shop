@@ -3,15 +3,17 @@ import { SessionUser } from '@/src/shared/session';
 import classes from './user-card.module.scss';
 
 import { Skeleton } from '@/src/ui/atoms/Skeleton';
+import clsx from 'clsx';
 
 export type UserCardProps = {
   user: SessionUser;
   isLoaded: boolean;
+  className?: string;
 };
 
-export const UserCard = ({ user, isLoaded }: UserCardProps) => {
+export const UserCard = ({ user, isLoaded, className }: UserCardProps) => {
   return (
-    <div className={classes.card}>
+    <div className={clsx(classes.card, className)}>
       <dl className={classes['user_info']}>
         <div>
           <dt>ID</dt>

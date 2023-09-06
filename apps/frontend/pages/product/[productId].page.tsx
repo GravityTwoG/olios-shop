@@ -25,6 +25,7 @@ import { Preloader } from '@/src/ui/molecules/Preloader';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 import { ProductCategoryLinkLoader } from '@/src/shared/components/ProductCategoryLinkLoader';
 import { MetaTags } from '@/src/shared/components/MetaTags';
+import clsx from 'clsx';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const scope = fork();
@@ -155,18 +156,27 @@ export default function ProductPageContainer() {
           </div>
         </div>
 
-        <div className={classes['product__recomended']} key={product.id}>
-          <div className={classes['product__recomended-title']}>Recomended</div>
+        <div
+          className={clsx(classes['product__recomended'], 'custom-scrollbar')}
+          key={product.id}
+        >
+          <div className={classes['product__recomended-title']}>
+            Recommended
+          </div>
 
-          <Preloader isLoading={areRecommendedProductsPending}>
+          <Preloader
+            isLoading={areRecommendedProductsPending}
+            className="h-full"
+          >
             <div className={classes['product__recomended-cont']}>
               {recommendedProducts.map((product) => (
                 <ProductCard
                   product={product}
                   key={product.id}
-                  className="max-w-[320px]"
+                  className="w-[260px] flex-grow-0 flex-shrink-0"
                 />
               ))}
+              <div className="w-[1px] h-[1rem] flex-shrink-0 flex-grow-0"></div>
             </div>
           </Preloader>
         </div>

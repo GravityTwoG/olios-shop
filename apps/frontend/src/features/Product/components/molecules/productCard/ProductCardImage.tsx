@@ -20,7 +20,10 @@ export const ProductCardImage = React.memo((props: ImageViewerProps) => {
 
   return (
     <div className="h-full overflow-hidden relative">
-      <Link href={props.link}>
+      <Link
+        href={props.link}
+        className="w-full h-full flex items-center justify-center"
+      >
         <img
           src={
             props.images.length

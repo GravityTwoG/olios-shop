@@ -41,7 +41,7 @@ export const $products = createStore<IProduct[]>([]);
 export const $productsCount = createStore(0);
 export const $searchQuery = createStore('');
 export const $categoryId = createStore<number>(0);
-export const $pageSize = createStore(24);
+export const $pageSize = createStore(12);
 export const $pageNumber = createStore(0);
 export const $isPending = createStore(false);
 

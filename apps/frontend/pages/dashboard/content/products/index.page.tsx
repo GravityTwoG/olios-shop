@@ -61,9 +61,10 @@ export default function ProductsManagementPage() {
       <MetaTags title="Manage products" />
 
       <H1>Manage products</H1>
-      <H2>Add new product</H2>
 
       <Paper className="my-8">
+        <H2>Add new product</H2>
+
         <Form className="text-center" onSubmit={onSubmit}>
           <InputField
             label="Name"

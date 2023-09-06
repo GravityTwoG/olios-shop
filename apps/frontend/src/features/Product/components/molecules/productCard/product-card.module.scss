@@ -1,5 +1,5 @@
 .product-card {
-  min-width: 250px;
+  min-width: 200px;
   padding: 1.25rem;
   background-color: #fff;
   transition: box-shadow 0.3s;
@@ -14,14 +14,8 @@
   &__photo {
     display: block;
     margin: 0 auto;
-    height: 190px;
+    height: 180px;
     position: relative;
-    img {
-      margin: 0 auto;
-      display: block;
-      height: 100%;
-      max-width: 100%;
-    }
   }
 
   &__info {
@@ -54,7 +48,7 @@
     font-size: 18px;
     font-weight: 300;
     color: #a8a8a8;
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
   }
 
   &__price {

@@ -28,6 +28,7 @@ import { PrivatePage } from '@/src/features/Auth';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/src/ui/atoms/Button';
+import { H1 } from '@/src/ui/atoms/Typography';
 import { StyledLink } from '@/src/ui/atoms/StyledLink';
 import { Container } from '@/src/ui/atoms/Container';
 import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
@@ -53,7 +54,7 @@ function CartPage() {
     <Container className={clsx(classes['basket-page'], 'my-8')}>
       <MetaTags title="Cart" />
 
-      <div className={classes['basket-page__title']}>Cart</div>
+      <H1>Cart</H1>
 
       <CartsList />
 
@@ -173,7 +174,7 @@ const CartsList = () => {
 
   return (
     <div className={clsx('mx-[-0.75rem]', classes.CartsList)}>
-      <ul className="px-[0.75rem] flex items-stretch gap-4 py-3 overflow-auto snap-x scroll-pl-[0.75rem]">
+      <ul className="px-[0.75rem] flex items-stretch gap-4 py-3 overflow-auto snap-x scroll-pl-[0.75rem] custom-scrollbar">
         {carts.map((c) => (
           <li
             key={c.id}
