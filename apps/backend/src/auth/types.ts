@@ -2,7 +2,7 @@ import { Request as ExpressRequest } from 'express';
 import { Session, SessionData } from 'express-session';
 import { User } from '@prisma/client';
 
-export type RequestUser = Omit<User, 'password'>;
+export type RequestUser = Omit<User, 'password' | 'passwordSalt'>;
 
 export interface Request extends ExpressRequest {
   user: RequestUser | undefined;

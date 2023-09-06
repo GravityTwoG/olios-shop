@@ -68,9 +68,23 @@ export class AuthController {
       authenticateReturn(req, res);
     });
 
-    req.user = user;
-    req.session.user = user;
-    return { data: mapUserToDto(user) };
+    const requestUser: RequestUser = {
+      id: user.id,
+      email: user.email,
+      birthDate: user.birthDate,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      patronymic: user.patronymic || '',
+      isActive: user.isActive,
+      isEmailVerified: user.isEmailVerified,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
+    req.user = requestUser;
+    req.session.user = requestUser;
+    return { data: mapUserToDto(requestUser) };
   }
 
   private handleRequest(
