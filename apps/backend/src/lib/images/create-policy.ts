@@ -10,8 +10,8 @@ export const createPolicy = (bucketName: string) => {
         },
         Action: [
           's3:GetBucketLocation',
-          's3:PutBucketAcl',
-          's3:ListBuckets',
+          // 's3:PutBucketAcl',
+          // 's3:ListBuckets',
           's3:PutObject',
           's3:AbortMultipartUpload',
           's3:DeleteObject',
@@ -21,7 +21,6 @@ export const createPolicy = (bucketName: string) => {
           `arn:aws:s3:::${bucketName}`,
           `arn:aws:s3:::${bucketName}/*`,
         ],
-        Condition: {},
       },
     ],
   };

@@ -30,22 +30,29 @@ export class ImagesService implements OnModuleInit {
   private async initializeBuckets() {
     await Promise.all(
       buckets.map(async (bucketName) => {
-        const bucket = await this.s3ClientService.getBucket(bucketName);
-
-        if (bucket) {
-          const existingPolicy = await this.s3ClientService.getBucketPolicy(
-            bucketName,
-          );
+        try {
+          const bucket = await this.s3ClientService.getBucket(bucketName);
           const newPolicy = JSON.stringify(createPolicy(bucketName));
-          if (!existingPolicy || existingPolicy !== newPolicy) {
+
+          if (bucket) {
+            const existingPolicy = await this.s3ClientService.getBucketPolicy(
+              bucketName,
+            );
+            if (!existingPolicy || existingPolicy !== newPolicy) {
+              await this.s3ClientService.setBucketPolicy(bucketName, newPolicy);
+            }
+          } else {
+            await this.s3ClientService.createBucket(bucketName);
             await this.s3ClientService.setBucketPolicy(bucketName, newPolicy);
           }
-        } else {
-          await this.s3ClientService.createBucket(bucketName);
-          await this.s3ClientService.setBucketPolicy(
-            bucketName,
-            JSON.stringify(createPolicy(bucketName)),
+        } catch (error) {
+          this.logger.error(
+            `Error while initializing bucket ${bucketName}: ${JSON.stringify(
+              error,
+            )}`,
           );
+
+          throw error;
         }
       }),
     );
