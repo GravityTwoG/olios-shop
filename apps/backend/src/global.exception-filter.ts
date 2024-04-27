@@ -49,8 +49,10 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         this.logger.error(exception.message);
       }
 
-      if ((exception as any).response?.message) {
-        httpException.message = (exception as any).response?.message;
+      const httpExceptionData =
+        exception.getResponse() as HttpExceptionData | null;
+      if (httpExceptionData?.message) {
+        httpException.message = httpExceptionData.message;
       }
     } else if (exception instanceof PrismaClientKnownRequestError) {
       httpException = this.handlePrismaException(exception);

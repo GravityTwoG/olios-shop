@@ -40,7 +40,7 @@ export class ProductsService {
   }): Promise<BaseListDTO<ProductEntity>> {
     const internalParams = params;
 
-    if (params.where && params.where.categoryId) {
+    if (params.where?.categoryId) {
       const categoryIds = await this.categoriesService.getSubtreeIds(
         params.where.categoryId,
       );

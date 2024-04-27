@@ -78,8 +78,8 @@ export class OrdersMapper {
       city: order.city,
       street: order.street,
       house: order.house,
-      flat: order.flat || '',
-      floor: order.floor || 0,
+      flat: order.flat ?? '',
+      floor: order.floor ?? 0,
 
       name: order.name,
       phoneNumber: order.phone,

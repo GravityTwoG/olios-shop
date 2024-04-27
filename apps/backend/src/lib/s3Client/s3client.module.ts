@@ -41,7 +41,7 @@ export class S3ClientModule {
 
     return {
       module: S3ClientModule,
-      imports: allImports || [],
+      imports: allImports ?? [],
       providers: [this.createConnectAsyncProviders(options), S3ClientService],
       exports: [S3ClientModule],
     };
@@ -54,7 +54,7 @@ export class S3ClientModule {
       return {
         provide: NEST_S3_CLIENT_OPTIONS,
         useFactory: options.useFactory,
-        inject: options.inject || [],
+        inject: options.inject ?? [],
       };
     }
 

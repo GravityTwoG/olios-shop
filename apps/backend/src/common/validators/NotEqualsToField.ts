@@ -15,7 +15,7 @@ export function NotEqualsToField(
       target: object.constructor,
       propertyName: currentProperty,
       constraints: [otherProperty],
-      options: validationOptions || {
+      options: validationOptions ?? {
         message: `Properties ${otherProperty} and ${currentProperty} must not be equal.`,
       },
       validator: {
