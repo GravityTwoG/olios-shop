@@ -42,6 +42,7 @@ async function bootstrap() {
 
   await app.listen(PORT);
   logger.log(`App listening on port: ${PORT}`, 'NestApplication');
+  logger.log(`URL: http://localhost:${PORT}`, 'NestApplication');
 }
 
 bootstrap();

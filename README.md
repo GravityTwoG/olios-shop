@@ -33,3 +33,15 @@ Template from www.symu.co
 ## Deploy
 
 - Ansible, Docker, Docker Compose, Github Container Registry
+
+## Development
+
+Add and configure .env files in all apps. Then:
+
+```sh
+# run in all apps
+npm install
+
+# start all apps using docker compose
+npm run dev
+```

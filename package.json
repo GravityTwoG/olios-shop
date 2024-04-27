@@ -16,6 +16,7 @@
   "main": " ",
   "scripts": {
     "prepare": "husky install",
+    "dev": "docker compose --project-directory . -f docker-compose.yaml -f apps/backend/docker-compose.yaml -f apps/frontend/docker-compose.yaml up ",
     "infra-up": "nx run olios-shop-backend:docker-compose-up",
     "infra-setup": "nx run olios-shop-backend:db-setup",
     "infra-down": "nx run olios-shop-backend:docker-compose-stop",

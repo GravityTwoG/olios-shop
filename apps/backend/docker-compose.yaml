@@ -1,12 +1,29 @@
 version: '3'
 services:
+  backend:
+    container_name: olios-backend
+    build:
+      context: ./apps/backend
+      target: development
+    command: sh -c 'npx prisma generate && npm run db-setup && npm run dev'
+    ports:
+      - '5111:5111'
+    volumes:
+      - ./apps/backend:/usr/src/app
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    networks:
+      - internal
+
   postgres:
     container_name: postgres-olios
     image: postgres:14.4
     ports:
       - '5555:5432'
     volumes:
-      - ./docker-volumes/dev/pgdata:/data/postgres
+      - ./apps/backend/docker-volumes/dev/pgdata:/data/postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1212
@@ -33,13 +50,15 @@ services:
     ports:
       - '6379:6379'
     volumes:
-      - ./docker-volumes/dev/redis:/data/redis
+      - ./apps/backend/docker-volumes/dev/redis:/data/redis
+    networks:
+      - internal
 
   minio:
     image: minio/minio:RELEASE.2022-07-08T00-05-23Z
     volumes:
-      - ./docker-volumes/dev/s3/data1-1:/data1
-      - ./docker-volumes/dev/s3/data1-2:/data2
+      - ./apps/backend/docker-volumes/dev/s3/data1-1:/data1
+      - ./apps/backend/docker-volumes/dev/s3/data1-2:/data2
     ports:
       - '10000:9000'
       - '10001:9001'

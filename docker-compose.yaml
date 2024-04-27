@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  backend:
+    ports:
+      - '5111:5111'
+      - '3000:3000'
+  frontend:
+    network_mode: service:backend

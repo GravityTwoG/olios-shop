@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  frontend:
+    container_name: olios-frontend
+    build:
+      context: ./apps/frontend
+      target: deps
+    # ports are publisher at root docker-compose.yaml
+    # ports:
+    #   - '3000:3000'
+    command: sh -c 'npm run dev'
+    volumes:
+      - ./apps/frontend:/app
+    depends_on:
+      - backend
