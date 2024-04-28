@@ -78,7 +78,6 @@ const loadOptions = async (inputValue: string) => {
 
 type Callback = (res: ComboboxOption<string>[]) => void;
 
-const loadOptionsDebounced = debounce(
-  (inputValue: string, cb: Callback) => loadOptions(inputValue).then(cb),
-  200,
-);
+const loadOptionsDebounced = debounce((inputValue: string, cb: Callback) => {
+  loadOptions(inputValue).then(cb);
+}, 200);

@@ -41,14 +41,16 @@ export const SegmentedControl: SegmentedControlComponent = forwardRef(
                 [classes.SegmentActive]:
                   segment.name === props.activeSegmentName,
               })}
-              role="button"
-              onClick={() => {
-                if (segment.name !== props.activeSegmentName) {
-                  props.onSelect(segment.name);
-                }
-              }}
             >
-              {segment.node}
+              <button
+                onClick={() => {
+                  if (segment.name !== props.activeSegmentName) {
+                    props.onSelect(segment.name);
+                  }
+                }}
+              >
+                {segment.node}
+              </button>
             </li>
           ))}
         </ul>

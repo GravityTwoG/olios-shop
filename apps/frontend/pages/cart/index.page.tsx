@@ -176,16 +176,17 @@ const CartsList = () => {
     <div className={clsx('mx-[-0.75rem]', classes.CartsList)}>
       <ul className="px-[0.75rem] flex items-stretch gap-4 py-3 overflow-auto snap-x scroll-pl-[0.75rem] custom-scrollbar">
         {carts.map((c) => (
-          <li
-            key={c.id}
-            className={clsx(
-              'bg-white py-3 px-4 cursor-pointer w-[170px] flex-none snap-start',
-              c.id === selectedCart.id && 'border-[1px] border-slate-950',
-            )}
-            onClick={() => loadCartEvent(c.id)}
-          >
-            <p>{c.name}</p>
-            <p className="text-xs">{c.isDefault ? 'Default' : ''}</p>
+          <li key={c.id} className="snap-start flex-none">
+            <button
+              className={clsx(
+                'bg-white py-3 px-4 cursor-pointer h-full w-[170px]',
+                c.id === selectedCart.id && 'border-[1px] border-slate-950',
+              )}
+              onClick={() => loadCartEvent(c.id)}
+            >
+              <p>{c.name}</p>
+              <p className="text-xs">{c.isDefault ? 'Default' : ''}</p>
+            </button>
           </li>
         ))}
 

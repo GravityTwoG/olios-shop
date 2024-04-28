@@ -26,16 +26,16 @@ export const ProductCategoriesTree = (props: ProductCategoriesTreeProps) => {
     <div className="py-4 w-[max-content]">
       <H3>Categories</H3>
 
-      <div
+      <button
         className={clsx(
-          'mb-2 cursor-pointer min-w-[100px]',
+          'mb-2 cursor-pointer min-w-[100px] text-left',
           props.selectedCategoryId === null &&
             'border-b-2 border-blue-800 text-blue-800',
         )}
         onClick={() => props.onCategorySelect(null)}
       >
         All
-      </div>
+      </button>
 
       <ProductCategoriesChildren
         onClick={props.onCategorySelect}
@@ -106,12 +106,12 @@ const ProductCategoriesTreeNode = ({
     <li>
       <div
         className={clsx(
-          'flex gap-4 items-center w-[max-content]  min-w-[100px] pb-1',
+          'flex gap-4 items-center justify-between w-[max-content]  min-w-[100px] pb-1 border-b-2 border-transparent hover:border-b-2 hover:border-blue-800',
           props.selectedCategoryId === category.id &&
-            'border-b-2 border-blue-800 text-blue-800',
+            'border-blue-800 text-blue-800',
         )}
       >
-        <div
+        <button
           className="flex gap-2 items-center cursor-pointer"
           onClick={() => props.onClick(category.id)}
         >
@@ -123,7 +123,7 @@ const ProductCategoriesTreeNode = ({
             style={{ width: 20, height: 20 }}
           />
           <span>{category.name}</span>
-        </div>
+        </button>
 
         {category.hasChildren && (
           <button
