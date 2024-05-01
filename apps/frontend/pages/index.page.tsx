@@ -26,7 +26,7 @@ import { MetaTags } from '@/src/shared/components/MetaTags';
 import { ProductsGrid } from '@/src/features/Product/components/molecules/productsGrid/ProductsGrid';
 import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
 import { ProductCategoriesTree } from '@/src/features/ProductCategory/components/organisms/ProductCategoriesTree';
-import { H1, H2 } from '@/src/ui/atoms/Typography';
+import { H1 } from '@/src/ui/atoms/Typography';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const scope = fork();

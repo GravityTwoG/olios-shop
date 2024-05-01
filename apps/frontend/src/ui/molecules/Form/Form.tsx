@@ -85,10 +85,10 @@ export type FormData<C = FormConfig> = {
   [key in keyof C]: C[key] extends ComboBoxField
     ? ComboboxOption
     : C[key] extends ImagesField
-    ? { preview: string; raw: Blob }[]
-    : C[key] extends ImageField
-    ? { preview: string; raw: Blob }
-    : string;
+      ? { preview: string; raw: Blob }[]
+      : C[key] extends ImageField
+        ? { preview: string; raw: Blob }
+        : string;
 };
 
 export type FormProps<C = FormConfig> = {

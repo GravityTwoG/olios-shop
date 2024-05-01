@@ -1,4 +1,4 @@
-import { useStore } from 'effector-react';
+import { useUnit } from 'effector-react';
 
 import {
   $authStatus,
@@ -9,7 +9,7 @@ import {
 } from './session';
 
 export const useUser = (): SessionUser => {
-  return useStore($user);
+  return useUnit($user);
 };
 
 export const useUserRole = (): SessionUserRole => {
@@ -17,5 +17,5 @@ export const useUserRole = (): SessionUserRole => {
 };
 
 export const useAuthStatus = (): AuthStatus => {
-  return useStore($authStatus);
+  return useUnit($authStatus);
 };

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useStore } from 'effector-react';
 
 import { AuthStatus, useAuthStatus } from '../../../shared/session';
 import { paths } from '../../../paths';

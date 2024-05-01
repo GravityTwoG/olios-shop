@@ -1,4 +1,4 @@
-ARG IMAGE=node:16-alpine3.16
+ARG IMAGE=node:18-alpine3.18
 
 # Install dependencies only when needed
 FROM ${IMAGE} AS deps

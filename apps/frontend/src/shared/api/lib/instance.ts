@@ -9,8 +9,12 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
-  if (err.response && err.response.data && (err.response.data as any).message) {
-    const data: any = err.response.data;
+  if (
+    err.response &&
+    err.response.data &&
+    (err.response.data as { message: string }).message
+  ) {
+    const data = err.response.data as { message: string; statusCode: number };
 
     return Promise.reject(
       new ApiError(err.name, data.message, data.statusCode),

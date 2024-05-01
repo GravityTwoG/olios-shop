@@ -42,7 +42,13 @@ export const Sidebar = (props: SidebarProps) => {
       ref={headerRef}
     >
       <Link href={paths.home({})} className={classes.SidebarLogo}>
-        <Image width={100} height={100} src="/LOGO.png" alt="Olios Shop" />
+        <Image
+          width={100}
+          height={100}
+          src="/LOGO.png"
+          alt="Olios Shop"
+          priority
+        />
       </Link>
 
       <nav className={classes.nav}>

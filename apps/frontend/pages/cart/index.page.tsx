@@ -33,7 +33,7 @@ import { StyledLink } from '@/src/ui/atoms/StyledLink';
 import { Container } from '@/src/ui/atoms/Container';
 import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Preloader } from '@/src/ui/molecules/Preloader';
-import { Form, FormError } from '@/src/ui/molecules/Form';
+import { FormError } from '@/src/ui/molecules/Form';
 import { RoleGuard } from '@/src/shared/components/RoleGuard';
 import { MetaTags } from '@/src/shared/components/MetaTags';
 

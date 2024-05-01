@@ -6,6 +6,7 @@ import { ComboboxOption } from './types';
 
 import AsyncSelect, { AsyncProps } from 'react-select/async';
 import { debounce } from '@/src/ui/lib/debounce';
+import { GroupBase } from 'react-select';
 
 export type LoadOptionsCallback<T> = (res: ComboboxOption<T>[]) => void;
 
@@ -13,7 +14,11 @@ export type AsyncComboboxProps<T> = {
   option: ComboboxOption<T>;
 
   onChange?: (option: ComboboxOption<T>) => void;
-  onBlur?: AsyncProps<ComboboxOption<T>, false, any>['onBlur'];
+  onBlur?: AsyncProps<
+    ComboboxOption<T>,
+    false,
+    GroupBase<ComboboxOption<T>>
+  >['onBlur'];
   loadOptions: (inputValue: string) => Promise<ComboboxOption<T>[]>;
 
   placeholder?: string;

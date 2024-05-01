@@ -17,6 +17,7 @@
   "scripts": {
     "prepare": "husky install",
     "dev": "docker compose --project-directory . -f docker-compose.yaml -f apps/backend/docker-compose.yaml -f apps/frontend/docker-compose.yaml up ",
+    "dev:down": "docker compose --project-directory . -f docker-compose.yaml -f apps/backend/docker-compose.yaml -f apps/frontend/docker-compose.yaml down ",
     "infra-up": "nx run olios-shop-backend:docker-compose-up",
     "infra-setup": "nx run olios-shop-backend:db-setup",
     "infra-down": "nx run olios-shop-backend:docker-compose-stop",
@@ -26,19 +27,18 @@
     "all:build": "nx run-many -t build",
     "all:deploy": "nx run-many -t deploy",
     "affected:lint": "nx affected -t lint",
-    "affected:lint-staged": "nx affected -t lint-staged -- --relative",
+    "affected:lint-staged": "nx affected -t lint-staged -- --relative && nx affected -t typecheck",
     "affected:build": "nx affected -t build",
     "affected:deploy": "nx affected -t deploy"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.4.2",
-    "@commitlint/config-conventional": "^17.4.2",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
     "eslint-config-prettier": "^9.1.0",
-    "husky": "^8.0.3",
-    "nx": "16.6.0"
+    "husky": "^9.0.11",
+    "nx": "18.3.4"
   },
   "volta": {
-    "node": "16.19.0",
-    "npm": "9.8.1"
+    "node": "18.20.2"
   }
 }
