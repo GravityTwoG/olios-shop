@@ -1,15 +1,18 @@
 .Field {
   width: 100%;
   display: block;
-  padding: 0.5rem 0;
 }
 
-.label {
+.Label {
   display: block;
-  margin-bottom: 0.25rem;
-  font-size: 18px;
-  line-height: 32px;
+  padding: 4px 0;
   text-align: left;
 
-  cursor: pointer;
+  & > .LabelText {
+    margin: 0 0 0.5rem;
+    color: var(--color-text);
+    font-size: 1.25rem;
+    line-height: 2rem;
+    cursor: pointer;
+  }
 }

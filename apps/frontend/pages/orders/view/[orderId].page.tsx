@@ -70,8 +70,8 @@ const OrdersPaymentPage = () => {
               cols: [
                 orderItem.name,
                 orderItem.quantity,
-                <MonetaryValue value={orderItem.price} />,
-                <MonetaryValue value={orderItem.sum} />,
+                <MonetaryValue key="price" value={orderItem.price} />,
+                <MonetaryValue key="sum" value={orderItem.sum} />,
               ],
             }))}
             emptyComponent={<NoResults>No products</NoResults>}

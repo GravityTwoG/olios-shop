@@ -1,9 +1,13 @@
-import { ReactNode } from 'react';
+import { clsx } from 'clsx';
 
-export type ErrorTextProps = {
-  children: ReactNode;
-};
+import { ReactTagProps } from '@/src/ui/types';
+
+export type ErrorTextProps = ReactTagProps<'span'>;
 
 export const ErrorText = (props: ErrorTextProps) => {
-  return <span className="text-red-700">{props.children}</span>;
+  return (
+    <span {...props} className={clsx('text-red-700', props.className)}>
+      {props.children}
+    </span>
+  );
 };

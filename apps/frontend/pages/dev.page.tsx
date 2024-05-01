@@ -115,10 +115,9 @@ export default function DevPage() {
 
         <div>
           <AsyncCombobox
-            options={options}
             option={option}
             onChange={(option) => setOption(option)}
-            loadOptions={() => options}
+            loadOptions={() => Promise.resolve(options)}
           />
         </div>
       </Paper>

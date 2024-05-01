@@ -192,7 +192,7 @@ const CartsList = () => {
 
         <RoleGuard roles={SessionUserRole.CUSTOMER}>
           <li className="bg-white py-3 px-4 w-[170px] snap-start">
-            <Form onSubmit={onSubmit}>
+            <form onSubmit={onSubmit}>
               <p className="mb-2">
                 <input
                   className="border-slate-950 border-[1px] px-2 py-1 w-full"
@@ -209,7 +209,7 @@ const CartsList = () => {
               >
                 Create new cart
               </Button>
-            </Form>
+            </form>
           </li>
         </RoleGuard>
       </ul>

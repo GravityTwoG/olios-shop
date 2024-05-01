@@ -1,7 +1,7 @@
 import React, { forwardRef, useId } from 'react';
 
-import { TextArea, TextAreaProps } from '../../atoms/TextArea';
-import { Field } from '../Field';
+import { TextArea, TextAreaProps } from '@/src/ui/atoms/TextArea';
+import { Field } from './Field';
 
 export type TextAreaFieldProps = {
   label: string;

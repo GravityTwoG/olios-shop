@@ -83,7 +83,7 @@ const ManageOrdersPage = () => {
               </Link>,
               order.status,
               order.items.length,
-              <MonetaryValue value={order.total} />,
+              <MonetaryValue key="total" value={order.total} />,
             ],
           }))}
           emptyComponent={<NoResults>No orders</NoResults>}

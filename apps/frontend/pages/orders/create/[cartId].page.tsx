@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-
-import { useForm } from 'react-hook-form';
+import { useUnit } from 'effector-react';
 
 import { SessionUserRole } from '@/src/shared/session';
 import { paths } from '@/src/paths';
 
-import { useUnit } from 'effector-react';
 import {
   $cart,
   $isCartPending,
@@ -22,11 +20,9 @@ import { Paper } from '@/src/ui/atoms/Paper';
 import { H1, H2 } from '@/src/ui/atoms/Typography';
 import { Container } from '@/src/ui/atoms/Container';
 import { NoResults } from '@/src/ui/atoms/NoResults';
-import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Table } from '@/src/ui/molecules/Table';
-import { Form, FormError } from '@/src/ui/molecules/Form';
-import { InputField } from '@/src/ui/molecules/Field';
+import { Form } from '@/src/ui/molecules/Form';
 import { MetaTags } from '@/src/shared/components/MetaTags';
 
 const headers = [
@@ -69,27 +65,6 @@ const CreateOrderPage = () => {
     }
   }, [pageMountedEvent, cartId]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      country: '',
-      city: '',
-      street: '',
-      house: '',
-      flat: '',
-      floor: 1,
-      phoneNumber: '',
-      name: '',
-    },
-  });
-
-  const onSubmit = handleSubmit((data) => {
-    formSubmittedEvent({ ...data, cartId: cart.id });
-  });
-
   useEffect(() => {
     orderCreated.watch((order) => {
       router.push(paths.ordersPayment({ orderId: order.id }));
@@ -113,8 +88,8 @@ const CreateOrderPage = () => {
             cols: [
               cartItem.productName,
               cartItem.quantity,
-              <MonetaryValue value={cartItem.realPrice} />,
-              <MonetaryValue value={cartItem.sum} />,
+              <MonetaryValue key="price" value={cartItem.realPrice} />,
+              <MonetaryValue key="sum" value={cartItem.sum} />,
             ],
           }))}
           emptyComponent={<NoResults>No products</NoResults>}
@@ -124,67 +99,71 @@ const CreateOrderPage = () => {
           Total: {cart.total}
         </div>
 
-        <Form className="my-4" onSubmit={onSubmit}>
-          <H2>Shipping Info</H2>
-
-          <InputField
-            label="Country"
-            {...register('country', { required: 'Country is required!' })}
-          />
-          <FormError>{errors.country?.message}</FormError>
-
-          <InputField
-            label="City"
-            {...register('city', { required: 'City is required!' })}
-          />
-          <FormError>{errors.city?.message}</FormError>
-
-          <InputField
-            label="Street"
-            {...register('street', { required: 'Street is required!' })}
-          />
-          <FormError>{errors.street?.message}</FormError>
-
-          <InputField
-            label="House"
-            {...register('house', { required: 'House is required!' })}
-          />
-          <FormError>{errors.house?.message}</FormError>
-
-          <InputField
-            label="Flat"
-            {...register('flat', { required: 'Flat is required!' })}
-          />
-          <FormError>{errors.flat?.message}</FormError>
-
-          <InputField
-            label="Floor"
-            type="number"
-            {...register('floor', {
+        <Form
+          className="my-4"
+          title="Shipping Info"
+          config={{
+            country: {
+              type: 'text',
+              label: 'Country',
+              placeholder: 'Country',
+              required: 'Country is required!',
+            },
+            city: {
+              type: 'text',
+              label: 'City',
+              placeholder: 'City',
+              required: 'City is required!',
+            },
+            street: {
+              type: 'text',
+              label: 'Street',
+              placeholder: 'Street',
+              required: 'Street is required!',
+            },
+            house: {
+              type: 'text',
+              label: 'House',
+              placeholder: 'House',
+              required: 'House is required!',
+            },
+            flat: {
+              type: 'text',
+              label: 'Flat',
+              placeholder: 'Flat',
+              required: 'Flat is required!',
+            },
+            floor: {
+              type: 'number',
+              label: 'Floor',
+              placeholder: 'Floor',
               required: 'Floor is required!',
-              valueAsNumber: true,
-            })}
-          />
-          <FormError>{errors.floor?.message}</FormError>
-
-          <InputField
-            label="Phone Number"
-            {...register('phoneNumber', {
+            },
+            phoneNumber: {
+              type: 'text',
+              label: 'Phone Number',
+              placeholder: 'Phone Number',
               required: 'Phone Number is required!',
-            })}
-          />
-          <FormError>{errors.phoneNumber?.message}</FormError>
-
-          <InputField
-            label="Name"
-            {...register('name', { required: 'Name is required!' })}
-          />
-          <FormError>{errors.name?.message}</FormError>
-
-          <CTAButton type="submit" isLoading={isCreating}>
-            Create order
-          </CTAButton>
-        </Form>
+            },
+            name: {
+              type: 'text',
+              label: 'Name',
+              placeholder: 'Name',
+              required: 'Name is required!',
+            },
+          }}
+          onSubmit={(data) => {
+            formSubmittedEvent({
+              ...data,
+              floor: Number(data.floor),
+              cartId: cart.id,
+            });
+            return Promise.resolve('');
+          }}
+          isPending={isCreating}
+          submitButtonVariant="CTA"
+          submitText="Create Order"
+        />
       </Paper>
     </Container>
   );

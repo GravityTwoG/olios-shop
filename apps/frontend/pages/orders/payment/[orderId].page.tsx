@@ -14,7 +14,6 @@ import { CTAButton } from '@/src/ui/atoms/CTAButton';
 import { Container } from '@/src/ui/atoms/Container';
 import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
 import { Preloader } from '@/src/ui/molecules/Preloader';
-import { Form } from '@/src/ui/molecules/Form';
 import { InputField } from '@/src/ui/molecules/Field';
 import { MetaTags } from '@/src/shared/components/MetaTags';
 
@@ -54,14 +53,14 @@ const OrdersPaymentPage = () => {
             Total: <MonetaryValue value={order.total} />
           </p>
 
-          <Form>
+          <form>
             <InputField label="Card number" />
             <InputField label="Card date" />
             <InputField label="Card CVC" />
             <InputField label="Card Holder" />
 
             <CTAButton type="submit">PAY</CTAButton>
-          </Form>
+          </form>
         </Paper>
       </Preloader>
     </Container>
