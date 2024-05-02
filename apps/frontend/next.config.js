@@ -1,11 +1,8 @@
-const withPlugins = require('next-compose-plugins');
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
+const { composePlugins, withNx } = require('@nx/next');
 
 const nextImageRemotes = [];
 
-if (process.env.NEXT_IMAGE_REMOTES !== '') {
+if (process.env.NEXT_IMAGE_REMOTES) {
   const urls = process.env.NEXT_IMAGE_REMOTES.split(',');
 
   urls.forEach((url) => {
@@ -15,6 +12,9 @@ if (process.env.NEXT_IMAGE_REMOTES !== '') {
   });
 }
 
+/**
+ * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
+ **/
 const nextConfig = {
   webpack(config) {
     config.module.rules.push({
@@ -73,14 +73,23 @@ const nextConfig = {
 
     return config;
   },
-  output: 'standalone',
-  pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
+  pageExtensions: ['page.tsx', 'page.ts'],
   images: {
     remotePatterns: nextImageRemotes,
     imageSizes: [128, 256, 384],
     minimumCacheTTL: 3600,
     formats: ['image/webp'],
   },
+  nx: {
+    svgr: false,
+  },
 };
 
-module.exports = withPlugins([withBundleAnalyzer], nextConfig);
+const plugins = [withNx];
+
+if (process.env.ANALYZE === 'true') {
+  const withBundleAnalyzer = require('@next/bundle-analyzer');
+  plugins.push(withBundleAnalyzer({ enabled: true }));
+}
+
+module.exports = composePlugins(...plugins)(nextConfig);

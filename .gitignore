@@ -3,3 +3,8 @@
 /.vscode
 
 /.nx
+/dist
+
+# Next.js
+.next
+out

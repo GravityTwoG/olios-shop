@@ -5,7 +5,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking', // contains rules that specifically require type information
-    'prettier',
+    'plugin:prettier/recommended',
   ],
   // all plugins (eslint-plugin-xxx) go here:
   plugins: ['@typescript-eslint'],

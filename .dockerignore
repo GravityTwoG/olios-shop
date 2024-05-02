@@ -1,0 +1,9 @@
+node_modules
+node_modules/
+docker-volumes
+dist
+.env*
+docker-compose*
+*Dockerfile*
+*.log
+*.png

@@ -3,6 +3,7 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
+    "webpackConfigPath": "webpack.config.js",
     "plugins": [
       {
         "name": "@nestjs/swagger",

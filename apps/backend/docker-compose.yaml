@@ -1,21 +1,20 @@
-version: '3'
 services:
   backend:
     container_name: olios-backend
     build:
-      context: ./apps/backend
-      target: development
-    command: sh -c 'npx prisma generate && npm run db-setup && npm run dev'
-    ports:
-      - '5111:5111'
+      context: ./
+      target: deps
+      dockerfile: ./Dockerfile
     volumes:
-      - ./apps/backend:/usr/src/app
+      - ./:/usr/src/app/
+      - /usr/src/app/node_modules
+    command: sh -c 'cd ./apps/backend && npx prisma generate && npm run db-setup && cd /usr/src/app && npx nx dev backend'
+    # ports:
+    #   - '5111:5111'
     depends_on:
       - postgres
       - redis
       - minio
-    networks:
-      - internal
 
   postgres:
     container_name: postgres-olios
@@ -31,18 +30,18 @@ services:
     networks:
       - internal
 
-  pgadmin:
-    container_name: olios-pgadmin
-    links:
-      - postgres:postgres
-    image: dpage/pgadmin4:6.20
-    ports:
-      - '5050:80'
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: 12121212
-    networks:
-      - internal
+  # pgadmin:
+  #   container_name: olios-pgadmin
+  #   links:
+  #     - postgres:postgres
+  #   image: dpage/pgadmin4:6.20
+  #   ports:
+  #     - '5050:80'
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@example.com
+  #     PGADMIN_DEFAULT_PASSWORD: 12121212
+  #   networks:
+  #     - internal
 
   redis:
     container_name: redis-olios
@@ -60,8 +59,8 @@ services:
       - ./apps/backend/docker-volumes/dev/s3/data1-1:/data1
       - ./apps/backend/docker-volumes/dev/s3/data1-2:/data2
     ports:
-      - '10000:9000'
-      - '10001:9001'
+      - '9000:9000'
+      - '9001:9001'
     networks:
       - internal
     environment:
@@ -73,3 +72,7 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
+
+networks:
+  internal:
+    driver: bridge
