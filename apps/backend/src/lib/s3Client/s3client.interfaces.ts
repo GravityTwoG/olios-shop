@@ -12,12 +12,12 @@ export interface NestS3ClientOptionsFactory {
     | NestS3ClientOptions;
 }
 
-export interface NestS3ClientAsyncOptions
+export interface NestS3ClientAsyncOptions<I extends unknown[]>
   extends Pick<ModuleMetadata, 'imports'> {
-  inject?: any[];
+  inject?: I;
   useExisting?: Type<NestS3ClientOptionsFactory>;
   useClass?: Type<NestS3ClientOptionsFactory>;
   useFactory?: (
-    ...args: any[]
+    ...args: I
   ) => Promise<NestS3ClientOptions> | NestS3ClientOptions;
 }

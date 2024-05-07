@@ -22,26 +22,30 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   }
 
   private enablePerformanceLogging(log: 'all_queries' | 'long_queries'): void {
-    (this as any).$on('query', (e: any) => {
-      if (log === 'all_queries') {
-        if (e.query !== 'SELECT 1') {
-          this.logger.log(
-            `query: ${e.query}, params: ${e.params}, duration: ${e.duration} ms`,
-          );
+    this.$on(
+      // @ts-expect-error private method
+      'query',
+      (e: { query: string; params: string; duration: number }) => {
+        if (log === 'all_queries') {
+          if (e.query !== 'SELECT 1') {
+            this.logger.log(
+              `query: ${e.query}, params: ${e.params}, duration: ${e.duration} ms`,
+            );
+          }
         }
-      }
 
-      if (log === 'long_queries') {
-        if (e.duration >= 2000) {
-          this.logger.warn(
-            `query is slow: ${e.query}, params: ${e.params}, execution time: ${e.duration} ms`,
-          );
+        if (log === 'long_queries') {
+          if (e.duration >= 2000) {
+            this.logger.warn(
+              `query is slow: ${e.query}, params: ${e.params}, execution time: ${e.duration} ms`,
+            );
+          }
         }
-      }
-    });
+      },
+    );
   }
 
-  async enableShutdownHooks(app: INestApplication) {
+  enableShutdownHooks(app: INestApplication) {
     this.$on('beforeExit', async () => {
       await app.close();
     });

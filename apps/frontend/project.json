@@ -67,6 +67,9 @@
         "lintFilePatterns": ["apps/frontend/**/*.{ts,tsx,js,jsx}"]
       }
     },
+    "lint-staged": {
+      "{apps,libs}/**/*.{ts,json,md,scss}": ["npm run lint-staged"]
+    },
     "container": {
       "executor": "@nx-tools/nx-container:build",
       "dependsOn": ["build"],

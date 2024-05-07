@@ -1,4 +1,9 @@
-import { DynamicModule, Module, Provider } from '@nestjs/common';
+import {
+  DynamicModule,
+  InjectionToken,
+  Module,
+  Provider,
+} from '@nestjs/common';
 import { connectionFactory } from './s3client.provider';
 
 import { NEST_S3_CLIENT_OPTIONS } from './s3client.constants';
@@ -31,8 +36,8 @@ export class S3ClientModule {
     };
   }
 
-  public static registerAsync(
-    options: NestS3ClientAsyncOptions,
+  public static registerAsync<I extends unknown[]>(
+    options: NestS3ClientAsyncOptions<I>,
   ): DynamicModule {
     const allImports: typeof options.imports = [];
     if (options.imports) {
@@ -47,14 +52,14 @@ export class S3ClientModule {
     };
   }
 
-  private static createConnectAsyncProviders(
-    options: NestS3ClientAsyncOptions,
+  private static createConnectAsyncProviders<I extends unknown[]>(
+    options: NestS3ClientAsyncOptions<I>,
   ): Provider {
     if (options.useFactory) {
       return {
         provide: NEST_S3_CLIENT_OPTIONS,
         useFactory: options.useFactory,
-        inject: options.inject ?? [],
+        inject: (options.inject ?? []) as unknown as InjectionToken[],
       };
     }
 

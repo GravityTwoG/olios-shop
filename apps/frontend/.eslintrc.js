@@ -8,9 +8,7 @@ module.exports = {
     'next/core-web-vitals',
   ],
   // all plugins (eslint-plugin-xxx) go here:
-  plugins: [
-    '@next/eslint-plugin-next',
-  ],
+  plugins: ['@next/eslint-plugin-next'],
   parserOptions: {
     project: 'tsconfig.json', // tells parser relative path of tsconfig.json
     tsconfigRootDir: __dirname,
@@ -19,7 +17,6 @@ module.exports = {
       jsx: true,
     },
     ecmaVersion: 12,
-    exclude: '*.jsx',
   },
 
   env: {

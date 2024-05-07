@@ -9,7 +9,7 @@ export function NotEqualsToField(
   validationOptions?: ValidationOptions,
 ) {
   // propertyName - property on which decorator was applied
-  return function (object: any, currentProperty: string) {
+  return function (object: object, currentProperty: string) {
     registerDecorator({
       name: 'notEqualsToField',
       target: object.constructor,
@@ -19,11 +19,16 @@ export function NotEqualsToField(
         message: `Properties ${otherProperty} and ${currentProperty} must not be equal.`,
       },
       validator: {
-        validate(value: any, args: ValidationArguments) {
+        validate(
+          value: unknown,
+          args: ValidationArguments & {
+            object: Record<string, unknown>;
+          },
+        ) {
           // args.object - class on which decorator was applied
           // otherPropertyName - otherProperty
-          const [otherPropertyName] = args.constraints;
-          const otherValue = (args.object as any)[otherPropertyName];
+          const [otherPropertyName] = args.constraints as string[];
+          const otherValue = args.object[otherPropertyName];
           return value !== otherValue;
           // you can return a Promise<boolean> here as well, if you want to make async validation
         },

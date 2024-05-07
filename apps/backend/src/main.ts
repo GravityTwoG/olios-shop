@@ -7,7 +7,7 @@ import { Logger } from 'nestjs-pino/Logger';
 import { AppModule } from './app.module';
 
 import { setupSwagger } from './config/setupSwagger';
-import { AppConfigService } from './config/configuration.schema';
+import { AppConfigService, Environment } from './config/configuration.schema';
 import { setupCORS } from './config/setupCors';
 import { setupSessions } from './config/setupSessions';
 
@@ -34,7 +34,10 @@ async function bootstrap() {
   await setupSessions(app);
 
   const ENVIRONMENT = configService.get('ENVIRONMENT', { infer: true });
-  if (ENVIRONMENT === 'production' || ENVIRONMENT === 'staging') {
+  if (
+    ENVIRONMENT === Environment.production ||
+    ENVIRONMENT === Environment.staging
+  ) {
     app.setGlobalPrefix('/api/v1');
   }
 

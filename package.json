@@ -22,14 +22,14 @@
     "infra-setup": "nx run backend:db-setup",
     "infra-down": "nx run backend:docker-compose-stop",
     "all:dev": "nx run-many -t dev",
-    "all:lint": "nx run-many -t lint",
-    "all:lint-staged": "nx run-many -t lint-staged -- --relative",
-    "all:build": "nx run-many -t build",
-    "all:deploy": "nx run-many -t deploy",
-    "affected:lint": "nx affected -t lint",
+    "lint": "nx run-many -t lint",
+    "lint-staged": "nx run-many -t lint-staged -- --relative && nx run-many -t typecheck",
+    "build": "nx run-many -t build",
+    "deploy": "nx run-many -t container",
+    "affected:lint": "nx affected -t lint && nx run-many -t typecheck",
     "affected:lint-staged": "nx affected -t lint-staged -- --relative && nx affected -t typecheck",
     "affected:build": "nx affected -t build",
-    "affected:deploy": "nx affected -t deploy"
+    "affected:deploy": "nx affected -t container"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.398.0",

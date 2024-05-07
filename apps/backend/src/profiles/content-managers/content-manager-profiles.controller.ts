@@ -1,18 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ContentManagerProfilesService } from './content-manager-profiles.service';
 
-import { UpdateContentManagerDto } from './dto/update-content-manager.dto';
+import { UpdateContentManagerDTO } from './dto/update-content-manager.dto';
 import { GetContentManagerProfilesDTO } from './dto/get-content-manager-profiles.dto';
 
 @ApiTags('Content Managers')
@@ -24,6 +15,7 @@ export class ContentManagerProfilesController {
 
   @Get()
   findAll(@Query() query: GetContentManagerProfilesDTO) {
+    console.error('query not used at /content-managers/findAll', query);
     return this.contentManagersService.findAll();
   }
 
@@ -35,7 +27,7 @@ export class ContentManagerProfilesController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateContentManagerDto: UpdateContentManagerDto,
+    @Body() updateContentManagerDto: UpdateContentManagerDTO,
   ) {
     return this.contentManagersService.update(+id, updateContentManagerDto);
   }

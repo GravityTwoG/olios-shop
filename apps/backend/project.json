@@ -64,7 +64,7 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/backend/**/*.{ts}"]
+        "lintFilePatterns": ["apps/backend/**/*.ts"]
       }
     },
     "container": {
