@@ -1,3 +1,4 @@
+const path = require('path');
 const { composePlugins, withNx } = require('@nx/next');
 
 const nextImageRemotes = [];
@@ -72,6 +73,11 @@ const nextConfig = {
     fileLoaderRule.exclude = /\.svg$/i;
 
     return config;
+  },
+  output: 'standalone',
+  experimental: {
+    // outputFileTracingRoot needed to work in monorepo
+    outputFileTracingRoot: path.join(__dirname, '../../'),
   },
   pageExtensions: ['page.tsx', 'page.ts'],
   images: {
