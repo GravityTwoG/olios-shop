@@ -7,7 +7,7 @@ services:
       dockerfile: ./Dockerfile
     volumes:
       - ./:/usr/src/app/
-      - /usr/src/app/node_modules
+      - node-modules:/usr/src/app/node_modules
     command: sh -c 'cd ./apps/backend && npx prisma generate && npm run db-setup && cd /usr/src/app && npx nx dev backend'
     # ports:
     #   - '5111:5111'

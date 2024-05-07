@@ -10,20 +10,34 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./:/usr/src/app/
-      - /usr/src/app/node_modules
+      - node-modules:/usr/src/app/node_modules
     command: sh -c 'npx nx dev frontend --verbose'
     ports:
       - '8000:8000' # for nginx
       - '5111:5111' # for backend
-      - '3000:3000' # for frontend
+      - '3000:3000' # for storefront
+      - '4200:4200' # for admin panel
     networks:
       - internal
+
+  admin-panel:
+    container_name: olios-admin-panel
+    build:
+      context: .
+      target: deps
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/usr/src/app/
+      - node-modules:/usr/src/app/node_modules
+    command: sh -c 'npx nx serve admin-panel'
+    network_mode: service:frontend
 
   nginx:
     container_name: olios-nginx
     image: nginx:1.15-alpine
     depends_on:
       - frontend
+      - admin-panel
       - backend
     # ports:
     #   - '8000:8000'
@@ -40,3 +54,7 @@ services:
 networks:
   internal:
     driver: bridge
+
+volumes:
+  node-modules:
+    driver: local

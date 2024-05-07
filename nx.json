@@ -35,9 +35,18 @@
   "generators": {
     "@nx/react": {
       "application": {
-        "babel": true
+        "babel": true,
+        "style": "tailwind",
+        "linter": "eslint",
+        "bundler": "vite"
       },
-      "library": {}
+      "library": {
+        "style": "tailwind",
+        "linter": "eslint"
+      },
+      "component": {
+        "style": "tailwind"
+      }
     },
     "@nx/next": {
       "application": {
@@ -75,6 +84,22 @@
         "buildTargetName": "build",
         "serveTargetName": "serve",
         "previewTargetName": "preview"
+      }
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static"
+      }
+    },
+    {
+      "plugin": "@nx/playwright/plugin",
+      "options": {
+        "targetName": "e2e"
       }
     }
   ]
