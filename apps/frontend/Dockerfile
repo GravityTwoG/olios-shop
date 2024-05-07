@@ -4,7 +4,7 @@ FROM docker.io/node:18-alpine3.18 as deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm install --only=production
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Production image, copy all the files and run next
 FROM docker.io/node:18-alpine3.18 as runner
