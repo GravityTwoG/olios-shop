@@ -1,3 +1,4 @@
+import { Button } from '@olios-shop/ui';
 import NxWelcome from './nx-welcome';
 
 import { Route, Routes, Link } from 'react-router-dom';
@@ -43,6 +44,8 @@ export function App() {
         />
       </Routes>
       {/* END: routes */}
+
+      <Button>Hello shad/cn</Button>
     </div>
   );
 }

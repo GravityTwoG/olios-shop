@@ -1,7 +1,8 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "workspaceLayout": {
-    "appsDir": "apps"
+    "appsDir": "apps",
+    "libsDir": "packages"
   },
   "cli": {
     "packageManager": "npm"

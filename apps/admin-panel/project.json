@@ -5,5 +5,16 @@
   "projectType": "application",
   "tags": [],
   "// targets": "to see all targets run: nx show project admin-panel --web",
-  "targets": {}
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/admin-panel/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "lint-staged": {
+      "{apps,libs}/**/*.{ts,json,md,scss}": ["npm run lint-staged"]
+    }
+  }
 }

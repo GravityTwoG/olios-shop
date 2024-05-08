@@ -7,7 +7,4 @@ WORKDIR /usr/src/app
 COPY .husky ./.husky
 COPY package*.json ./
 
-RUN npm install
-
-EXPOSE 3000
-EXPOSE 4200
+RUN npm ci --no-audit --maxsockets 1
