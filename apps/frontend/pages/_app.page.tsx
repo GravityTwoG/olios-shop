@@ -1,23 +1,23 @@
 import React, { useEffect, useRef, useState, ReactNode } from 'react';
 import classes from './_app.module.scss';
-import '@/src/styles/globals.css';
-import '@/src/styles/theme.css';
-import '@/src/styles/ui.scss';
+import '@olios-shop/frontend/styles/globals.css';
+import '@olios-shop/ui/styles/theme.css';
+import '@olios-shop/ui/styles/ui.scss';
 
 import { AppProps } from 'next/app';
 import { EffectorNext } from '@effector/next';
 
 import { useUnit } from 'effector-react';
-import { appStarted } from '@/src/shared/session';
+import { appStarted } from '@olios-shop/frontend/shared/session';
 
-import { useOnClickOutside } from '@/src/ui/hooks/useOnClickOutside';
+import { useOnClickOutside } from '@olios-shop/ui/hooks/useOnClickOutside';
 
-import { NextProgressBar } from '@/src/ui/atoms/NextProgressBar';
-import { AppErrorBoundary } from '@/src/ui/molecules/AppErrorBoundary';
-import { BurgerButton } from '@/src/ui/molecules/BurgerButton';
-import { Menu } from '@/src/shared/components/Menu';
-import { Sidebar } from '@/src/shared/components/Sidebar';
-import { AppToaster } from '@/src/shared/toasts';
+import { AppErrorBoundary } from '@olios-shop/ui/molecules/AppErrorBoundary';
+import { BurgerButton } from '@olios-shop/ui/molecules/BurgerButton';
+import { NextProgressBar } from '@olios-shop/frontend/ui/atoms/NextProgressBar';
+import { Menu } from '@olios-shop/frontend/shared/components/Menu';
+import { Sidebar } from '@olios-shop/frontend/shared/components/Sidebar';
+import { AppToaster } from '@olios-shop/frontend/shared/toasts';
 
 const App = ({ children }: { children: ReactNode }) => {
   const [appStartedEvent] = useUnit([appStarted]);

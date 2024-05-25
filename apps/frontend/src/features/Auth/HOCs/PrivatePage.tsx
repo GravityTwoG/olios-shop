@@ -6,12 +6,12 @@ import {
   SessionUserRole,
   useAuthStatus,
   useUserRole,
-} from '@/src/shared/session';
-import { paths } from '@/src/paths';
+} from '@olios-shop/frontend/shared/session';
+import { paths } from '@olios-shop/frontend/paths';
 
-import { PageLoader } from '@/src/ui/atoms/PageLoader';
-import { Container } from '@/src/ui/atoms/Container';
-import { H1 } from '@/src/ui/atoms/Typography';
+import { PageLoader } from '@olios-shop/ui/atoms/PageLoader';
+import { Container } from '@olios-shop/ui/atoms/Container';
+import { H1 } from '@olios-shop/ui/atoms/Typography';
 
 export const PrivatePage = <P extends Record<string, unknown>>(
   Component: React.ComponentType<P>,

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Container } from '@/src/ui/atoms/Container';
-import { H1, H2 } from '@/src/ui/atoms/Typography';
-import { MetaTags } from '@/src/shared/components/MetaTags';
+import { Container } from '@olios-shop/ui/atoms/Container';
+import { H1, H2 } from '@olios-shop/ui/atoms/Typography';
+import { MetaTags } from '@olios-shop/frontend/shared/components/MetaTags';
 
 export default function AboutPage() {
   return (

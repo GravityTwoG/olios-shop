@@ -10,7 +10,7 @@ import {
   CartSchema,
   ICart,
   ICartItem,
-} from '@/src/types/ICart';
+} from '@olios-shop/frontend/types/ICart';
 import { AnonymousCart } from './AnonymousCart';
 
 const BASE_ROUTE = '/cart';

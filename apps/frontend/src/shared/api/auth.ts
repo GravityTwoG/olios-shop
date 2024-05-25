@@ -1,4 +1,4 @@
-import { IUser } from '@/src/types/IUser';
+import { IUser } from '@olios-shop/frontend/types/IUser';
 import { axiosInstance } from './lib';
 
 import { UserResponseSchema } from './users';

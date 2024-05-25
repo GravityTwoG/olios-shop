@@ -1,5 +1,5 @@
-import { H1 } from '@/src/ui/atoms/Typography';
-import { Container } from '@/src/ui/atoms/Container';
+import { H1 } from '@olios-shop/ui/atoms/Typography';
+import { Container } from '@olios-shop/ui/atoms/Container';
 
 export default function NotFoundPage() {
   return (

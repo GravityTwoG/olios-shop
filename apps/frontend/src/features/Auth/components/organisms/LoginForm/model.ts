@@ -1,7 +1,7 @@
 import { createEvent, createStore, sample } from 'effector';
 import { not } from 'patronum';
 
-import { loginFx } from '@/src/shared/auth';
+import { loginFx } from '@olios-shop/frontend/shared/auth';
 
 // Events
 export const setLoginError = createEvent<string>('set loginError');

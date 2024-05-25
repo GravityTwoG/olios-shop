@@ -1,7 +1,7 @@
 import {
   IProductCategory,
   ProductCategorySchema,
-} from '@/src/types/IProductCategory';
+} from '@olios-shop/frontend/types/IProductCategory';
 
 import {
   axiosInstance,

@@ -1,9 +1,9 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 
-import * as ordersApi from '@/src/shared/api/orders';
-import { IOrder } from '@/src/types/IOrder';
-import { ListDTO } from '@/src/shared/api/lib';
-import { toast } from '@/src/shared/toasts';
+import * as ordersApi from '@olios-shop/frontend/shared/api/orders';
+import { IOrder } from '@olios-shop/frontend/types/IOrder';
+import { ListDTO } from '@olios-shop/frontend/shared/api/lib';
+import { toast } from '@olios-shop/frontend/shared/toasts';
 
 // Effects
 const fetchOrdersFx = createEffect<

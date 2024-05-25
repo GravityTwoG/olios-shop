@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { AuthStatus, useAuthStatus } from '../../../shared/session';
 import { paths } from '../../../paths';
 
-import { PageLoader } from '../../../ui/atoms/PageLoader';
+import { PageLoader } from '../../../../../../packages/ui/src/atoms/PageLoader';
 
 export const AnonymousPage = <P extends Record<string, unknown>>(
   Component: React.ComponentType<P>,

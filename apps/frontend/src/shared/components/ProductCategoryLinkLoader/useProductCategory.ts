@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-import { IProductCategory } from '@/src/types/IProductCategory';
+import { IProductCategory } from '@olios-shop/frontend/types/IProductCategory';
 
 import { fetchCategory } from '../../api/product-categories';
 import { ApiError } from '../../api';

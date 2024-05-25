@@ -19,23 +19,22 @@ import {
   selectedAsDefault,
 } from './model';
 
-import { SessionUserRole } from '@/src/shared/session';
+import { SessionUserRole } from '@olios-shop/frontend/shared/session';
 
-import { paths } from '@/src/paths';
+import { paths } from '@olios-shop/frontend/paths';
 
-import { PrivatePage } from '@/src/features/Auth';
+import { PrivatePage } from '@olios-shop/frontend/features/Auth';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/src/ui/atoms/Button';
-import { H1 } from '@/src/ui/atoms/Typography';
-import { StyledLink } from '@/src/ui/atoms/StyledLink';
-import { Container } from '@/src/ui/atoms/Container';
-import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
-import { Preloader } from '@/src/ui/molecules/Preloader';
-import { FormError } from '@/src/ui/molecules/Form';
-import { RoleGuard } from '@/src/shared/components/RoleGuard';
-import { MetaTags } from '@/src/shared/components/MetaTags';
+import { Button } from '@olios-shop/ui/atoms/Button';
+import { H1 } from '@olios-shop/ui/atoms/Typography';
+import { StyledLink } from '@olios-shop/frontend/ui/atoms/StyledLink';
+import { Container } from '@olios-shop/ui/atoms/Container';
+import { MonetaryValue } from '@olios-shop/ui/atoms/MonetaryValue';
+import { Preloader } from '@olios-shop/ui/molecules/Preloader';
+import { FormError } from '@olios-shop/ui/molecules/Form';
+import { MetaTags } from '@olios-shop/frontend/shared/components/MetaTags';
 
 function CartPage() {
   const [cart, isCartPending] = useUnit([$cart, $isCartPending]);
@@ -60,22 +59,17 @@ function CartPage() {
 
       <div className="mt-8 mb-4 flex flex-wrap justify-between items-center gap-6">
         <div className="flex gap-2">
-          <RoleGuard roles={SessionUserRole.CUSTOMER}>
-            {!cart.isDefault && (
-              <Button
-                color="secondary"
-                onClick={() => selectedAsDefaultEvent()}
-              >
-                Select as default
-              </Button>
-            )}
+          {!cart.isDefault && (
+            <Button color="secondary" onClick={() => selectedAsDefaultEvent()}>
+              Select as default
+            </Button>
+          )}
 
-            {!cart.isDefault && (
-              <Button color="danger" onClick={() => cartDeletedEvent()}>
-                Delete cart
-              </Button>
-            )}
-          </RoleGuard>
+          {!cart.isDefault && (
+            <Button color="danger" onClick={() => cartDeletedEvent()}>
+              Delete cart
+            </Button>
+          )}
         </div>
 
         <div>
@@ -190,28 +184,26 @@ const CartsList = () => {
           </li>
         ))}
 
-        <RoleGuard roles={SessionUserRole.CUSTOMER}>
-          <li className="bg-white py-3 px-4 w-[170px] snap-start">
-            <form onSubmit={onSubmit}>
-              <p className="mb-2">
-                <input
-                  className="border-slate-950 border-[1px] px-2 py-1 w-full"
-                  placeholder="Cart name"
-                  {...register('name', { required: 'Enter name!' })}
-                />
-              </p>
-              <FormError>{errors.name?.message}</FormError>
+        <li className="bg-white py-3 px-4 w-[170px] snap-start">
+          <form onSubmit={onSubmit}>
+            <p className="mb-2">
+              <input
+                className="border-slate-950 border-[1px] px-2 py-1 w-full"
+                placeholder="Cart name"
+                {...register('name', { required: 'Enter name!' })}
+              />
+            </p>
+            <FormError>{errors.name?.message}</FormError>
 
-              <Button
-                className="w-full"
-                type="submit"
-                isLoading={isNewCartCreating}
-              >
-                Create new cart
-              </Button>
-            </form>
-          </li>
-        </RoleGuard>
+            <Button
+              className="w-full"
+              type="submit"
+              isLoading={isNewCartCreating}
+            >
+              Create new cart
+            </Button>
+          </form>
+        </li>
       </ul>
     </div>
   );

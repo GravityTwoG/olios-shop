@@ -4,13 +4,13 @@ import classes from './menu.module.scss';
 
 import useSWR from 'swr';
 
-import { IProductCategory } from '@/src/types/IProductCategory';
-import { ApiError } from '@/src/shared/api';
-import { ListDTO } from '@/src/shared/api/lib';
-import { fetchCategories } from '@/src/shared/api/product-categories';
-import { toast } from '@/src/shared/toasts';
+import { IProductCategory } from '@olios-shop/frontend/types/IProductCategory';
+import { ApiError } from '@olios-shop/frontend/shared/api';
+import { ListDTO } from '@olios-shop/frontend/shared/api/lib';
+import { fetchCategories } from '@olios-shop/frontend/shared/api/product-categories';
+import { toast } from '@olios-shop/frontend/shared/toasts';
 
-import { ProductCategoryLink } from '@/src/shared/components/ProductCategoryLink';
+import { ProductCategoryLink } from '@olios-shop/frontend/shared/components/ProductCategoryLink';
 import { ProductCategoryLinkSkeleton } from '../ProductCategoryLinkLoader';
 
 const fetchCategoriesSWR = () =>

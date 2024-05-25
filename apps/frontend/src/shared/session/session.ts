@@ -1,6 +1,6 @@
 import { createStore, createEffect, createEvent, sample } from 'effector';
 
-import { IUser, IUserRole } from '@/src/types/IUser';
+import { IUser, IUserRole } from '@olios-shop/frontend/types/IUser';
 
 import * as authApi from '../api/auth';
 import { ApiError } from '../api';

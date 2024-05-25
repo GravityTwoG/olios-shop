@@ -1,12 +1,12 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { reset } from 'patronum';
 
-import { IProduct } from '@/src/types/IProduct';
-import { ICartItem } from '@/src/types/ICart';
-import { toast } from '@/src/shared/toasts';
-import * as productsApi from '@/src/shared/api/products';
-import * as cartApi from '@/src/shared/api/cart';
-import { ApiError } from '@/src/shared/api';
+import { IProduct } from '@olios-shop/frontend/types/IProduct';
+import { ICartItem } from '@olios-shop/frontend/types/ICart';
+import { toast } from '@olios-shop/frontend/shared/toasts';
+import * as productsApi from '@olios-shop/frontend/shared/api/products';
+import * as cartApi from '@olios-shop/frontend/shared/api/cart';
+import { ApiError } from '@olios-shop/frontend/shared/api';
 
 import {
   $user,
@@ -14,7 +14,7 @@ import {
   $isAuthenticated,
   sessionChecked,
   SessionUserRole,
-} from '@/src/shared/session';
+} from '@olios-shop/frontend/shared/session';
 
 // Effects
 const fetchProductFx = createEffect<number, IProduct, ApiError>(

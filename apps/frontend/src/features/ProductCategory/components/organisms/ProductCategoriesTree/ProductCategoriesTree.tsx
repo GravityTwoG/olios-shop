@@ -2,16 +2,16 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import useSWR from 'swr';
 
-import { IProductCategory } from '@/src/types/IProductCategory';
+import { IProductCategory } from '@olios-shop/frontend/types/IProductCategory';
 
-import { ApiError, ListDTO } from '@/src/shared/api/lib';
-import { fetchCategories } from '@/src/shared/api/product-categories';
-import { toast } from '@/src/shared/toasts';
+import { ApiError, ListDTO } from '@olios-shop/frontend/shared/api/lib';
+import { fetchCategories } from '@olios-shop/frontend/shared/api/product-categories';
+import { toast } from '@olios-shop/frontend/shared/toasts';
 
 import Image from 'next/image';
-import { Skeleton } from '@/src/ui/atoms/Skeleton';
-import { H3 } from '@/src/ui/atoms/Typography';
-import { Arrow } from '@/src/ui/atoms/Icons/Arrow';
+import { Skeleton } from '@olios-shop/ui/atoms/Skeleton';
+import { H3 } from '@olios-shop/ui/atoms/Typography';
+import { Arrow } from '@olios-shop/ui/atoms/Icons/Arrow';
 
 const fetchCategoriesSWR = (parentId: number | null) =>
   fetchCategories({ take: 8, skip: 0, parentId });

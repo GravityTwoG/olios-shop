@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-import { ICart, ICartItem } from '@/src/types/ICart';
+import { ICart, ICartItem } from '@olios-shop/frontend/types/ICart';
 
 import {
   convertToCartFromIds,
   convertToCartItemFromId,
-} from '@/src/shared/api/cart/cart';
+} from '@olios-shop/frontend/shared/api/cart/cart';
 
 const ITEM_NAME = 'OliosShopAnonymousCart';
 

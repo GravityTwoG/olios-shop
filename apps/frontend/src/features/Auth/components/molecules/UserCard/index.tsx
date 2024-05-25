@@ -1,8 +1,8 @@
-import { SessionUser } from '@/src/shared/session';
+import { SessionUser } from '@olios-shop/frontend/shared/session';
 
 import classes from './user-card.module.scss';
 
-import { Skeleton } from '@/src/ui/atoms/Skeleton';
+import { Skeleton } from '@olios-shop/ui/atoms/Skeleton';
 import clsx from 'clsx';
 
 export type UserCardProps = {

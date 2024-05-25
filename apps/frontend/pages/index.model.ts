@@ -1,9 +1,9 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { debounce, reset } from 'patronum';
 
-import { ApiError, ListDTO } from '@/src/shared/api/lib';
-import { fetchProducts } from '@/src/shared/api/products';
-import { IProduct } from '@/src/types/IProduct';
+import { ApiError, ListDTO } from '@olios-shop/frontend/shared/api/lib';
+import { fetchProducts } from '@olios-shop/frontend/shared/api/products';
+import { IProduct } from '@olios-shop/frontend/types/IProduct';
 
 // Effects
 const fetchProductsFx = createEffect<

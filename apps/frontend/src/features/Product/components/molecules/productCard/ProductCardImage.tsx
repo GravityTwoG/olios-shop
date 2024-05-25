@@ -5,7 +5,7 @@ import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import 'yet-another-react-lightbox/styles.css';
 
-import { FullScreenButton } from '@/src/ui/atoms/FullScreenButton';
+import { FullScreenButton } from '@olios-shop/ui/atoms/FullScreenButton';
 
 type ImageViewerProps = {
   images: { src: string }[];

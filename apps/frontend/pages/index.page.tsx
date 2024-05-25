@@ -19,14 +19,14 @@ import {
   searchQueryChanged,
 } from './index.model';
 
-import { Container } from '@/src/ui/atoms/Container';
-import { Paginator } from '@/src/ui/molecules/Paginator';
-import { Preloader } from '@/src/ui/molecules/Preloader';
-import { MetaTags } from '@/src/shared/components/MetaTags';
-import { ProductsGrid } from '@/src/features/Product/components/molecules/productsGrid/ProductsGrid';
-import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
-import { ProductCategoriesTree } from '@/src/features/ProductCategory/components/organisms/ProductCategoriesTree';
-import { H1 } from '@/src/ui/atoms/Typography';
+import { Container } from '@olios-shop/ui/atoms/Container';
+import { Paginator } from '@olios-shop/ui/molecules/Paginator';
+import { Preloader } from '@olios-shop/ui/molecules/Preloader';
+import { MetaTags } from '@olios-shop/frontend/shared/components/MetaTags';
+import { ProductsGrid } from '@olios-shop/frontend/features/Product/components/molecules/productsGrid/ProductsGrid';
+import { ProductCard } from '@olios-shop/frontend/features/Product/components/molecules/productCard/ProductCard';
+import { ProductCategoriesTree } from '@olios-shop/frontend/features/ProductCategory/components/organisms/ProductCategoriesTree';
+import { H1 } from '@olios-shop/ui/atoms/Typography';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const scope = fork();

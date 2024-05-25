@@ -1,21 +1,21 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { SessionUserRole } from '@/src/shared/session';
+import { SessionUserRole } from '@olios-shop/frontend/shared/session';
 
 import { useUnit } from 'effector-react';
 import { $isOrderPending, $order, pageMounted } from './index.model';
 
-import { PrivatePage } from '@/src/features/Auth';
+import { PrivatePage } from '@olios-shop/frontend/features/Auth';
 
-import { Paper } from '@/src/ui/atoms/Paper';
-import { H1 } from '@/src/ui/atoms/Typography';
-import { Container } from '@/src/ui/atoms/Container';
-import { NoResults } from '@/src/ui/atoms/NoResults';
-import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
-import { Table } from '@/src/ui/molecules/Table';
-import { Preloader } from '@/src/ui/molecules/Preloader';
-import { MetaTags } from '@/src/shared/components/MetaTags';
+import { Paper } from '@olios-shop/ui/atoms/Paper';
+import { H1 } from '@olios-shop/ui/atoms/Typography';
+import { Container } from '@olios-shop/ui/atoms/Container';
+import { NoResults } from '@olios-shop/ui/atoms/NoResults';
+import { MonetaryValue } from '@olios-shop/ui/atoms/MonetaryValue';
+import { Table } from '@olios-shop/ui/molecules/Table';
+import { Preloader } from '@olios-shop/ui/molecules/Preloader';
+import { MetaTags } from '@olios-shop/frontend/shared/components/MetaTags';
 
 const headers = [
   {

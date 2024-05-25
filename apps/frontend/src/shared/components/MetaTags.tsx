@@ -2,7 +2,7 @@ import Head from 'next/head';
 
 import { useRouter } from 'next/router';
 import { getURL } from '../lib/getURL';
-import { toDollars } from '@/src/ui/atoms/MonetaryValue';
+import { toDollars } from '@olios-shop/ui/atoms/MonetaryValue';
 
 export type MetaTagsProps = {
   title: string;

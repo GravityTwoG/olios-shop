@@ -2,11 +2,11 @@ import React from 'react';
 import clsx from 'clsx';
 import classes from './category.module.scss';
 
-import { paths } from '@/src/paths';
-import { IProductCategory } from '@/src/types/IProductCategory';
+import { paths } from '@olios-shop/frontend/paths';
+import { IProductCategory } from '@olios-shop/frontend/types/IProductCategory';
 
 import Image from 'next/image';
-import { NavLink } from '@/src/ui/atoms/NavLink';
+import { NavLink } from '@olios-shop/frontend/ui/atoms/NavLink';
 
 export type ProductCategoryLinkProps = {
   className?: string;

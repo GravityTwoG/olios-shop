@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import classes from './next-progress-bar.module.scss';
 
-import { Skeleton } from '@/src/ui/atoms/Skeleton';
+import { Skeleton } from '@olios-shop/ui/atoms/Skeleton';
 
 import Router from 'next/router';
 import clsx from 'clsx';

@@ -6,11 +6,11 @@ import {
   sample,
 } from 'effector';
 
-import { ICart } from '@/src/types/ICart';
-import { toast } from '@/src/shared/toasts';
-import * as cartApi from '@/src/shared/api/cart';
+import { ICart } from '@olios-shop/frontend/types/ICart';
+import { toast } from '@olios-shop/frontend/shared/toasts';
+import * as cartApi from '@olios-shop/frontend/shared/api/cart';
 
-import { $isAuthenticated } from '@/src/shared/session';
+import { $isAuthenticated } from '@olios-shop/frontend/shared/session';
 
 // Effects
 const createCartFx = createEffect<string, ICart>((name) => {

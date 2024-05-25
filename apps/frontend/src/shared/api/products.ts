@@ -1,4 +1,4 @@
-import { ProductSchema, IProduct } from '@/src/types/IProduct';
+import { ProductSchema, IProduct } from '@olios-shop/frontend/types/IProduct';
 import {
   axiosInstance,
   ListDTO,

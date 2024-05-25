@@ -2,11 +2,11 @@ import React from 'react';
 import clsx from 'clsx';
 import classes from './product-card.module.scss';
 
-import { paths } from '@/src/paths';
-import { IProduct } from '@/src/types/IProduct';
+import { paths } from '@olios-shop/frontend/paths';
+import { IProduct } from '@olios-shop/frontend/types/IProduct';
 
 import Link from 'next/link';
-import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
+import { MonetaryValue } from '@olios-shop/ui/atoms/MonetaryValue';
 import { ProductCardImage } from './ProductCardImage';
 
 export type ProductCartProps = {

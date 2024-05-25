@@ -1,7 +1,7 @@
 import React from 'react';
 import { useUnit } from 'effector-react';
 
-import { Form } from '@/src/ui/molecules/Form';
+import { Form } from '@olios-shop/ui/molecules/Form';
 import { $isPending, $error, formSubmitted } from './model';
 
 export const RegisterForm = () => {

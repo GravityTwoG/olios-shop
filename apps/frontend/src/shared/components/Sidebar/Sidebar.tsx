@@ -2,16 +2,13 @@ import React from 'react';
 import clsx from 'clsx';
 import classes from './sidebar.module.scss';
 
-import { SessionUserRole } from '../../session';
-
-import { paths } from '@/src/paths';
+import { paths } from '@olios-shop/frontend/paths';
 import { useHideOnScroll } from './useHideOnScroll';
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { NavLink } from '../../../ui/atoms/NavLink';
-import { BurgerButton } from '../../../ui/molecules/BurgerButton';
-import { RoleGuard } from '../RoleGuard';
+import { NavLink } from '@olios-shop/frontend/ui/atoms/NavLink';
+import { BurgerButton } from '@olios-shop/ui/molecules/BurgerButton';
 
 import HomeIcon from './img/Home.svg';
 import BasketIcon from './img/Basket.svg';
@@ -60,17 +57,13 @@ export const Sidebar = (props: SidebarProps) => {
           <HomeIcon />
         </NavLink>
 
-        <RoleGuard
-          roles={[SessionUserRole.ANONYMOUS, SessionUserRole.CUSTOMER]}
+        <NavLink
+          href={paths.cart({})}
+          className={classes.NavItem}
+          activeClassName={classes.NavItemActive}
         >
-          <NavLink
-            href={paths.cart({})}
-            className={classes.NavItem}
-            activeClassName={classes.NavItemActive}
-          >
-            <BasketIcon />
-          </NavLink>
-        </RoleGuard>
+          <BasketIcon />
+        </NavLink>
       </nav>
 
       <nav className={classes.nav}>

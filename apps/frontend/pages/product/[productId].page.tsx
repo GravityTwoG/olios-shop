@@ -18,12 +18,12 @@ import {
   removeFromCart,
 } from './model';
 
-import { CTAButton } from '@/src/ui/atoms/CTAButton';
-import { ImageViewer } from '@/src/ui/atoms/ImageViewer';
-import { MonetaryValue } from '@/src/ui/atoms/MonetaryValue';
-import { ProductCategoryLinkLoader } from '@/src/shared/components/ProductCategoryLinkLoader';
-import { ProductCard } from '@/src/features/Product/components/molecules/productCard/ProductCard';
-import { MetaTags } from '@/src/shared/components/MetaTags';
+import { CTAButton } from '@olios-shop/ui/atoms/CTAButton';
+import { ImageViewer } from '@olios-shop/ui/atoms/ImageViewer';
+import { MonetaryValue } from '@olios-shop/ui/atoms/MonetaryValue';
+import { ProductCategoryLinkLoader } from '@olios-shop/frontend/shared/components/ProductCategoryLinkLoader';
+import { ProductCard } from '@olios-shop/frontend/features/Product/components/molecules/productCard/ProductCard';
+import { MetaTags } from '@olios-shop/frontend/shared/components/MetaTags';
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const scope = fork();

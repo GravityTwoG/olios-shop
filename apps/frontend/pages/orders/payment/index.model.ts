@@ -1,11 +1,11 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { every } from 'patronum';
 
-import { toast } from '@/src/shared/toasts';
-import { ApiError } from '@/src/shared/api';
-import * as ordersApi from '@/src/shared/api/orders';
-import { createField } from '@/src/shared/effector';
-import { IOrder, OrderStatus } from '@/src/types/IOrder';
+import { toast } from '@olios-shop/frontend/shared/toasts';
+import { ApiError } from '@olios-shop/frontend/shared/api';
+import * as ordersApi from '@olios-shop/frontend/shared/api/orders';
+import { createField } from '@olios-shop/frontend/shared/effector';
+import { IOrder, OrderStatus } from '@olios-shop/frontend/types/IOrder';
 
 // Effects
 const fetchOrderFx = createEffect<string, IOrder, ApiError>((orderId) => {

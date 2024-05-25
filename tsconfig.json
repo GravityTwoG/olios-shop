@@ -15,7 +15,9 @@
     "baseUrl": ".",
     "paths": {
       "@olios-shop/ui": ["packages/ui/src/index.ts"],
-      "@olios-shop/ui/*": ["packages/ui/src/*"]
+      "@olios-shop/ui/*": ["packages/ui/src/*"],
+      "@olios-shop/admin/*": ["apps/admin-panel/src/*"],
+      "@olios-shop/frontend/*": ["apps/frontend/src/*"]
     }
   },
   "compileOnSave": false,

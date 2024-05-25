@@ -1,4 +1,4 @@
-import { IOrder, OrderSchema } from '@/src/types/IOrder';
+import { IOrder, OrderSchema } from '@olios-shop/frontend/types/IOrder';
 import {
   ListDTO,
   PaginationQueryDTO,

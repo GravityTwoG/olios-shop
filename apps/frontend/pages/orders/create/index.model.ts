@@ -1,11 +1,11 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 
-import { ICart } from '@/src/types/ICart';
-import { toast } from '@/src/shared/toasts';
-import { ApiError } from '@/src/shared/api';
-import * as cartApi from '@/src/shared/api/cart/cart';
-import * as ordersApi from '@/src/shared/api/orders';
-import { IOrder } from '@/src/types/IOrder';
+import { ICart } from '@olios-shop/frontend/types/ICart';
+import { toast } from '@olios-shop/frontend/shared/toasts';
+import { ApiError } from '@olios-shop/frontend/shared/api';
+import * as cartApi from '@olios-shop/frontend/shared/api/cart/cart';
+import * as ordersApi from '@olios-shop/frontend/shared/api/orders';
+import { IOrder } from '@olios-shop/frontend/types/IOrder';
 
 // Effects
 const fetchCartFx = createEffect<string, ICart, ApiError>((cartId) => {

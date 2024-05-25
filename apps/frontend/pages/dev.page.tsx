@@ -1,14 +1,14 @@
 import { useState } from 'react';
 
-import { Paper } from '@/src/ui/atoms/Paper';
-import { Button } from '@/src/ui/atoms/Button';
-import { CTAButton } from '@/src/ui/atoms/CTAButton';
-import { Container } from '@/src/ui/atoms/Container';
-import { ImageInput } from '@/src/ui/atoms/ImageInput';
-import { AsyncCombobox } from '@/src/ui/atoms/Combobox';
-import { H1, H2, H3, H4, H5, H6 } from '@/src/ui/atoms/Typography';
-import { InputField, TextAreaField } from '@/src/ui/molecules/Field';
-import { SegmentedControl } from '@/src/ui/molecules/SegmentedControl';
+import { Paper } from '@olios-shop/ui/atoms/Paper';
+import { Button } from '@olios-shop/ui/atoms/Button';
+import { CTAButton } from '@olios-shop/ui/atoms/CTAButton';
+import { Container } from '@olios-shop/ui/atoms/Container';
+import { ImageInput } from '@olios-shop/ui/atoms/ImageInput';
+import { AsyncCombobox } from '@olios-shop/ui/atoms/Combobox';
+import { H1, H2, H3, H4, H5, H6 } from '@olios-shop/ui/atoms/Typography';
+import { InputField, TextAreaField } from '@olios-shop/ui/molecules/Field';
+import { SegmentedControl } from '@olios-shop/ui/molecules/SegmentedControl';
 
 export default function DevPage() {
   const [image, setImage] = useState<{ raw: Blob | null; preview: string }>({

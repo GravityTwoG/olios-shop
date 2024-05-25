@@ -9,7 +9,7 @@
     "cssVariables": true
   },
   "aliases": {
-    "components": "@olios-shop/ui/components",
+    "components": "@olios-shop/shadcn",
     "utils": "@olios-shop/ui/utils"
   }
 }

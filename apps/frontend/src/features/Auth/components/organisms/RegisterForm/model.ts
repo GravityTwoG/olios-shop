@@ -1,10 +1,10 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { combineEvents, not } from 'patronum';
 
-import * as authApi from '@/src/shared/api/auth';
-import { addFromAnonymousCart } from '@/src/shared/api/cart';
-import { loginFx } from '@/src/shared/auth';
-import { toast } from '@/src/shared/toasts';
+import * as authApi from '@olios-shop/frontend/shared/api/auth';
+import { addFromAnonymousCart } from '@olios-shop/frontend/shared/api/cart';
+import { loginFx } from '@olios-shop/frontend/shared/auth';
+import { toast } from '@olios-shop/frontend/shared/toasts';
 
 // Effects
 const registerFx = createEffect(

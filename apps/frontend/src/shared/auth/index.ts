@@ -1,7 +1,7 @@
 import { createEffect, sample } from 'effector';
 
-import * as authApi from '@/src/shared/api/auth';
-import { IUser } from '@/src/types/IUser';
+import * as authApi from '@olios-shop/frontend/shared/api/auth';
+import { IUser } from '@olios-shop/frontend/types/IUser';
 import { ApiError } from '../api';
 import { fetchSessionFx } from '../session';
 

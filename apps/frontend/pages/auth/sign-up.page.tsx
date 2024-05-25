@@ -2,15 +2,15 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import classes from './auth.module.scss';
-import { paths } from '@/src/paths';
-import { AuthStatus, useAuthStatus } from '@/src/shared/session';
+import { paths } from '@olios-shop/frontend/paths';
+import { AuthStatus, useAuthStatus } from '@olios-shop/frontend/shared/session';
 
-import { AnonymousPage } from '@/src/features/Auth';
+import { AnonymousPage } from '@olios-shop/frontend/features/Auth';
 
-import { Paper } from '@/src/ui/atoms/Paper';
-import { NavLink } from '@/src/ui/atoms/NavLink';
-import { MetaTags } from '@/src/shared/components/MetaTags';
-import { RegisterForm } from '@/src/features/Auth';
+import { Paper } from '@olios-shop/ui/atoms/Paper';
+import { NavLink } from '@olios-shop/frontend/ui/atoms/NavLink';
+import { MetaTags } from '@olios-shop/frontend/shared/components/MetaTags';
+import { RegisterForm } from '@olios-shop/frontend/features/Auth';
 
 function SignUpPage() {
   const router = useRouter();
@@ -45,14 +45,6 @@ function SignUpPage() {
         </nav>
 
         <RegisterForm />
-
-        <NavLink
-          href={paths.registerEmployee({})}
-          className={classes['local_nav_item_min']}
-          activeClassName={classes['active']}
-        >
-          Sign Up for employees
-        </NavLink>
       </Paper>
     </div>
   );

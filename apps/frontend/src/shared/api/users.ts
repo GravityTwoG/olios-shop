@@ -1,4 +1,4 @@
-import { IUser, UserSchema } from '@/src/types/IUser';
+import { IUser, UserSchema } from '@olios-shop/frontend/types/IUser';
 import {
   axiosInstance,
   ListDTO,
