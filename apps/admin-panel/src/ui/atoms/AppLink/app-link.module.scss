@@ -1,0 +1,25 @@
+.AppLink {
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 16px;
+  color: #c1c1c1;
+  transition: color 0.3s ease;
+  display: inline-block;
+
+  &:hover {
+    color: #0023ff;
+
+    &::after {
+      background-color: #0023ff;
+    }
+  }
+  &::after {
+    content: '';
+    display: block;
+    margin: 0px auto 0;
+    width: 100%;
+    height: 2px;
+    background-color: #c1c1c1;
+    transition: background-color 0.3s ease;
+  }
+}

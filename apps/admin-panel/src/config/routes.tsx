@@ -1,9 +1,9 @@
-import { SessionUserRole } from '../shared/session';
 import { paths } from './paths';
 
 import { HomePage } from '../pages/HomePage';
 import { SignInPage } from '../pages/auth/sign-in.page';
 import { SignUpPage } from '../pages/auth/sign-up.page';
+import { ProfilePage } from '../pages/ProfilePage';
 
 export enum RouteAccess {
   'ANONYMOUS' = 'ANONYMOUS',
@@ -11,7 +11,7 @@ export enum RouteAccess {
 }
 
 type Link = {
-  label: string; // key of translation
+  label: string;
   path: string;
   icon?: React.ReactNode;
 };
@@ -19,15 +19,12 @@ type Link = {
 export type PublicRouteDescriptor = {
   path: string;
   component: React.FC;
-  access?: RouteAccess.ANONYMOUS;
   link?: Link;
 };
 
 export type PrivateRouteDescriptor = {
   path: string;
   component: React.FC;
-  access: RouteAccess.AUTHENTICATED;
-  forRoles: SessionUserRole[];
   link?: Link;
 };
 
@@ -41,7 +38,6 @@ export const routes: RouteDescriptor[] = [
   {
     path: paths.login.pattern,
     component: SignInPage,
-    access: RouteAccess.ANONYMOUS,
     link: {
       label: 'Sign In',
       path: paths.login({}),
@@ -50,10 +46,13 @@ export const routes: RouteDescriptor[] = [
   {
     path: paths.register.pattern,
     component: SignUpPage,
-    access: RouteAccess.ANONYMOUS,
     link: {
       label: 'register',
       path: paths.register({}),
     },
+  },
+  {
+    path: paths.profile.pattern,
+    component: ProfilePage,
   },
 ];

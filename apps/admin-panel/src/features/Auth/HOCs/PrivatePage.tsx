@@ -11,6 +11,7 @@ import { paths } from '@olios-shop/admin/config/paths';
 import { PageLoader } from '@olios-shop/ui/atoms/PageLoader';
 import { Container } from '@olios-shop/ui/atoms/Container';
 import { H1 } from '@olios-shop/ui/atoms/Typography';
+import { useLayoutEffect } from 'react';
 
 export const PrivatePage = <P extends Record<string, unknown>>(
   Component: React.ComponentType<P>,
@@ -21,6 +22,12 @@ export const PrivatePage = <P extends Record<string, unknown>>(
     const userRole = useUserRole();
     const navigate = useNavigate();
 
+    useLayoutEffect(() => {
+      if (authStatus === AuthStatus.Anonymous) {
+        navigate(paths.login({}));
+      }
+    }, [authStatus, navigate]);
+
     if (
       authStatus === AuthStatus.Pending ||
       authStatus === AuthStatus.Initial
@@ -30,11 +37,6 @@ export const PrivatePage = <P extends Record<string, unknown>>(
 
     if (allowedRoles.length !== 0 && allowedRoles.includes(userRole)) {
       return <Component {...props} />;
-    }
-
-    if (authStatus === AuthStatus.Anonymous) {
-      navigate(paths.login({}));
-      return null;
     }
 
     return (

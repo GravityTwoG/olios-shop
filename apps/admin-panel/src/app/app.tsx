@@ -1,14 +1,22 @@
-import { Button } from '@olios-shop/ui';
+import { useEffect } from 'react';
+import { useUnit } from 'effector-react';
+
+import { router } from './router';
+import { appStarted } from '../shared/session';
 
 import { RouterProvider } from 'react-router-dom';
-import { router } from './router';
+import { AppErrorBoundary } from '@olios-shop/ui/molecules/AppErrorBoundary';
 
 export function App() {
-  return (
-    <div>
-      <RouterProvider router={router} />
+  const [appStartedEvent] = useUnit([appStarted]);
 
-      <Button>Hello shad/cn</Button>
-    </div>
+  useEffect(() => {
+    appStartedEvent();
+  }, [appStartedEvent]);
+
+  return (
+    <AppErrorBoundary>
+      <RouterProvider router={router} />
+    </AppErrorBoundary>
   );
 }
