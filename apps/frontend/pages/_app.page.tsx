@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState, ReactNode } from 'react';
 import classes from './_app.module.scss';
+
 import '@olios-shop/frontend/styles/globals.css';
-import '@olios-shop/ui/styles/theme.css';
-import '@olios-shop/ui/styles/ui.scss';
+import '@olios-shop/ui/theme.css';
 
 import { AppProps } from 'next/app';
 import { EffectorNext } from '@effector/next';

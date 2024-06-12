@@ -1,1 +1,1 @@
-export * from './button';
+import './styles/theme.css';

@@ -6,6 +6,28 @@
   "tags": [],
   "// targets": "to see all targets run: nx show project admin-panel --web",
   "targets": {
+    "serve": {
+      "executor": "@nx/vite:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "admin-panel:build",
+        "dev": true,
+        "serveTarget": "admin-panel:serve",
+        "postcssConfig": "apps/admin-panel/postcss.config.js"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "admin-panel:build:development",
+          "dev": true,
+          "serveTarget": "admin-panel:serve:development"
+        },
+        "production": {
+          "buildTarget": "admin-panel:build:production",
+          "dev": false,
+          "customServerTarget": "admin-panel:serve:production"
+        }
+      }
+    },
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],

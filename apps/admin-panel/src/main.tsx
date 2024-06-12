@@ -1,9 +1,8 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
 
-import '@olios-shop/ui/styles/theme.css';
-import '@olios-shop/ui/styles/ui.scss';
+import './main.css';
+import '@olios-shop/ui/theme.css';
 
 import { App } from './app/app';
 

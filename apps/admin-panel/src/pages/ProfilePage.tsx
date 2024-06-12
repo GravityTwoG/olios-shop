@@ -1,7 +1,5 @@
 import { useUnit } from 'effector-react';
 
-import { paths } from '@olios-shop/admin/config/paths';
-
 import {
   AuthStatus,
   SessionUserRole,
@@ -14,7 +12,6 @@ import { PrivatePage } from '@olios-shop/admin/features/Auth';
 
 import { CTAButton } from '@olios-shop/ui/atoms/CTAButton';
 import { Container } from '@olios-shop/ui/atoms/Container';
-import { AppLink } from '@olios-shop/admin/ui/atoms/AppLink';
 import { H1 } from '@olios-shop/ui/atoms/Typography';
 import { UserCard } from '@olios-shop/admin/features/Auth';
 

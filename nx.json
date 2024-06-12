@@ -103,5 +103,10 @@
         "targetName": "e2e"
       }
     }
-  ]
+  ],
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
+    }
+  }
 }
