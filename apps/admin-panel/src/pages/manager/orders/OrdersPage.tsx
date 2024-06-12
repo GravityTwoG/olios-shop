@@ -44,7 +44,7 @@ const headers = [
   },
 ];
 
-const ManageOrdersPage = () => {
+export const OrdersPage = PrivatePage(() => {
   const [orders, ordersCount, isPending, pageSize, pageNumber] = useUnit([
     $orders,
     $ordersCount,
@@ -72,10 +72,7 @@ const ManageOrdersPage = () => {
           data={orders.map((order) => ({
             key: order.id,
             cols: [
-              <Link
-                to={paths.manageOrdersView({ orderId: order.id })}
-                key="link"
-              >
+              <Link to={paths.order({ orderId: order.id })} key="link">
                 Link
               </Link>,
               order.status,
@@ -95,6 +92,4 @@ const ManageOrdersPage = () => {
       </Paper>
     </Container>
   );
-};
-
-export default PrivatePage(ManageOrdersPage, [SessionUserRole.MANAGER]);
+}, [SessionUserRole.MANAGER]);

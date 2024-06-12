@@ -20,7 +20,7 @@ import { Container } from '@olios-shop/ui/atoms/Container';
 import { Form } from '@olios-shop/ui/molecules/Form';
 import { useNavigate } from 'react-router-dom';
 
-const CreateInviteCodePage = () => {
+export const CreateInviteCodePage = PrivatePage(() => {
   const [isPending, error] = useUnit([$isPending, $error]);
 
   const [formSubmittedEvent] = useUnit([formSubmitted]);
@@ -102,6 +102,4 @@ const CreateInviteCodePage = () => {
       />
     </Container>
   );
-};
-
-export default PrivatePage(CreateInviteCodePage, [SessionUserRole.MANAGER]);
+}, [SessionUserRole.MANAGER]);

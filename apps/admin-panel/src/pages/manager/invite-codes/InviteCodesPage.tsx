@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { SessionUserRole } from '@olios-shop/admin/shared/session';
-import { paths } from '@olios-shop/admin/paths';
+import { paths } from '@olios-shop/admin/config/paths';
 
 import { useUnit } from 'effector-react';
 import {
@@ -26,11 +26,10 @@ import { Button } from '@olios-shop/ui/atoms/Button';
 import { H1 } from '@olios-shop/ui/atoms/Typography';
 import { NoResults } from '@olios-shop/ui/atoms/NoResults';
 import { Container } from '@olios-shop/ui/atoms/Container';
-import { AppLink } from '@olios-shop/ui/atoms/AppLink';
+import { AppLink } from '@olios-shop/admin/ui/atoms/AppLink';
 import { Table } from '@olios-shop/ui/molecules/Table';
 import { Paginator } from '@olios-shop/ui/molecules/Paginator';
 import { RoleBadge } from '@olios-shop/admin/shared/components/RoleBadge';
-import { MetaTags } from '@olios-shop/admin/shared/components/MetaTags';
 
 const headers = [
   { key: 'name', node: 'Name' },
@@ -46,7 +45,7 @@ const headers = [
   },
 ];
 
-export function InviteCodesPage() {
+export const InviteCodesPage = PrivatePage(() => {
   const [
     inviteCodes,
     inviteCodesCount,
@@ -78,14 +77,10 @@ export function InviteCodesPage() {
 
   return (
     <Container className="py-8">
-      <MetaTags title="Invite Codes" />
-
       <H1>Invite Codes</H1>
 
       <div className="flex justify-center my-4">
-        <AppLink href={paths.inviteCodesCreate({})}>
-          Create Invite Codes
-        </AppLink>
+        <AppLink to={paths.inviteCodesCreate({})}>Create Invite Codes</AppLink>
       </div>
 
       <Paper>
@@ -132,6 +127,4 @@ export function InviteCodesPage() {
       </Paper>
     </Container>
   );
-}
-
-export default PrivatePage(InviteCodesPage, [SessionUserRole.MANAGER]);
+}, [SessionUserRole.MANAGER]);

@@ -1,6 +1,6 @@
 import { useUnit } from 'effector-react';
 
-import { paths } from '@olios-shop/frontend/paths';
+import { paths } from '@olios-shop/admin/config/paths';
 
 import {
   AuthStatus,
@@ -29,10 +29,6 @@ export const ProfilePage = PrivatePage(() => {
       <H1>Profile</H1>
 
       <UserCard user={user} isLoaded={authStatus !== AuthStatus.Pending} />
-
-      <div className="flex justify-center my-4">
-        <AppLink to={paths.orders({})}>Orders</AppLink>
-      </div>
 
       <div className="flex justify-center my-8">
         <div>

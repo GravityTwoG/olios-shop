@@ -9,15 +9,10 @@ const profile = path('/profile');
 
 const product = path('/product/:id');
 
-const orders = path('/orders');
-const ordersCreate = path('/orders/create/:cartId');
-const ordersPayment = path('/orders/payment/:orderId');
-const ordersView = path('/orders/view/:orderId');
-
 const content = path('/content');
 
-const contentCategories = content.path('/categories');
-const contentProducts = content.path('/products');
+const categories = content.path('/categories');
+const products = content.path('/products');
 
 const manager = path('/manager');
 
@@ -26,8 +21,8 @@ const users = manager.path('/users');
 const inviteCodes = manager.path('/invite-codes');
 const inviteCodesCreate = inviteCodes.path('/create');
 
-const manageOrders = manager.path('/orders');
-const manageOrdersView = manageOrders.path('/view/:orderId');
+const orders = manager.path('/orders');
+const order = orders.path('/view/:orderId');
 
 export const paths = {
   home,
@@ -36,20 +31,15 @@ export const paths = {
   register,
   profile,
 
-  orders,
-  ordersCreate,
-  ordersPayment,
-  ordersView,
-
   product,
 
   content,
-  contentCategories,
-  contentProducts,
+  categories: categories,
+  products: products,
 
   users,
   inviteCodes,
   inviteCodesCreate,
-  manageOrders,
-  manageOrdersView,
+  orders: orders,
+  order: order,
 };

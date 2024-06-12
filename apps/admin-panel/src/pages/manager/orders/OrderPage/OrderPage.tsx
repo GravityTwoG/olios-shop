@@ -43,7 +43,7 @@ const headers = [
   },
 ];
 
-const OrdersPaymentPage = () => {
+export const OrderPage = PrivatePage(() => {
   const [order, isOrderPending, isMarking] = useUnit([
     $order,
     $isOrderPending,
@@ -105,6 +105,4 @@ const OrdersPaymentPage = () => {
       </Preloader>
     </Container>
   );
-};
-
-export default PrivatePage(OrdersPaymentPage, [SessionUserRole.MANAGER]);
+}, [SessionUserRole.MANAGER]);

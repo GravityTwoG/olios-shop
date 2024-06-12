@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { useUnit } from 'effector-react';
 import {
@@ -28,7 +28,6 @@ import { Table } from '@olios-shop/ui/molecules/Table';
 import { Paginator } from '@olios-shop/ui/molecules/Paginator';
 import { NoResults } from '@olios-shop/ui/atoms/NoResults';
 import { RoleBadge } from '@olios-shop/admin/shared/components/RoleBadge';
-import { MetaTags } from '@olios-shop/admin/shared/components/MetaTags';
 
 const headers = [
   {
@@ -40,7 +39,7 @@ const headers = [
   { key: 'role', node: 'Role' },
 ];
 
-export function UsersPage() {
+export const UsersPage = PrivatePage(() => {
   const [
     users,
     usersCount,
@@ -81,8 +80,6 @@ export function UsersPage() {
 
   return (
     <Container className="py-8">
-      <MetaTags title="Users" />
-
       <H1>Users</H1>
 
       <Paper>
@@ -132,6 +129,4 @@ export function UsersPage() {
       </Paper>
     </Container>
   );
-}
-
-export default PrivatePage(UsersPage, [SessionUserRole.MANAGER]);
+}, [SessionUserRole.MANAGER]);

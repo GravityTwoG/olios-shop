@@ -1,24 +1,24 @@
 import { useUnit } from 'effector-react';
 
-import { loadCategories } from '@olios-shop/admin/shared/components/ProductCategoriesSelect';
+import { loadCategories } from '@olios-shop/admin/features/ProductCategory/components/ProductCategoriesSelect';
 import { $isPending, formSubmitted } from './index.model';
+import { SessionUserRole } from '@olios-shop/admin/shared/session';
+
+import { PrivatePage } from '@olios-shop/admin/features/Auth';
 
 import { Paper } from '@olios-shop/ui/atoms/Paper';
 import { H1, H2 } from '@olios-shop/ui/atoms/Typography';
 import { Container } from '@olios-shop/ui/atoms/Container';
 import { Form } from '@olios-shop/ui/molecules/Form';
-import { MetaTags } from '@olios-shop/admin/shared/components/MetaTags';
 import { ProductsWidget } from './ProductsWidget';
 
-export default function ProductsManagementPage() {
+export const ProductsPage = PrivatePage(() => {
   const [isPending] = useUnit([$isPending]);
 
   const formSubmittedEvent = useUnit(formSubmitted);
 
   return (
     <Container className="py-8">
-      <MetaTags title="Manage products" />
-
       <H1>Manage products</H1>
 
       <Paper className="my-8">
@@ -79,4 +79,4 @@ export default function ProductsManagementPage() {
       </div>
     </Container>
   );
-}
+}, [SessionUserRole.CONTENT_MANAGER]);

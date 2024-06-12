@@ -1,4 +1,4 @@
-import { fetchCategories } from '../../api/product-categories';
+import { fetchCategories } from '@olios-shop/admin/shared/api/product-categories';
 
 import {
   AsyncCombobox,

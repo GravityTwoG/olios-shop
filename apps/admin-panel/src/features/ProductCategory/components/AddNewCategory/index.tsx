@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useUnit } from 'effector-react';
 
-import { loadCategories } from '@olios-shop/admin/shared/components/ProductCategoriesSelect';
+import { loadCategories } from '@olios-shop/admin/features/ProductCategory/components/ProductCategoriesSelect';
 import { $isPending, categoryCreated, formSubmitted } from './index.model';
 
 import { Paper } from '@olios-shop/ui/atoms/Paper';
