@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 
 import {
   AuthStatus,
@@ -7,7 +6,7 @@ import {
   useAuthStatus,
   useUserRole,
 } from '@olios-shop/admin/shared/session';
-import { paths } from '@olios-shop/admin/paths';
+import { paths } from '@olios-shop/admin/config/paths';
 
 import { PageLoader } from '@olios-shop/ui/atoms/PageLoader';
 import { Container } from '@olios-shop/ui/atoms/Container';
@@ -20,6 +19,7 @@ export const PrivatePage = <P extends Record<string, unknown>>(
   return function Protected(props: P) {
     const authStatus = useAuthStatus();
     const userRole = useUserRole();
+    const navigate = useNavigate();
 
     if (
       authStatus === AuthStatus.Pending ||
@@ -32,26 +32,15 @@ export const PrivatePage = <P extends Record<string, unknown>>(
       return <Component {...props} />;
     }
 
-    return <Redirect authStatus={authStatus} />;
-  };
-};
-
-type RedirectProps = {
-  authStatus: AuthStatus;
-};
-
-const Redirect = ({ authStatus }: RedirectProps) => {
-  const router = useRouter();
-
-  useEffect(() => {
     if (authStatus === AuthStatus.Anonymous) {
-      router.replace(paths.login({}));
+      navigate(paths.login({}));
+      return null;
     }
-  }, [authStatus, router]);
 
-  return (
-    <Container className="h-full flex justify-center items-center">
-      <H1>Forbidden</H1>
-    </Container>
-  );
+    return (
+      <Container className="h-full flex justify-center items-center">
+        <H1>Forbidden</H1>
+      </Container>
+    );
+  };
 };

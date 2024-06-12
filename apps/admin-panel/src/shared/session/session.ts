@@ -8,7 +8,6 @@ import { toast } from '../toasts';
 
 export enum SessionUserRole {
   ANONYMOUS = 'ANONYMOUS',
-  CUSTOMER = IUserRole.CUSTOMER,
   CONTENT_MANAGER = IUserRole.CONTENT_MANAGER,
   MANAGER = IUserRole.MANAGER,
 }
@@ -99,9 +98,6 @@ logoutFx.failData.watch((error) => {
 
 // Utils
 function mapToSessionUserRole(role: IUserRole): SessionUserRole {
-  if (role === IUserRole.CUSTOMER) {
-    return SessionUserRole.CUSTOMER;
-  }
   if (role === IUserRole.CONTENT_MANAGER) {
     return SessionUserRole.CONTENT_MANAGER;
   }

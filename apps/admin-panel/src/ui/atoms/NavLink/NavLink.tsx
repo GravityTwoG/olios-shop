@@ -3,8 +3,9 @@ export type NavLinkProps = {
   children?: React.ReactNode;
   className?: string;
   activeClassName?: string;
+  onClick?: () => void;
 };
 
 export const NavLink = (props: NavLinkProps) => {
-  return null;
+  return props.children;
 };

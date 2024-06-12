@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useParams } from 'react-router-dom';
 
 import { SessionUserRole } from '@olios-shop/admin/shared/session';
 import { OrderStatus } from '@olios-shop/admin/types/IOrder';
@@ -23,7 +23,6 @@ import { Container } from '@olios-shop/ui/atoms/Container';
 import { MonetaryValue } from '@olios-shop/ui/atoms/MonetaryValue';
 import { Preloader } from '@olios-shop/ui/molecules/Preloader';
 import { Table } from '@olios-shop/ui/molecules/Table';
-import { MetaTags } from '@olios-shop/admin/shared/components/MetaTags';
 
 const headers = [
   {
@@ -52,8 +51,7 @@ const OrdersPaymentPage = () => {
   ]);
   const [deliveredEvent, pageMountedEvent] = useUnit([delivered, pageMounted]);
 
-  const router = useRouter();
-  const orderId = router.query.orderId;
+  const { orderId } = useParams();
   useEffect(() => {
     if (orderId && typeof orderId === 'string') {
       pageMountedEvent(orderId);
@@ -62,8 +60,6 @@ const OrdersPaymentPage = () => {
 
   return (
     <Container className="py-8">
-      <MetaTags title={`Order ${order.id}`} />
-
       <H1>Order {order.id}</H1>
 
       <Preloader isLoading={isOrderPending}>

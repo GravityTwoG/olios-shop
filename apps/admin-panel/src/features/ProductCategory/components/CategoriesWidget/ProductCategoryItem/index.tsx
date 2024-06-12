@@ -6,14 +6,13 @@ import { toast } from '@olios-shop/admin/shared/toasts';
 
 import { $isDeleting, deleteCategory, updateCategory } from './index.model';
 
-import Image from 'next/image';
 import { Button } from '@olios-shop/ui/atoms/Button';
 import { Input } from '@olios-shop/ui/atoms/Input';
 import {
   Image as ImageType,
   ImageInput,
 } from '@olios-shop/ui/atoms/ImageInput';
-import { ProductCategoriesSelect } from '@olios-shop/admin/shared/components/ProductCategoriesSelect';
+import { ProductCategoriesSelect } from '../../ProductCategoriesSelect';
 
 type ProductCategoryItemProps = {
   category: IProductCategory;
@@ -89,12 +88,7 @@ export const ProductCategoryItem = ({ category }: ProductCategoryItemProps) => {
 
   return (
     <li className="flex items-center py-4 gap-2">
-      <Image
-        src={category.iconUrl}
-        alt={category.name}
-        width={60}
-        height={60}
-      />
+      <img src={category.iconUrl} alt={category.name} />
       <div>{category.name}</div>
 
       <div className="ml-auto flex flex-col gap-2">

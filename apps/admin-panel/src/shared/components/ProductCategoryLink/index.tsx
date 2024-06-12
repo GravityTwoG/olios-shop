@@ -2,11 +2,10 @@ import React from 'react';
 import clsx from 'clsx';
 import classes from './category.module.scss';
 
-import { paths } from '@olios-shop/admin/paths';
+import { paths } from '@olios-shop/admin/config/paths';
 import { IProductCategory } from '@olios-shop/admin/types/IProductCategory';
 
-import Image from 'next/image';
-import { NavLink } from '@olios-shop/ui/atoms/NavLink';
+import { NavLink } from '@olios-shop/admin/ui/atoms/NavLink';
 
 export type ProductCategoryLinkProps = {
   className?: string;
@@ -23,12 +22,7 @@ export const ProductCategoryLink = (props: ProductCategoryLinkProps) => {
       onClick={props.onClick}
     >
       <span>{props.category.name}</span>
-      <Image
-        width={200}
-        height={200}
-        src={props.category.iconUrl}
-        alt={props.category.name}
-      />
+      <img src={props.category.iconUrl} alt={props.category.name} />
     </NavLink>
   );
 };

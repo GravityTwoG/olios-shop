@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 
 import classes from './auth.module.scss';
 import { paths } from '@olios-shop/admin/config/paths';
@@ -11,15 +11,15 @@ import { Paper } from '@olios-shop/ui/atoms/Paper';
 import { NavLink } from '@olios-shop/admin/ui/atoms/NavLink';
 import { LoginForm } from '@olios-shop/admin/features/Auth';
 
-function SignInPage() {
-  const router = useRouter();
+export const SignInPage = AnonymousPage(() => {
+  const navigate = useNavigate();
   const authStatus = useAuthStatus();
 
   useEffect(() => {
     if (authStatus === AuthStatus.Authenticated) {
-      router.replace('/profile');
+      navigate(paths.profile({}));
     }
-  }, [authStatus, router]);
+  }, [authStatus, navigate]);
 
   return (
     <div className={classes.page}>
@@ -45,6 +45,4 @@ function SignInPage() {
       </Paper>
     </div>
   );
-}
-
-export default AnonymousPage(SignInPage);
+});

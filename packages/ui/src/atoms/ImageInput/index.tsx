@@ -4,7 +4,6 @@ import classes from './image-input.module.scss';
 
 import UploadIcon from './upload-icon.svg';
 import { reduceFileSize } from './reduceFileSize';
-import Image from 'next/image';
 
 export type Image = { raw: Blob | null; preview: string };
 
@@ -108,13 +107,7 @@ export const ImageInput = ({
       </div>
 
       {props.preview && (
-        <Image
-          src={props.preview}
-          width={100}
-          height={100}
-          alt=""
-          className={classes.ImageInputPreview}
-        />
+        <img src={props.preview} alt="" className={classes.ImageInputPreview} />
       )}
 
       {props.preview && (

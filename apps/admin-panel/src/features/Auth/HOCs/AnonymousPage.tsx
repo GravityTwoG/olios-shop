@@ -1,23 +1,23 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 
-import { AuthStatus, useAuthStatus } from '../../../shared/session';
-import { paths } from '../../../paths';
+import { AuthStatus, useAuthStatus } from '@olios-shop/admin/shared/session';
+import { paths } from '@olios-shop/admin/config/paths';
 
-import { PageLoader } from '../../../ui/atoms/PageLoader';
+import { PageLoader } from '@olios-shop/ui/atoms/PageLoader';
 
 export const AnonymousPage = <P extends Record<string, unknown>>(
   Component: React.ComponentType<P>,
 ) => {
   return function Anonymous(props: P) {
-    const router = useRouter();
+    const navigate = useNavigate();
     const authStatus = useAuthStatus();
 
     useEffect(() => {
       if (authStatus === AuthStatus.Authenticated) {
-        router.replace(paths.profile({}));
+        navigate(paths.profile({}));
       }
-    }, [authStatus, router]);
+    }, [authStatus, navigate]);
 
     if (authStatus === AuthStatus.Pending) {
       return <PageLoader />;

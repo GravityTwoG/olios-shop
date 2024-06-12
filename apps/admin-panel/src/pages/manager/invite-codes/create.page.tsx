@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 
 import { IEmployeeRole } from '@olios-shop/admin/types/IUser';
-import { paths } from '@olios-shop/admin/paths';
+import { paths } from '@olios-shop/admin/config/paths';
 
 import { SessionUserRole } from '@olios-shop/admin/shared/session';
 
@@ -19,24 +18,22 @@ import { PrivatePage } from '@olios-shop/admin/features/Auth';
 import { H1 } from '@olios-shop/ui/atoms/Typography';
 import { Container } from '@olios-shop/ui/atoms/Container';
 import { Form } from '@olios-shop/ui/molecules/Form';
-import { MetaTags } from '@olios-shop/admin/shared/components/MetaTags';
+import { useNavigate } from 'react-router-dom';
 
 const CreateInviteCodePage = () => {
   const [isPending, error] = useUnit([$isPending, $error]);
 
   const [formSubmittedEvent] = useUnit([formSubmitted]);
 
-  const router = useRouter();
+  const navigate = useNavigate();
   useEffect(() => {
     return inviteCodeCreated.watch(() => {
-      router.push(paths.inviteCodes({}));
+      navigate(paths.inviteCodes({}));
     });
-  }, [router]);
+  }, [navigate]);
 
   return (
     <Container className="py-8">
-      <MetaTags title="Create Invite Code" />
-
       <H1>Create Invite Code</H1>
 
       <Form

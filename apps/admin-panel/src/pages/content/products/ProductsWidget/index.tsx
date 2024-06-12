@@ -18,7 +18,6 @@ import {
   searchQueryChanged,
 } from './index.model';
 
-import Image from 'next/image';
 import { Paper } from '@olios-shop/ui/atoms/Paper';
 import { Input } from '@olios-shop/ui/atoms/Input';
 import { Button } from '@olios-shop/ui/atoms/Button';
@@ -97,7 +96,7 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
 
   return (
     <li className="flex items-center py-4 gap-2">
-      <Image src={product.thumbUrl} alt={product.name} width={60} height={60} />
+      <img src={product.thumbUrl} alt={product.name} />
       <div>{product.name}</div>
       <div>
         <MonetaryValue value={product.realPrice} />
