@@ -17,7 +17,7 @@ import { Container } from '@olios-shop/ui/atoms/Container';
 import { H1 } from '@olios-shop/ui/atoms/Typography';
 import { AppLink } from '@olios-shop/storefront/ui/atoms/AppLink';
 import { MetaTags } from '@olios-shop/storefront/shared/components/MetaTags';
-import { UserCard } from './UserCard';
+import { UserCard } from '@olios-shop/storefront/features/Auth/UserCard';
 
 function ProfilePage() {
   const authStatus = useAuthStatus();

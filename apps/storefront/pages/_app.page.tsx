@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState, ReactNode } from 'react';
+import clsx from 'clsx';
+
 import classes from './_app.module.scss';
 
 import '@olios-shop/storefront/styles/globals.css';
@@ -19,15 +21,14 @@ import {
 
 import { useOnClickOutside } from '@olios-shop/ui/hooks/useOnClickOutside';
 
+import { H1 } from '@olios-shop/ui/atoms/Typography';
+import { CTAButton } from '@olios-shop/ui/atoms/CTAButton';
 import { AppErrorBoundary } from '@olios-shop/ui/molecules/AppErrorBoundary';
 import { BurgerButton } from '@olios-shop/ui/molecules/BurgerButton';
 import { NextProgressBar } from '@olios-shop/storefront/ui/atoms/NextProgressBar';
-import { Menu } from '@olios-shop/storefront/shared/components/Menu';
-import { Sidebar } from '@olios-shop/storefront/shared/components/Sidebar';
+import { Menu } from '@olios-shop/storefront/ui/organisms/Menu';
+import { Sidebar } from '@olios-shop/storefront/ui/organisms/Sidebar';
 import { AppToaster } from '@olios-shop/storefront/shared/toasts';
-import { CTAButton } from '@olios-shop/ui/atoms/CTAButton';
-import { H1 } from '@olios-shop/ui/atoms/Typography';
-import clsx from 'clsx';
 
 const App = ({ children }: { children: ReactNode }) => {
   const [appStartedEvent] = useUnit([appStarted]);

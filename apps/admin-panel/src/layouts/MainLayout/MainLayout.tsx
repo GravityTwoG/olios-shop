@@ -1,6 +1,6 @@
 import classes from './main-layout.module.scss';
 
-import { Sidebar } from '@olios-shop/admin/shared/components/Sidebar';
+import { Sidebar } from '@olios-shop/admin/ui/organisms/Sidebar';
 import { AppToaster } from '@olios-shop/admin/shared/toasts';
 
 export type MainLayoutProps = {

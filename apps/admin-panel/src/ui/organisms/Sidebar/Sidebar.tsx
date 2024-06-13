@@ -2,12 +2,12 @@ import clsx from 'clsx';
 import classes from './sidebar.module.scss';
 
 import { paths } from '@olios-shop/admin/config/paths';
-import { useHideOnScroll } from './useHideOnScroll';
+import { useHideOnScroll } from '@olios-shop/ui/hooks/useHideOnScroll';
 
 import { Link } from 'react-router-dom';
+import HomeIcon from '@olios-shop/ui/atoms/Icons/Home.svg';
+import ProfileIcon from '@olios-shop/ui/atoms/Icons/Profile.svg';
 import { NavLink } from '@olios-shop/admin/ui/atoms/NavLink';
-import HomeIcon from './img/Home.svg';
-import ProfileIcon from './img/Profile.svg';
 
 export type SidebarProps = {
   className?: string;

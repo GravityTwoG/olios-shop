@@ -11,7 +11,7 @@ import { fetchCategories } from '@olios-shop/storefront/shared/api/product-categ
 import { toast } from '@olios-shop/storefront/shared/toasts';
 
 import { ProductCategoryLink } from '@olios-shop/storefront/shared/components/ProductCategoryLink';
-import { ProductCategoryLinkSkeleton } from '../ProductCategoryLinkLoader';
+import { ProductCategoryLinkSkeleton } from '@olios-shop/storefront/shared/components/ProductCategoryLinkLoader';
 
 const fetchCategoriesSWR = () =>
   fetchCategories({ take: 8, skip: 0, parentId: null });
