@@ -80,7 +80,7 @@ export const InviteCodesPage = PrivatePage(() => {
       <H1>Invite Codes</H1>
 
       <div className="flex justify-center my-4">
-        <AppLink to={paths.inviteCodesCreate({})}>Create Invite Codes</AppLink>
+        <AppLink to={paths.inviteCodesCreate({})}>Create Invite Code</AppLink>
       </div>
 
       <Paper>

@@ -14,11 +14,23 @@ E-commerce fullstack app.
 
 - S3 Compatible Object Storage (Minio)
 
-## Frontend
+## Storefront
 
 - TypeScript
 
 - Next.js, React, react-hook-form
+
+- Tailwind.css, scss modules
+
+- Effector, patronum
+
+- Axios, zod
+
+## Admin panel
+
+- TypeScript
+
+- React, react-hook-form
 
 - Tailwind.css, scss modules
 

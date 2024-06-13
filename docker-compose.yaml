@@ -1,9 +1,9 @@
-# nginx, backend, frontend share the same "localhost"
-# it's neccessary because files in minio must be reachable inside frontend container and developer's browser
+# nginx, backend, storefront share the same "localhost"
+# it's neccessary because files in minio must be reachable inside storefront container and developer's browser
 # In real world you'll just use publicly available domain name
 services:
-  frontend:
-    container_name: olios-frontend
+  storefront:
+    container_name: olios-storefront
     build:
       context: .
       target: deps
@@ -11,7 +11,7 @@ services:
     volumes:
       - ./:/usr/src/app/
       - node-modules:/usr/src/app/node_modules
-    command: sh -c 'npx nx dev frontend --verbose'
+    command: sh -c 'npx nx dev storefront --verbose'
     ports:
       - '8000:8000' # for nginx
       - '5111:5111' # for backend
@@ -30,13 +30,13 @@ services:
       - ./:/usr/src/app/
       - node-modules:/usr/src/app/node_modules
     command: sh -c 'npx nx serve admin-panel'
-    network_mode: service:frontend
+    network_mode: service:storefront
 
   nginx:
     container_name: olios-nginx
     image: nginx:1.15-alpine
     depends_on:
-      - frontend
+      - storefront
       - admin-panel
       - backend
     # ports:
@@ -44,12 +44,12 @@ services:
     volumes:
       - ./nginx_dev:/etc/nginx/conf.d
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-    network_mode: service:frontend
+    network_mode: service:storefront
     # networks:
     # - internal
 
   backend:
-    network_mode: service:frontend
+    network_mode: service:storefront
 
 networks:
   internal:
