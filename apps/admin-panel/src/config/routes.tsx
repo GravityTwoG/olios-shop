@@ -1,9 +1,9 @@
 import { paths } from './paths';
 
 import { HomePage } from '../pages/HomePage';
-import { SignInPage } from '../pages/auth/sign-in.page';
-import { SignUpPage } from '../pages/auth/sign-up.page';
-import { ProfilePage } from '../pages/ProfilePage';
+import { SignInPage } from '../pages/auth/SignIn/SignInPage';
+import { SignUpPage } from '../pages/auth/SignUp/SignUpPage';
+import { ProfilePage } from '../pages/Profile/ProfilePage';
 import { OrdersPage } from '../pages/manager/orders/OrdersPage';
 import { OrderPage } from '../pages/manager/orders/OrderPage/OrderPage';
 import { InviteCodesPage } from '../pages/manager/invite-codes/InviteCodesPage';

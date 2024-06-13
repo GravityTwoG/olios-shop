@@ -13,13 +13,13 @@ import { PrivatePage } from '@olios-shop/admin/features/Auth';
 import { CTAButton } from '@olios-shop/ui/atoms/CTAButton';
 import { Container } from '@olios-shop/ui/atoms/Container';
 import { H1 } from '@olios-shop/ui/atoms/Typography';
-import { UserCard } from '@olios-shop/admin/features/Auth';
+import { UserCard } from './UserCard';
 
 export const ProfilePage = PrivatePage(() => {
   const authStatus = useAuthStatus();
   const user = useUser();
 
-  const [logoutEvent] = useUnit([logout]);
+  const logoutEvent = useUnit(logout);
 
   return (
     <Container className="py-8">
