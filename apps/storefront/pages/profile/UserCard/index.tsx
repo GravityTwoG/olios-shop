@@ -1,9 +1,10 @@
-import { SessionUser } from '@olios-shop/storefront/shared/session';
+import clsx from 'clsx';
 
 import classes from './user-card.module.scss';
 
+import { SessionUser } from '@olios-shop/storefront/shared/session';
+
 import { Skeleton } from '@olios-shop/ui/atoms/Skeleton';
-import clsx from 'clsx';
 
 export type UserCardProps = {
   user: SessionUser;
@@ -43,11 +44,6 @@ export const UserCard = ({ user, isLoaded, className }: UserCardProps) => {
         <div>
           <dt>Email</dt>
           <dd>{isLoaded ? user.email : <Skeleton />}</dd>
-        </div>
-
-        <div>
-          <dt>Role</dt>
-          <dd>{isLoaded ? user.role : <Skeleton />}</dd>
         </div>
       </dl>
     </div>

@@ -14,16 +14,16 @@ import { PrivatePage } from '@olios-shop/storefront/features/Auth';
 
 import { CTAButton } from '@olios-shop/ui/atoms/CTAButton';
 import { Container } from '@olios-shop/ui/atoms/Container';
-import { AppLink } from '@olios-shop/storefront/ui/atoms/AppLink';
 import { H1 } from '@olios-shop/ui/atoms/Typography';
+import { AppLink } from '@olios-shop/storefront/ui/atoms/AppLink';
 import { MetaTags } from '@olios-shop/storefront/shared/components/MetaTags';
-import { UserCard } from '@olios-shop/storefront/features/Auth';
+import { UserCard } from './UserCard';
 
 function ProfilePage() {
   const authStatus = useAuthStatus();
   const user = useUser();
 
-  const [logoutEvent] = useUnit([logout]);
+  const logoutEvent = useUnit(logout);
 
   return (
     <Container className="py-8">
