@@ -10,6 +10,9 @@ module.exports = {
   // all plugins (eslint-plugin-xxx) go here:
   plugins: ['@typescript-eslint'],
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+  },
   ignorePatterns: ['.eslintrc.js'],
 
   rules: {

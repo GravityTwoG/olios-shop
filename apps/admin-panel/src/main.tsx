@@ -6,12 +6,20 @@ import '@olios-shop/ui/theme.css';
 
 import { App } from './app/app';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement,
-);
+function bootstrap() {
+  const element = document.getElementById('root');
+  if (!element) {
+    alert('Failed to find the root element');
+    return;
+  }
 
-root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+  const root = ReactDOM.createRoot(element);
+
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+}
+
+bootstrap();

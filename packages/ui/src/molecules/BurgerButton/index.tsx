@@ -1,10 +1,11 @@
-import React, { forwardRef } from 'react';
-import clsx from 'clsx';
+import { forwardRef } from 'react';
+import { clsx } from 'clsx';
 import classes from './burger-button.module.scss';
+import { ReactTagProps } from '@olios-shop/ui/types';
 
 export type BurgerButtonProps = {
   isOpened: boolean;
-} & React.HTMLAttributes<HTMLButtonElement>;
+} & ReactTagProps<'button'>;
 
 export const BurgerButton = forwardRef<HTMLButtonElement, BurgerButtonProps>(
   ({ isOpened, ...props }, ref) => {

@@ -97,7 +97,9 @@ export function debounce(
   if (isObject(options)) {
     leading = !!options.leading;
     maxing = 'maxWait' in options;
-    maxWait = maxing ? Math.max(options.maxWait || 0, wait) : maxWait!;
+    if (maxing) {
+      maxWait = Math.max(options.maxWait || 0, wait);
+    }
     trailing = 'trailing' in options ? !!options.trailing : trailing;
   }
 
@@ -107,13 +109,16 @@ export function debounce(
 
     lastArgs = lastThis = undefined;
     lastInvokeTime = time;
-    result = func.apply(thisArg, args!);
+    // @ts-expect-error ts(2339)
+    result = func.apply(thisArg, args);
     return result;
   }
 
   function startTimer(pendingFunc: Callback, milliseconds: number) {
     if (useRAF) {
-      window.cancelAnimationFrame(timerId!);
+      if (timerId) {
+        window.cancelAnimationFrame(timerId);
+      }
       return window.requestAnimationFrame(pendingFunc);
     }
     // eslint-disable-next-line @typescript-eslint/no-implied-eval
@@ -138,7 +143,7 @@ export function debounce(
   }
 
   function remainingWait(time: number) {
-    const timeSinceLastCall = time - lastCallTime!;
+    const timeSinceLastCall = time - (lastCallTime || 0);
     const timeSinceLastInvoke = time - lastInvokeTime;
     const timeWaiting = wait - timeSinceLastCall;
 
@@ -148,7 +153,7 @@ export function debounce(
   }
 
   function shouldInvoke(time: number) {
-    const timeSinceLastCall = time - lastCallTime!;
+    const timeSinceLastCall = time - (lastCallTime || 0);
     const timeSinceLastInvoke = time - lastInvokeTime;
 
     // Either this is the first call, activity has stopped and we're at the

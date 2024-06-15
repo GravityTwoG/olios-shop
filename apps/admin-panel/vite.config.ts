@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import svgr from 'vite-plugin-svgr';
-import path from 'path';
+import { join } from 'path';
 
 export default defineConfig({
   root: __dirname,
@@ -14,7 +14,7 @@ export default defineConfig({
     port: 4200,
     host: true, // make it work with docker,
     fs: {
-      allow: [path.join(__dirname, '../../')],
+      allow: [join(__dirname, '../../')],
     },
   },
 
