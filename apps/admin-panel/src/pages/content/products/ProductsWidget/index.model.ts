@@ -1,4 +1,4 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { debounce, reset } from 'patronum';
 
 import { toast } from '@olios-shop/admin/shared/toasts';
@@ -7,9 +7,10 @@ import * as productsApi from '@olios-shop/admin/shared/api/products';
 import { ApiError, ListDTO } from '@olios-shop/admin/shared/api/lib';
 import { IProduct } from '@olios-shop/admin/types/IProduct';
 import { productCreated } from '../index.model';
+import { createAPIEffect } from '@olios-shop/admin/shared/effector';
 
 // Effects
-const fetchProductsFx = createEffect<
+const fetchProductsFx = createAPIEffect<
   {
     pageSize: number;
     pageNumber: number;
@@ -39,7 +40,7 @@ export const $productsCount = createStore(0);
 export const $searchQuery = createStore('');
 export const $pageSize = createStore(12);
 export const $pageNumber = createStore(0);
-export const $isPending = createStore(false);
+export const $isPending = fetchProductsFx.$isPending;
 
 $searchQuery.on(searchQueryChanged, (_, newQuery) => newQuery);
 
@@ -55,7 +56,7 @@ sample({
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  target: fetchProductsFx,
+  target: fetchProductsFx.call,
 });
 
 sample({
@@ -69,51 +70,44 @@ sample({
     pageNumber,
     searchQuery,
   }),
-  target: fetchProductsFx,
+  target: fetchProductsFx.call,
 });
 
-$isPending.on(fetchProductsFx, () => true);
-
-$products.on(fetchProductsFx.doneData, (_, { list }) => {
+$products.on(fetchProductsFx.call.doneData, (_, { list }) => {
   return list;
 });
-$productsCount.on(fetchProductsFx.doneData, (_, { count }) => {
+$productsCount.on(fetchProductsFx.call.doneData, (_, { count }) => {
   return count;
 });
-$pageNumber.on(fetchProductsFx.doneData, (_, { pageNumber }) => pageNumber);
-
-fetchProductsFx.failData.watch((e) => toast.error(e.message));
-
-$isPending.on(fetchProductsFx.finally, () => false);
-
-//
-const deleteProductFx = createEffect<number, void, ApiError>(
-  (productId: number) => {
-    return productsApi.deleteProduct(productId);
-  },
+$pageNumber.on(
+  fetchProductsFx.call.doneData,
+  (_, { pageNumber }) => pageNumber,
 );
 
-export const $isDeleting = createStore(false);
+fetchProductsFx.call.failData.watch((e) => toast.error(e.message));
+
+//
+const deleteProductFx = createAPIEffect<number, void>((productId: number) => {
+  return productsApi.deleteProduct(productId);
+});
+
+export const $isDeleting = deleteProductFx.$isPending;
 
 export const deleteProduct = createEvent<number>('Delete product');
 
 sample({
   clock: deleteProduct,
-  target: deleteProductFx,
+  target: deleteProductFx.call,
 });
 
-$isDeleting.on(deleteProductFx, () => true);
-
-deleteProductFx.failData.watch((e) => toast.error(e.message));
-
-$isDeleting.on(deleteProductFx.finally, () => false);
+deleteProductFx.call.failData.watch((e) => toast.error(e.message));
 
 sample({
-  clock: deleteProductFx.done,
+  clock: deleteProductFx.call.done,
   source: {
     pageSize: $pageSize,
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  target: fetchProductsFx,
+  target: fetchProductsFx.call,
 });

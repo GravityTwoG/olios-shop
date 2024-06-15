@@ -1,5 +1,5 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
-import { debounce, reset } from 'patronum';
+import { createEvent, createStore, sample } from 'effector';
+import { debounce, or, reset } from 'patronum';
 
 import { IUser } from '@olios-shop/admin/types/IUser';
 
@@ -7,11 +7,12 @@ import { ApiError } from '@olios-shop/admin/shared/api';
 import * as usersApi from '@olios-shop/admin/shared/api/users';
 import { ListDTO } from '@olios-shop/admin/shared/api/lib/types';
 import { toast } from '@olios-shop/admin/shared/toasts';
+import { createAPIEffect } from '@olios-shop/admin/shared/effector';
 
 const PAGE_SIZE = 12;
 
 // Effects
-const fetchUsersFx = createEffect<
+const fetchUsersFx = createAPIEffect<
   { pageSize: number; pageNumber: number; searchQuery: string },
   ListDTO<IUser> & { pageNumber: number },
   ApiError
@@ -34,7 +35,7 @@ const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
 // Stores
 export const $users = createStore<IUser[]>([]);
 export const $usersCount = createStore(0);
-export const $isPending = createStore(false);
+export const $isPending = fetchUsersFx.$isPending;
 export const $pageSize = createStore(PAGE_SIZE);
 export const $pageNumber = createStore(0);
 export const $searchQuery = createStore('');
@@ -53,7 +54,7 @@ sample({
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  target: fetchUsersFx,
+  target: fetchUsersFx.call,
 });
 
 sample({
@@ -64,31 +65,27 @@ sample({
     pageNumber,
     searchQuery,
   }),
-  target: fetchUsersFx,
+  target: fetchUsersFx.call,
 });
 
-$isPending.on(fetchUsersFx, () => true);
-
-$users.on(fetchUsersFx.doneData, (_, { list }) => {
+$users.on(fetchUsersFx.call.doneData, (_, { list }) => {
   return list;
 });
-$usersCount.on(fetchUsersFx.doneData, (_, { count }) => {
+$usersCount.on(fetchUsersFx.call.doneData, (_, { count }) => {
   return count;
 });
-$pageNumber.on(fetchUsersFx.doneData, (_, { pageNumber }) => pageNumber);
+$pageNumber.on(fetchUsersFx.call.doneData, (_, { pageNumber }) => pageNumber);
 
-fetchUsersFx.failData.watch((error) => toast.error(error.message));
-
-$isPending.on(fetchUsersFx.finally, () => false);
+fetchUsersFx.call.failData.watch((error) => toast.error(error.message));
 
 //
 // Block/Unblock users
 // Effects
-const blockUserFx = createEffect((userId: string) => {
+const blockUserFx = createAPIEffect((userId: string) => {
   return usersApi.blockOrUnblockUser({ userId, isActive: false });
 });
 
-const unblockUserFx = createEffect((userId: string) => {
+const unblockUserFx = createAPIEffect((userId: string) => {
   return usersApi.blockOrUnblockUser({ userId, isActive: true });
 });
 
@@ -97,23 +94,20 @@ export const blockUser = createEvent<string>('Block user');
 export const unblockUser = createEvent<string>('Unblock user');
 
 // Stores
-export const $isBlockingOrUnblocking = createStore(false);
+export const $isBlockingOrUnblocking = or(
+  blockUserFx.$isPending,
+  unblockUserFx.$isPending,
+);
 
-sample({ clock: blockUser, target: blockUserFx });
-sample({ clock: unblockUser, target: unblockUserFx });
-
-$isBlockingOrUnblocking.on(blockUserFx, () => true);
-$isBlockingOrUnblocking.on(unblockUserFx, () => true);
-
-$isBlockingOrUnblocking.on(blockUserFx.finally, () => false);
-$isBlockingOrUnblocking.on(unblockUserFx.finally, () => false);
+sample({ clock: blockUser, target: blockUserFx.call });
+sample({ clock: unblockUser, target: unblockUserFx.call });
 
 sample({
-  clock: [blockUserFx.done, unblockUserFx.done],
+  clock: [blockUserFx.call.done, unblockUserFx.call.done],
   source: {
     pageSize: $pageSize,
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  target: fetchUsersFx,
+  target: fetchUsersFx.call,
 });

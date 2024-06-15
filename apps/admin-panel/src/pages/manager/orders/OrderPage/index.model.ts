@@ -1,17 +1,17 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { reset } from 'patronum';
 
 import { toast } from '@olios-shop/admin/shared/toasts';
-import { ApiError } from '@olios-shop/admin/shared/api';
 import * as ordersApi from '@olios-shop/admin/shared/api/orders';
 import { IOrder, OrderStatus } from '@olios-shop/admin/types/IOrder';
+import { createAPIEffect } from '@olios-shop/admin/shared/effector';
 
 // Effects
-const fetchOrderFx = createEffect<string, IOrder, ApiError>((orderId) => {
+const fetchOrderFx = createAPIEffect<string, IOrder>((orderId) => {
   return ordersApi.fetchOrder(orderId);
 });
 
-const markAsDeliveredFx = createEffect<string, IOrder, ApiError>((orderId) => {
+const markAsDeliveredFx = createAPIEffect<string, IOrder>((orderId) => {
   return ordersApi.markAsDelivered(orderId);
 });
 
@@ -35,8 +35,8 @@ export const $order = createStore<IOrder>({
   total: 0,
 });
 
-export const $isOrderPending = createStore(false);
-export const $isMarking = createStore(false);
+export const $isOrderPending = fetchOrderFx.$isPending;
+export const $isMarking = markAsDeliveredFx.$isPending;
 
 reset({
   clock: pageMounted,
@@ -45,28 +45,20 @@ reset({
 
 sample({
   clock: [pageMounted],
-  target: fetchOrderFx,
+  target: fetchOrderFx.call,
 });
 
-$isOrderPending.on(fetchOrderFx, () => true);
+$order.on(fetchOrderFx.call.doneData, (_, order) => order);
 
-$order.on(fetchOrderFx.doneData, (_, order) => order);
-
-fetchOrderFx.failData.watch((e) => toast.error(e.message));
-
-$isOrderPending.on(fetchOrderFx.finally, () => false);
+fetchOrderFx.call.failData.watch((e) => toast.error(e.message));
 
 sample({
   clock: delivered,
   source: { order: $order },
   fn: ({ order }) => order.id,
-  target: markAsDeliveredFx,
+  target: markAsDeliveredFx.call,
 });
 
-$isMarking.on(markAsDeliveredFx, () => true);
+markAsDeliveredFx.call.failData.watch((e) => toast.error(e.message));
 
-markAsDeliveredFx.failData.watch((e) => toast.error(e.message));
-
-$isMarking.on(markAsDeliveredFx.finally, () => false);
-
-$order.on(markAsDeliveredFx.doneData, (_, order) => order);
+$order.on(markAsDeliveredFx.call.doneData, (_, order) => order);

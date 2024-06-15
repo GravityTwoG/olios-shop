@@ -1,12 +1,13 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 
 import * as ordersApi from '@olios-shop/admin/shared/api/orders';
 import { IOrder } from '@olios-shop/admin/types/IOrder';
 import { ListDTO } from '@olios-shop/admin/shared/api/lib';
 import { toast } from '@olios-shop/admin/shared/toasts';
+import { createAPIEffect } from '@olios-shop/admin/shared/effector';
 
 // Effects
-const fetchOrdersFx = createEffect<
+const fetchOrdersFx = createAPIEffect<
   { pageSize: number; pageNumber: number },
   ListDTO<IOrder> & { pageNumber: number }
 >(async ({ pageSize, pageNumber }) => {
@@ -31,7 +32,7 @@ export const $ordersCount = createStore(0);
 
 export const $pageSize = createStore(12);
 export const $pageNumber = createStore(0);
-export const $isPending = createStore(false);
+export const $isPending = fetchOrdersFx.$isPending;
 
 sample({
   clock: pageMounted,
@@ -39,7 +40,7 @@ sample({
     pageSize: $pageSize,
     pageNumber: $pageNumber,
   },
-  target: fetchOrdersFx,
+  target: fetchOrdersFx.call,
 });
 
 sample({
@@ -48,15 +49,11 @@ sample({
     pageSize: $pageSize,
   },
   fn: ({ pageSize }, pageNumber) => ({ pageSize, pageNumber }),
-  target: fetchOrdersFx,
+  target: fetchOrdersFx.call,
 });
 
-$isPending.on(fetchOrdersFx, () => true);
+$orders.on(fetchOrdersFx.call.doneData, (_, { list }) => list);
+$ordersCount.on(fetchOrdersFx.call.doneData, (_, { count }) => count);
+$pageNumber.on(fetchOrdersFx.call.doneData, (_, { pageNumber }) => pageNumber);
 
-$orders.on(fetchOrdersFx.doneData, (_, { list }) => list);
-$ordersCount.on(fetchOrdersFx.doneData, (_, { count }) => count);
-$pageNumber.on(fetchOrdersFx.doneData, (_, { pageNumber }) => pageNumber);
-
-fetchOrdersFx.failData.watch((e) => toast.error(e.message));
-
-$isPending.on(fetchOrdersFx.finally, () => false);
+fetchOrdersFx.call.failData.watch((e) => toast.error(e.message));

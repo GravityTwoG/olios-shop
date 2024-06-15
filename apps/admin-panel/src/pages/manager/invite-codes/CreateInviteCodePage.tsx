@@ -96,7 +96,7 @@ export const CreateInviteCodePage = PrivatePage(() => {
           return '';
         }}
         isPending={isPending}
-        error={error}
+        error={error || ''}
         submitText="Create"
         submitButtonVariant="CTA"
       />

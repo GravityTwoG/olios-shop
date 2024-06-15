@@ -1,15 +1,17 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { createEvent, sample } from 'effector';
 
 import * as authApi from '@olios-shop/admin/shared/api/auth';
+import { createAPIEffect } from '@olios-shop/admin/shared/effector';
 import { loginFx } from '@olios-shop/admin/shared/auth';
 
 // Effects
-const registerEmployeeFx = createEffect(
+const registerEmployeeFx = createAPIEffect(
   async (credentials: authApi.IRegisterEmployeeCredentials) => {
     await authApi.registerEmployee(credentials);
 
     return credentials;
   },
+  (err) => err.message,
 );
 
 // Events
@@ -18,23 +20,15 @@ export const formSubmitted = createEvent<authApi.IRegisterEmployeeCredentials>(
 );
 
 // Stores
-export const $error = createStore('');
-export const $isPending = createStore(false);
+export const $error = registerEmployeeFx.$error;
+export const $isPending = registerEmployeeFx.$isPending;
 
 sample({
   clock: formSubmitted,
-  target: registerEmployeeFx,
+  target: registerEmployeeFx.call,
 });
 
-$error.on(registerEmployeeFx, () => '');
-
-$isPending.on(registerEmployeeFx, () => true);
-
-$isPending.on(registerEmployeeFx.finally, () => false);
-
-$error.on(registerEmployeeFx.failData, (_, err) => err.message);
-
 sample({
-  clock: registerEmployeeFx.doneData,
+  clock: registerEmployeeFx.call.doneData,
   target: loginFx,
 });

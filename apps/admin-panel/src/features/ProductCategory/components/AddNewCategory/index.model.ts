@@ -1,13 +1,13 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { createEvent, sample } from 'effector';
 
-import { ApiError } from '@olios-shop/admin/shared/api';
 import {
   CreateCategoryDTO,
   createCategory,
 } from '@olios-shop/admin/shared/api/product-categories';
+import { createAPIEffect } from '@olios-shop/admin/shared/effector';
 
 // Effects
-const createCategoryFx = createEffect<CreateCategoryDTO, void, ApiError>(
+const createCategoryFx = createAPIEffect<CreateCategoryDTO, void>(
   async (data) => {
     await createCategory(data);
   },
@@ -15,15 +15,12 @@ const createCategoryFx = createEffect<CreateCategoryDTO, void, ApiError>(
 
 // Events
 export const formSubmitted = createEvent<CreateCategoryDTO>('');
-export const categoryCreated = createCategoryFx.done;
+export const categoryCreated = createCategoryFx.call.done;
 
 // Stores
-export const $isPending = createStore(false);
+export const $isPending = createCategoryFx.$isPending;
 
 sample({
   clock: formSubmitted,
-  target: createCategoryFx,
+  target: createCategoryFx.call,
 });
-
-$isPending.on(createCategoryFx, () => true);
-$isPending.on(createCategoryFx.finally, () => false);

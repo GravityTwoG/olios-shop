@@ -1,11 +1,12 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { createEvent, createStore, sample } from 'effector';
 import { debounce, reset } from 'patronum';
 
 import { toast } from '@olios-shop/admin/shared/toasts';
+import { createAPIEffect } from '@olios-shop/admin/shared/effector';
 
 import { IProductCategory } from '@olios-shop/admin/types/IProductCategory';
 import * as categoriesApi from '@olios-shop/admin/shared/api/product-categories';
-import { ApiError, ListDTO } from '@olios-shop/admin/shared/api/lib';
+import { ListDTO } from '@olios-shop/admin/shared/api/lib';
 import { categoryCreated } from '../AddNewCategory/index.model';
 import {
   categoryDeleted,
@@ -13,14 +14,13 @@ import {
 } from './ProductCategoryItem/index.model';
 
 // Effects
-const fetchCategoriesFx = createEffect<
+const fetchCategoriesFx = createAPIEffect<
   {
     pageSize: number;
     pageNumber: number;
     name: string;
   },
-  ListDTO<IProductCategory> & { pageNumber: number },
-  ApiError
+  ListDTO<IProductCategory> & { pageNumber: number }
 >(async ({ pageSize, pageNumber, name }) => {
   const result = await categoriesApi.fetchCategories({
     take: pageSize,
@@ -42,7 +42,7 @@ export const $categoriesCount = createStore(0);
 export const $searchQuery = createStore('');
 export const $pageSize = createStore(12);
 export const $pageNumber = createStore(0);
-export const $isPending = createStore(false);
+export const $isPending = fetchCategoriesFx.$isPending;
 
 $searchQuery.on(searchQueryChanged, (_, newQuery) => newQuery);
 
@@ -64,7 +64,7 @@ sample({
     pageNumber: $pageNumber,
     name: $searchQuery,
   },
-  target: fetchCategoriesFx,
+  target: fetchCategoriesFx.call,
 });
 
 sample({
@@ -74,19 +74,18 @@ sample({
     name: $searchQuery,
   },
   fn: ({ pageSize, name }, pageNumber) => ({ pageSize, pageNumber, name }),
-  target: fetchCategoriesFx,
+  target: fetchCategoriesFx.call,
 });
 
-$isPending.on(fetchCategoriesFx, () => true);
-
-$categories.on(fetchCategoriesFx.doneData, (_, { list }) => {
+$categories.on(fetchCategoriesFx.call.doneData, (_, { list }) => {
   return list;
 });
-$categoriesCount.on(fetchCategoriesFx.doneData, (_, { count }) => {
+$categoriesCount.on(fetchCategoriesFx.call.doneData, (_, { count }) => {
   return count;
 });
-$pageNumber.on(fetchCategoriesFx.doneData, (_, { pageNumber }) => pageNumber);
+$pageNumber.on(
+  fetchCategoriesFx.call.doneData,
+  (_, { pageNumber }) => pageNumber,
+);
 
-fetchCategoriesFx.failData.watch((e) => toast.error(e.message));
-
-$isPending.on(fetchCategoriesFx.finally, () => false);
+fetchCategoriesFx.call.failData.watch((e) => toast.error(e.message));

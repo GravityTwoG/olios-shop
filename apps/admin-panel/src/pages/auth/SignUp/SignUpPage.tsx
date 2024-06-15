@@ -73,7 +73,7 @@ export const SignUpPage = AnonymousPage(() => {
           }}
           submitText="Sign up"
           isPending={isPending}
-          error={error}
+          error={error || ''}
           submitButtonVariant="CTA"
         />
       </Paper>

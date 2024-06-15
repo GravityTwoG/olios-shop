@@ -1,34 +1,32 @@
-import {
-  combine,
-  createEffect,
-  createEvent,
-  createStore,
-  sample,
-} from 'effector';
+import { combine, createEvent, createStore, sample } from 'effector';
 import { debounce, reset } from 'patronum';
 
 import { IInviteCode } from '@olios-shop/admin/types/IInviteCode';
 
-import { ApiError } from '@olios-shop/admin/shared/api';
 import * as inviteCodesApi from '@olios-shop/admin/shared/api/invite-codes';
-import { ListDTO } from '@olios-shop/admin/shared/api/lib/types';
+import { createAPIEffect } from '@olios-shop/admin/shared/effector';
 
 const PAGE_SIZE = 12;
 
-// Effects
-const fetchInviteCodesFx = createEffect<
-  { pageSize: number; pageNumber: number; searchQuery: string },
-  ListDTO<IInviteCode> & { pageNumber: number },
-  ApiError
->(async ({ pageSize, pageNumber, searchQuery }) => {
-  const data = await inviteCodesApi.fetchInviteCodes({
-    take: pageSize,
-    skip: pageSize * pageNumber,
-    searchQuery: searchQuery,
-  });
+type Query = {
+  pageSize: number;
+  pageNumber: number;
+  searchQuery: string;
+};
 
-  return { ...data, pageNumber };
-});
+// Effects
+const fetchInviteCodesFx = createAPIEffect(
+  async ({ pageSize, pageNumber, searchQuery }: Query) => {
+    const data = await inviteCodesApi.fetchInviteCodes({
+      take: pageSize,
+      skip: pageSize * pageNumber,
+      searchQuery: searchQuery,
+    });
+
+    return { ...data, pageNumber };
+  },
+  (err) => err.message,
+);
 
 // Events
 export const pageMounted = createEvent('Page mounted');
@@ -39,11 +37,11 @@ const searchTriggered = debounce({ source: searchQueryChanged, timeout: 500 });
 // Stores
 export const $inviteCodes = createStore<IInviteCode[]>([]);
 export const $inviteCodesCount = createStore(0);
-export const $isPending = createStore(false);
+export const $isPending = fetchInviteCodesFx.$isPending;
 export const $pageSize = createStore(PAGE_SIZE);
 export const $pageNumber = createStore(0);
 export const $searchQuery = createStore('');
-export const $error = createStore('');
+export const $error = fetchInviteCodesFx.$error;
 
 $searchQuery.on(searchQueryChanged, (_, newQuery) => newQuery);
 
@@ -59,7 +57,7 @@ sample({
     pageNumber: 0,
     searchQuery: $searchQuery,
   }),
-  target: fetchInviteCodesFx,
+  target: fetchInviteCodesFx.call,
 });
 
 sample({
@@ -70,7 +68,7 @@ sample({
     pageNumber,
     searchQuery,
   }),
-  target: fetchInviteCodesFx,
+  target: fetchInviteCodesFx.call,
 });
 
 sample({
@@ -80,45 +78,37 @@ sample({
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  target: fetchInviteCodesFx,
+  target: fetchInviteCodesFx.call,
 });
 
-$isPending.on(fetchInviteCodesFx, () => true);
-
-$inviteCodes.on(fetchInviteCodesFx.doneData, (_, { list }) => {
+$inviteCodes.on(fetchInviteCodesFx.call.doneData, (_, { list }) => {
   return list;
 });
-$inviteCodesCount.on(fetchInviteCodesFx.doneData, (_, { count }) => {
+$inviteCodesCount.on(fetchInviteCodesFx.call.doneData, (_, { count }) => {
   return count;
 });
-$pageNumber.on(fetchInviteCodesFx.doneData, (_, { pageNumber }) => pageNumber);
-
-$error.on(fetchInviteCodesFx.failData, (_, error) => {
-  return error.message;
-});
-
-$isPending.on(fetchInviteCodesFx.finally, () => false);
+$pageNumber.on(
+  fetchInviteCodesFx.call.doneData,
+  (_, { pageNumber }) => pageNumber,
+);
 
 //
-const deleteInviteCodeFx = createEffect((id: string) => {
+const deleteInviteCodeFx = createAPIEffect((id: string) => {
   return inviteCodesApi.deleteInviteCode({ id });
 });
 
 export const deleteInviteCode = createEvent<string>('Delete Invite code');
 
-export const $isDeleting = createStore(false);
+export const $isDeleting = deleteInviteCodeFx.$isPending;
 
-sample({ clock: deleteInviteCode, target: deleteInviteCodeFx });
-
-$isDeleting.on(deleteInviteCodeFx, () => true);
-$isDeleting.on(deleteInviteCodeFx.finally, () => false);
+sample({ clock: deleteInviteCode, target: deleteInviteCodeFx.call });
 
 sample({
-  clock: deleteInviteCodeFx.done,
+  clock: deleteInviteCodeFx.call.done,
   source: {
     pageSize: $pageSize,
     pageNumber: $pageNumber,
     searchQuery: $searchQuery,
   },
-  target: fetchInviteCodesFx,
+  target: fetchInviteCodesFx.call,
 });
