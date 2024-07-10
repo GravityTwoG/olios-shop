@@ -7,6 +7,7 @@ import { ImagesService } from 'src/lib/images';
 
 import { CreateProductCategoryDTO } from './dto/create-product-category.dto';
 import { UpdateProductCategoryDTO } from './dto/update-product-category.dto';
+import { GetProductCategoriesDTO } from './dto/get-product-categories.dto';
 
 export type ProductCategoryJoined = ProductCategory & {
   parent: ProductCategory | null;
@@ -44,18 +45,24 @@ export class ProductCategoriesService {
     return category;
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.ProductCategoryWhereUniqueInput;
-    where?: Prisma.ProductCategoryWhereInput;
-  }) {
+  async findAll(dto: GetProductCategoriesDTO) {
+    const where: Prisma.ProductCategoryWhereInput = {};
+
+    if (dto.parentId) {
+      where.parentId = dto.parentId;
+    }
+
+    if (dto.name) {
+      where.OR = this.prisma.createSearchQuery('name', dto.name);
+    }
+
     const categories = await this.prisma.productCategory.findMany({
-      ...params,
+      take: dto.take,
+      skip: dto.skip,
       include: ProductCategoryInclude,
     });
     const count = await this.prisma.productCategory.count({
-      where: params.where,
+      where: where,
     });
 
     return { count, list: categories };

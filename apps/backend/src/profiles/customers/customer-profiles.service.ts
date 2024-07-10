@@ -4,7 +4,6 @@ import { User, CustomerProfile, Prisma } from '@prisma/client';
 
 import { CartsService } from 'src/carts/carts.service';
 import { BaseListDTO } from 'src/common/dto/base-list.dto';
-
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 @Injectable()
@@ -38,13 +37,9 @@ export class CustomerProfilesService {
   async findAll(params: {
     skip?: number;
     take?: number;
-    cursor?: Prisma.CustomerProfileWhereUniqueInput;
-    where?: Prisma.CustomerProfileWhereInput;
   }): Promise<BaseListDTO<CustomerProfile>> {
     const list = await this.prisma.customerProfile.findMany(params);
-    const count = await this.prisma.customerProfile.count({
-      where: params.where,
-    });
+    const count = await this.prisma.customerProfile.count({});
 
     return { count, list };
   }

@@ -8,6 +8,7 @@ import { CustomerProfilesService } from '../profiles/customers/customer-profiles
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { GetUsersDTO } from './dto/get-users.dto';
 
 @Injectable()
 export class UsersService {
@@ -79,14 +80,25 @@ export class UsersService {
     return user;
   }
 
-  async getUsers(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.UserWhereUniqueInput;
-    where?: Prisma.UserWhereInput;
-  }): Promise<BaseListDTO<User>> {
-    const users = await this.prisma.user.findMany(params);
-    const count = await this.prisma.user.count({ where: params.where });
+  async getUsers(dto: GetUsersDTO): Promise<BaseListDTO<User>> {
+    const where: Prisma.UserWhereInput = {};
+
+    if (dto.searchQuery) {
+      where.OR = [
+        ...this.prisma.createSearchQuery('firstName', dto.searchQuery),
+        ...this.prisma.createSearchQuery('lastName', dto.searchQuery),
+        ...this.prisma.createSearchQuery('patronymic', dto.searchQuery),
+        ...this.prisma.createSearchQuery('email', dto.searchQuery),
+      ];
+    }
+
+    const users = await this.prisma.user.findMany({
+      take: dto.take,
+      skip: dto.skip,
+      where: where,
+    });
+    const count = await this.prisma.user.count({ where: where });
+
     return { count, list: users };
   }
 

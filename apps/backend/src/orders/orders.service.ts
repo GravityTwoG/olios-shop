@@ -11,6 +11,7 @@ import { CreateOrderDTO } from './dto/create-order.dto';
 import { OrderStatus, Prisma } from '@prisma/client';
 
 import { OrdersMapper } from './orders.mapper';
+import { GetOrdersDTO } from './dto/get-orders.dto';
 
 const OrderInclude = {
   orderItems: {
@@ -111,36 +112,31 @@ export class OrdersService {
     return prisma.customerProfile.findFirstOrThrow({ where: { userId } });
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.OrderWhereUniqueInput;
-    where?: Prisma.OrderWhereInput;
-  }) {
+  async findAll(dto: GetOrdersDTO) {
     const list = await this.prisma.order.findMany({
-      ...params,
+      take: dto.take,
+      skip: dto.skip,
       include: OrderInclude,
     });
-    const count = await this.prisma.order.count({ where: params.where });
+    const count = await this.prisma.order.count({});
 
     return { list: list.map(this.mapper.mapToOrderDTO), count };
   }
 
-  async getCustomersOrders(
-    params: {
-      skip?: number;
-      take?: number;
-      cursor?: Prisma.OrderWhereUniqueInput;
-      where?: Prisma.OrderWhereInput;
-    },
-    userId: string,
-  ) {
+  async getCustomersOrders(dto: GetOrdersDTO, userId: string) {
     const profile = await this.getCustomerProfile(userId);
 
-    return this.findAll({
-      ...params,
-      where: { ...params.where, customerProfileId: profile.id },
+    const list = await this.prisma.order.findMany({
+      take: dto.take,
+      skip: dto.skip,
+      where: { customerProfileId: profile.id },
+      include: OrderInclude,
     });
+    const count = await this.prisma.order.count({
+      where: { customerProfileId: profile.id },
+    });
+
+    return { list: list.map(this.mapper.mapToOrderDTO), count };
   }
 
   async findOne(id: string) {

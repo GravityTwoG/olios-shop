@@ -16,7 +16,6 @@ import { ApiConsumes, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UploadedImageFiles } from 'src/common/decorators/uploaded-image-files.decorator';
-import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
 
 import { ProductsService } from './products.service';
 import { ProductMapper } from './product.mapper';
@@ -43,23 +42,7 @@ export class ProductsController {
     @Query()
     query: GetProductsDTO,
   ): Promise<ProductsListResponseDTO> {
-    const params: Parameters<typeof this.productsService.findAll>[0] = {
-      take: query.take,
-      skip: query.skip,
-    };
-
-    if (query.searchQuery) {
-      params.where = this.createSearchQuery(query.searchQuery);
-    }
-
-    if (query.categoryId) {
-      params.where = {
-        ...params.where,
-        categoryId: query.categoryId,
-      };
-    }
-
-    const data = await this.productsService.findAll(params);
+    const data = await this.productsService.findAll(query);
     return {
       data: {
         count: data.count,
@@ -68,39 +51,12 @@ export class ProductsController {
     };
   }
 
-  private createSearchQuery(searchQuery: string) {
-    return {
-      OR: [
-        ...createSearchQuery('name', searchQuery),
-        ...createSearchQuery('description', searchQuery),
-        {
-          productCategory: {
-            OR: createSearchQuery('name', searchQuery),
-          },
-        },
-      ],
-    };
-  }
-
   @Get('/recommended')
   async recommended(
     @Query()
     query: GetRecommendedProductsDTO,
   ): Promise<ProductsListResponseDTO> {
-    const params: Parameters<typeof this.productsService.getRecommended>[0] = {
-      take: query.take,
-      skip: query.skip,
-      where: { categoryId: query.productId },
-    };
-
-    if (query.searchQuery && params.where) {
-      params.where.OR = this.createSearchQuery(query.searchQuery).OR;
-    }
-
-    const data = await this.productsService.getRecommended(
-      params,
-      query.productId,
-    );
+    const data = await this.productsService.getRecommended(query);
     return {
       data: {
         count: data.count,

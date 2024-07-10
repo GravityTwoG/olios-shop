@@ -40,10 +40,7 @@ export class OrdersController {
   async allOrders(
     @Query() query: GetOrdersDTO,
   ): Promise<OrdersListResponseDTO> {
-    const result = await this.ordersService.findAll({
-      take: query.take,
-      skip: query.skip,
-    });
+    const result = await this.ordersService.findAll(query);
 
     return {
       data: result,
@@ -70,10 +67,7 @@ export class OrdersController {
     @Query() query: GetOrdersDTO,
     @CurrentUser() user: RequestUser,
   ): Promise<OrdersListResponseDTO> {
-    const result = await this.ordersService.getCustomersOrders(
-      { take: query.take, skip: query.skip },
-      user.id,
-    );
+    const result = await this.ordersService.getCustomersOrders(query, user.id);
 
     return {
       data: result,

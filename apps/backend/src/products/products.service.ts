@@ -7,6 +7,8 @@ import { PrismaService } from 'src/lib/prisma/prisma.service';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
 import { BaseListDTO } from 'src/common/dto/base-list.dto';
+import { GetProductsDTO } from './dto/get-products.dto';
+import { GetRecommendedProductsDTO } from './dto/get-recommended-products.dto';
 import { ProductCategoriesService } from './product-categories/product-categories.service';
 
 const includes = {
@@ -29,59 +31,82 @@ export class ProductsService {
     private readonly categoriesService: ProductCategoriesService,
   ) {}
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.ProductWhereUniqueInput;
-    where?: Omit<Prisma.ProductWhereInput, 'categoryId'> & {
-      categoryId?: number;
-    };
-  }): Promise<BaseListDTO<ProductEntity>> {
-    const internalParams = params;
+  async findAll(dto: GetProductsDTO): Promise<BaseListDTO<ProductEntity>> {
+    const where: Prisma.ProductWhereInput = {};
 
-    if (params.where?.categoryId) {
+    if (dto.searchQuery) {
+      where.OR = [
+        ...this.prisma.createSearchQuery('name', dto.searchQuery),
+        ...this.prisma.createSearchQuery('description', dto.searchQuery),
+        {
+          productCategory: {
+            OR: this.prisma.createSearchQuery('name', dto.searchQuery),
+          },
+        },
+      ];
+    }
+
+    if (dto.categoryId) {
+      where.categoryId = dto.categoryId;
+    }
+
+    if (dto.categoryId) {
       const categoryIds = await this.categoriesService.getSubtreeIds(
-        params.where.categoryId,
+        dto.categoryId,
       );
-      (internalParams.where as Prisma.ProductWhereInput).categoryId = {
+      where.categoryId = {
         in: categoryIds,
       };
     }
 
     const list = await this.prisma.product.findMany({
-      ...internalParams,
+      take: dto.take,
+      skip: dto.skip,
+      where: where,
       include: includes,
     });
     const count = await this.prisma.product.count({
-      where: internalParams.where,
+      where: where,
     });
 
     return { count, list };
   }
 
   async getRecommended(
-    params: {
-      skip?: number;
-      take?: number;
-      cursor?: Prisma.ProductWhereUniqueInput;
-      where?: Prisma.ProductWhereInput;
-    },
-    productId: number,
+    dto: GetRecommendedProductsDTO,
   ): Promise<BaseListDTO<ProductEntity>> {
+    const where: Prisma.ProductWhereInput = {
+      OR: [],
+      id: { not: dto.productId },
+    };
+
+    if (dto.searchQuery) {
+      (where.OR as Prisma.ProductWhereInput[]).push(
+        ...this.prisma.createSearchQuery('name', dto.searchQuery),
+        ...this.prisma.createSearchQuery('description', dto.searchQuery),
+        {
+          productCategory: {
+            OR: this.prisma.createSearchQuery('name', dto.searchQuery),
+          },
+        },
+      );
+    }
+
     const product = await this.prisma.product.findUniqueOrThrow({
-      where: { id: productId },
+      where: { id: dto.productId },
     });
 
+    where.categoryId = product?.categoryId;
+
     const list = await this.prisma.product.findMany({
-      ...params,
-      where: {
-        ...params.where,
-        categoryId: product?.categoryId,
-        id: { not: product.id },
-      },
+      take: dto.take,
+      skip: dto.skip,
+      where: where,
       include: includes,
     });
-    const count = await this.prisma.product.count({ where: params.where });
+    const count = await this.prisma.product.count({
+      where: where,
+    });
 
     return { count, list };
   }
