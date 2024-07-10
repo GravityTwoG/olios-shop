@@ -45,12 +45,25 @@
       transition: fill 0.2s;
     }
 
+    & .ProfileIcon {
+      stroke: #d8d8d8;
+      transition: stroke 0.2s;
+    }
+
     &:hover path {
       fill: var(--accent-color);
     }
 
+    &:hover .ProfileIcon {
+      stroke: var(--accent-color);
+    }
+
     &.NavItemActive path {
       fill: var(--accent-color);
+    }
+
+    &.NavItemActive .ProfileIcon {
+      stroke: var(--accent-color);
     }
   }
 }

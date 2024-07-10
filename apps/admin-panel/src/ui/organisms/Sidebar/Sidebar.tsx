@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import classes from './sidebar.module.scss';
 
 import { paths } from '@olios-shop/admin/config/paths';
@@ -49,7 +49,7 @@ export const Sidebar = (props: SidebarProps) => {
           className={classes.NavItem}
           activeClassName={classes.NavItemActive}
         >
-          <ProfileIcon />
+          <ProfileIcon className={classes.ProfileIcon} />
         </NavLink>
       </nav>
     </aside>

@@ -71,7 +71,7 @@ export const Sidebar = (props: SidebarProps) => {
           className={classes.NavItem}
           activeClassName={classes.NavItemActive}
         >
-          <ProfileIcon />
+          <ProfileIcon className={classes.ProfileIcon} />
         </NavLink>
 
         <NavLink
