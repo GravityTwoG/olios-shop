@@ -22,7 +22,7 @@ import { PrivatePage } from '@olios-shop/admin/features/Auth';
 
 import { Paper } from '@olios-shop/ui/atoms/Paper';
 import { Input } from '@olios-shop/ui/atoms/Input';
-import { Button } from '@olios-shop/ui/atoms/Button';
+import { Button, CopyButton } from '@olios-shop/ui/atoms/Button';
 import { H1 } from '@olios-shop/ui/atoms/Typography';
 import { NoResults } from '@olios-shop/ui/atoms/NoResults';
 import { Container } from '@olios-shop/ui/atoms/Container';
@@ -96,9 +96,11 @@ export const InviteCodesPage = PrivatePage(() => {
             key: invite.id,
             cols: [
               `${invite.firstName} ${invite.lastName} ${invite.patronymic}`,
-              invite.birthDate,
+              new Date(invite.birthDate).toLocaleDateString(),
               <RoleBadge key="role" role={invite.role} />,
-              invite.code,
+              <div>
+                {invite.code.slice(0, 6)}... <CopyButton text={invite.code} />
+              </div>,
               <div
                 key="action"
                 className="flex items-center justify-between gap-3"

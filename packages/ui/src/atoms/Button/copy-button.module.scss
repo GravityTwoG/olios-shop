@@ -1,0 +1,18 @@
+.CopyButton {
+  & svg {
+    fill: currentColor;
+    transition: fill 0.2s;
+  }
+
+  &:hover {
+    svg {
+      fill: #aeaeae;
+    }
+  }
+
+  &[data-copied='true'] {
+    svg {
+      fill: var(--success-color);
+    }
+  }
+}

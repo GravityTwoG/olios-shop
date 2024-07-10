@@ -21,8 +21,7 @@
     "pages/**/*.ts",
     "pages/**/*.tsx",
     "src/**/*.ts",
-    "src/**/*.tsx",
-    "../../packages/ui/src/hooks/useHideOnScroll.ts"
+    "src/**/*.tsx"
   ],
   "exclude": ["node_modules"],
   "extends": "../../tsconfig.base.json"

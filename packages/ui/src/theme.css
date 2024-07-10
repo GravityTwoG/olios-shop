@@ -8,6 +8,7 @@
   --secondary-color: #222;
   --secondary-hover-color: #555;
   --deco-color: #d8d8d8;
+  --success-color: #37e60b;
 }
 
 @layer base {
