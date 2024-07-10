@@ -40,7 +40,6 @@ export class CustomerProfilesService {
     take?: number;
     cursor?: Prisma.CustomerProfileWhereUniqueInput;
     where?: Prisma.CustomerProfileWhereInput;
-    orderBy?: Prisma.Enumerable<Prisma.CustomerProfileOrderByWithRelationAndSearchRelevanceInput>;
   }): Promise<BaseListDTO<CustomerProfile>> {
     const list = await this.prisma.customerProfile.findMany(params);
     const count = await this.prisma.customerProfile.count({

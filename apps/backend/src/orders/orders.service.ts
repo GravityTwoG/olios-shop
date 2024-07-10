@@ -116,7 +116,6 @@ export class OrdersService {
     take?: number;
     cursor?: Prisma.OrderWhereUniqueInput;
     where?: Prisma.OrderWhereInput;
-    orderBy?: Prisma.Enumerable<Prisma.OrderOrderByWithRelationAndSearchRelevanceInput>;
   }) {
     const list = await this.prisma.order.findMany({
       ...params,
@@ -133,7 +132,6 @@ export class OrdersService {
       take?: number;
       cursor?: Prisma.OrderWhereUniqueInput;
       where?: Prisma.OrderWhereInput;
-      orderBy?: Prisma.Enumerable<Prisma.OrderOrderByWithRelationAndSearchRelevanceInput>;
     },
     userId: string,
   ) {

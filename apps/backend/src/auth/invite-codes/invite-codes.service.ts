@@ -42,16 +42,15 @@ export class InviteCodesService {
     take?: number;
     cursor?: Prisma.InviteCodeWhereUniqueInput;
     where?: Prisma.InviteCodeWhereInput;
-    orderBy?: Prisma.Enumerable<Prisma.InviteCodeOrderByWithRelationAndSearchRelevanceInput>;
   }): Promise<BaseListDTO<InviteCodeDTO>> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const { skip, take, cursor, where } = params;
 
     const list = await this.prisma.inviteCode.findMany({
       skip,
       take,
       cursor,
       where,
-      orderBy,
+      orderBy: [{ createdAt: 'desc' }, { isUsed: 'asc' }, { id: 'desc' }],
     });
     const count = await this.prisma.inviteCode.count({
       where,

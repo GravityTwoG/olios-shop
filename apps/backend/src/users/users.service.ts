@@ -84,7 +84,6 @@ export class UsersService {
     take?: number;
     cursor?: Prisma.UserWhereUniqueInput;
     where?: Prisma.UserWhereInput;
-    orderBy?: Prisma.Enumerable<Prisma.UserOrderByWithRelationAndSearchRelevanceInput>;
   }): Promise<BaseListDTO<User>> {
     const users = await this.prisma.user.findMany(params);
     const count = await this.prisma.user.count({ where: params.where });

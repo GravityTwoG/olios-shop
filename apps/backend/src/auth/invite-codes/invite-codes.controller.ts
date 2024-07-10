@@ -26,7 +26,6 @@ export class InviteCodesController {
       {
         take: query.take,
         skip: query.skip,
-        orderBy: [{ createdAt: 'desc' }, { isUsed: 'asc' }, { id: 'desc' }],
       };
 
     if (query.searchQuery) {

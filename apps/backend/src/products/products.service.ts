@@ -36,7 +36,6 @@ export class ProductsService {
     where?: Omit<Prisma.ProductWhereInput, 'categoryId'> & {
       categoryId?: number;
     };
-    orderBy?: Prisma.Enumerable<Prisma.ProductOrderByWithRelationAndSearchRelevanceInput>;
   }): Promise<BaseListDTO<ProductEntity>> {
     const internalParams = params;
 
@@ -66,7 +65,6 @@ export class ProductsService {
       take?: number;
       cursor?: Prisma.ProductWhereUniqueInput;
       where?: Prisma.ProductWhereInput;
-      orderBy?: Prisma.Enumerable<Prisma.ProductOrderByWithRelationAndSearchRelevanceInput>;
     },
     productId: number,
   ): Promise<BaseListDTO<ProductEntity>> {
