@@ -9,12 +9,14 @@ services:
       - ./:/usr/src/app/
       - node-modules:/usr/src/app/node_modules
     command: sh -c 'cd ./apps/backend && npx prisma generate && npm run db-setup && cd /usr/src/app && npx nx dev backend'
-    # ports:
-    #   - '5111:5111'
+    ports:
+      - '5111:5111'
     depends_on:
       - postgres
       - redis
       - minio
+    networks:
+      - internal
 
   postgres:
     container_name: postgres-olios

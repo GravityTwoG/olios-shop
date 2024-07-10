@@ -13,10 +13,7 @@ services:
       - node-modules:/usr/src/app/node_modules
     command: sh -c 'npx nx dev storefront --verbose'
     ports:
-      - '8000:8000' # for nginx
-      - '5111:5111' # for backend
-      - '3000:3000' # for storefront
-      - '4200:4200' # for admin panel
+      - '3000:3000'
     networks:
       - internal
 
@@ -26,11 +23,12 @@ services:
       context: .
       target: deps
       dockerfile: Dockerfile
+    ports:
+      - '4200:4200'
     volumes:
       - ./:/usr/src/app/
       - node-modules:/usr/src/app/node_modules
     command: sh -c 'npx nx serve admin-panel'
-    network_mode: service:storefront
 
   nginx:
     container_name: olios-nginx
@@ -39,17 +37,13 @@ services:
       - storefront
       - admin-panel
       - backend
-    # ports:
-    #   - '8000:8000'
+    ports:
+      - '8000:8000'
     volumes:
       - ./nginx_dev:/etc/nginx/conf.d
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-    network_mode: service:storefront
-    # networks:
-    # - internal
-
-  backend:
-    network_mode: service:storefront
+    networks:
+      - internal
 
 networks:
   internal:
