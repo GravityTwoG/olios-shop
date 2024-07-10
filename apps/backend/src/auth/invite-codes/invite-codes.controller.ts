@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Roles } from '../decorators/roles.decorator';
-import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
 
 import { InviteCodesService } from './invite-codes.service';
 import { CreateInviteCodeDto } from './dto/create-invite-code.dto';
@@ -22,38 +21,22 @@ export class InviteCodesController {
   async getInviteCodes(
     @Query() query: GetInviteCodesDTO,
   ): Promise<InviteCodesListResponseDTO> {
-    const params: Parameters<typeof this.inviteCodesService.getInviteCodes>[0] =
-      {
-        take: query.take,
-        skip: query.skip,
-        orderBy: [{ createdAt: 'desc' }, { isUsed: 'asc' }, { id: 'desc' }],
-      };
-
-    if (query.searchQuery) {
-      params.where = {
-        OR: [
-          ...createSearchQuery('firstName', query.searchQuery),
-          ...createSearchQuery('lastName', query.searchQuery),
-          ...createSearchQuery('patronymic', query.searchQuery),
-        ],
-      };
-    }
-    const data = await this.inviteCodesService.getInviteCodes(params);
+    const data = await this.inviteCodesService.getInviteCodes(query);
     return { data };
   }
 
   @Post()
   @Roles('MANAGER')
   async createInviteCode(
-    @Body() body: CreateInviteCodeDto,
+    @Body() dto: CreateInviteCodeDto,
   ): Promise<InviteCodeResponseDTO> {
-    const data = await this.inviteCodesService.createInviteCode(body);
+    const data = await this.inviteCodesService.createInviteCode(dto);
     return { data };
   }
 
   @Delete()
   @Roles('MANAGER')
   async deleteInviteCode(@Query('id') id: string): Promise<void> {
-    await this.inviteCodesService.deleteInviteCode({ id });
+    await this.inviteCodesService.deleteInviteCode(id);
   }
 }

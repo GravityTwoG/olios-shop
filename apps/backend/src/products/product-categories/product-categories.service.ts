@@ -7,6 +7,7 @@ import { ImagesService } from 'src/lib/images';
 
 import { CreateProductCategoryDTO } from './dto/create-product-category.dto';
 import { UpdateProductCategoryDTO } from './dto/update-product-category.dto';
+import { GetProductCategoriesDTO } from './dto/get-product-categories.dto';
 
 export type ProductCategoryJoined = ProductCategory & {
   parent: ProductCategory | null;
@@ -14,6 +15,8 @@ export type ProductCategoryJoined = ProductCategory & {
 };
 
 const ProductCategoryInclude = { parent: true, children: { take: 1 } };
+
+const bucketName = 'product-categories';
 
 @Injectable()
 export class ProductCategoriesService {
@@ -28,7 +31,7 @@ export class ProductCategoriesService {
   ): Promise<ProductCategoryJoined> {
     const { name, parentId } = createProductCategoryInput;
 
-    const result = await this.imagesService.upload(icon, 'product-categories');
+    const result = await this.imagesService.upload(icon, bucketName);
     const category = await this.prisma.productCategory.create({
       data: {
         name,
@@ -42,19 +45,24 @@ export class ProductCategoriesService {
     return category;
   }
 
-  async findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.ProductCategoryWhereUniqueInput;
-    where?: Prisma.ProductCategoryWhereInput;
-    orderBy?: Prisma.Enumerable<Prisma.ProductCategoryOrderByWithRelationAndSearchRelevanceInput>;
-  }) {
+  async findAll(dto: GetProductCategoriesDTO) {
+    const where: Prisma.ProductCategoryWhereInput = {};
+
+    if (dto.parentId) {
+      where.parentId = dto.parentId;
+    }
+
+    if (dto.name) {
+      where.OR = this.prisma.createSearchQuery('name', dto.name);
+    }
+
     const categories = await this.prisma.productCategory.findMany({
-      ...params,
+      take: dto.take,
+      skip: dto.skip,
       include: ProductCategoryInclude,
     });
     const count = await this.prisma.productCategory.count({
-      where: params.where,
+      where: where,
     });
 
     return { count, list: categories };
@@ -73,7 +81,7 @@ export class ProductCategoriesService {
   }
 
   async getSubtreeIds(categoryId: number): Promise<number[]> {
-    const ids = await this.prisma.$queryRaw`
+    const ids = await this.prisma.$queryRaw<{ id: number }[]>`
       WITH RECURSIVE Parents AS (
         -- base member, root of the subtree
         SELECT id
@@ -104,10 +112,7 @@ export class ProductCategoriesService {
     const { name, parentId } = updateProductCategoryInput;
 
     if (icon) {
-      const result = await this.imagesService.upload(
-        icon,
-        'product-categories',
-      );
+      const result = await this.imagesService.upload(icon, bucketName);
       return this.prisma.productCategory.update({
         where: { id },
         data: {

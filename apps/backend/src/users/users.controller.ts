@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
-import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
 import { assertTruthy } from 'src/lib/domain/assertions';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
@@ -45,23 +44,7 @@ export class UsersController {
 
   @Get()
   async users(@Query() query: GetUsersDTO): Promise<UsersListResponseDTO> {
-    const params: Parameters<typeof this.usersService.getUsers>[0] = {
-      take: query.take,
-      skip: query.skip,
-    };
-
-    if (query.searchQuery) {
-      params.where = {
-        OR: [
-          ...createSearchQuery('firstName', query.searchQuery),
-          ...createSearchQuery('lastName', query.searchQuery),
-          ...createSearchQuery('patronymic', query.searchQuery),
-          ...createSearchQuery('email', query.searchQuery),
-        ],
-      };
-    }
-
-    const data = await this.usersService.getUsers(params);
+    const data = await this.usersService.getUsers(query);
     return {
       data: { count: data.count, list: data.list.map(mapUserToDto) },
     };

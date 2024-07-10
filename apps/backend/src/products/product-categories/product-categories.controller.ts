@@ -18,8 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { UploadedImageFile } from 'src/common/decorators/uploaded-image-file.decorator';
-import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
+import { UploadedImageFile } from 'src/lib/decorators/uploaded-image-file.decorator';
 
 import { ProductCategoriesService } from './product-categories.service';
 import { ProductCategoryMapper } from './product-category.mapper';
@@ -45,26 +44,7 @@ export class ProductCategoriesController {
   async productCategories(
     @Query() query: GetProductCategoriesDTO,
   ): Promise<ProductCategoryListOutputDTO> {
-    const params: Parameters<typeof this.productCategoriesService.findAll>[0] =
-      {
-        take: query.take,
-        skip: query.skip,
-      };
-
-    if (query.parentId !== undefined) {
-      params.where = {
-        parentId: query.parentId,
-      };
-    }
-
-    if (query.name) {
-      params.where = {
-        ...params.where,
-        OR: [...createSearchQuery('name', query.name)],
-      };
-    }
-
-    const data = await this.productCategoriesService.findAll(params);
+    const data = await this.productCategoriesService.findAll(query);
 
     return {
       data: {

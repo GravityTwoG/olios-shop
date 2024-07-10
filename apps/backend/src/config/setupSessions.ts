@@ -6,7 +6,7 @@ import session from 'express-session';
 import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
 
-import { AppConfigService } from './configuration.schema';
+import { AppConfigService, Environment } from './configuration.schema';
 
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
@@ -28,13 +28,13 @@ export async function setupSessions(app: NestExpressApplication) {
   let sameSite: 'strict' | 'lax' | 'none' = 'strict';
   let secure = true;
 
-  if (ENVIRONMENT === 'local') {
+  if (ENVIRONMENT === Environment.local) {
     sameSite = 'lax';
     secure = false;
-  } else if (ENVIRONMENT === 'staging') {
+  } else if (ENVIRONMENT === Environment.staging) {
     sameSite = 'none';
     secure = true;
-  } else if (ENVIRONMENT === 'production') {
+  } else if (ENVIRONMENT === Environment.production) {
     sameSite = 'strict';
     secure = true;
   }

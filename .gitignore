@@ -1,3 +1,10 @@
 /node_modules
 /.idea
 /.vscode
+
+/.nx
+/dist
+
+# Next.js
+.next
+out

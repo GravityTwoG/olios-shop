@@ -1,0 +1,16 @@
+{
+  "name": "storefront",
+  "version": "0.1.0",
+  "private": true,
+  "prefix": "./",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "prettier --ignore-unknown --write",
+      "eslint --fix"
+    ],
+    "*.{css,scss,md}": "prettier --ignore-unknown --write"
+  }
+}

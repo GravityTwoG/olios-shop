@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString } from 'class-validator';
-import { ListQueryDTO } from 'src/common/dto/list-query-dto';
+import { ListQueryDTO } from 'src/lib/dto/list-query-dto';
 
 export class GetRecommendedProductsDTO extends ListQueryDTO {
   @IsInt()

@@ -1,0 +1,50 @@
+@font-face {
+  font-family: 'Lato';
+  font-weight: 400;
+  font-style: normal;
+  src:
+    local('Lato Regular'),
+    local('Lato-Regular'),
+    url(/fonts/Lato-Regular.woff) format('woff'),
+    url(/fonts/Lato-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-weight: 700;
+  font-style: normal;
+  src:
+    local('Lato Bold'),
+    local('Lato-Bold'),
+    url(/fonts/Lato-Bold.woff) format('woff'),
+    url(/fonts/Lato-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-weight: 900;
+  font-style: normal;
+  src:
+    local('Lato Black'),
+    local('Lato-Black'),
+    url(/fonts/Lato-Black.woff) format('woff'),
+    url(/fonts/Lato-Black.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-weight: 300;
+  font-style: normal;
+  src:
+    local('Lato Light'),
+    local('Lato-Light'),
+    url(/fonts/Lato-Light.woff) format('woff'),
+    url(/fonts/Lato-Light.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Lato';
+  font-weight: 100;
+  font-style: normal;
+  src:
+    local('Lato Thin'),
+    local('Lato-Thin'),
+    url(/fonts/Lato-Thin.woff) format('woff'),
+    url(/fonts/Lato-Thin.ttf) format('truetype');
+}

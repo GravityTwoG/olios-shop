@@ -10,7 +10,7 @@ import { ImagesService } from './images.service';
   imports: [
     S3ClientModule.registerAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
+      inject: [ConfigService as unknown as AppConfigService],
       useFactory: (configService: AppConfigService) => {
         return {
           endpoint: configService.get('S3_ENDPOINT', {

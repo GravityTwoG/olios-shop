@@ -1,0 +1,33 @@
+.Form {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  width: 24rem;
+  max-width: 100%;
+}
+
+.Field {
+  width: 100%;
+}
+
+.FieldError {
+  display: block;
+  min-height: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.FormError {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.FormActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.SubmitButton {
+  width: 100%;
+}

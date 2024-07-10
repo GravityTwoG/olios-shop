@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateContentManagerDto } from './dto/update-content-manager.dto';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
+import { UpdateContentManagerDTO } from './dto/update-content-manager.dto';
 
 @Injectable()
 export class ContentManagerProfilesService {
@@ -18,7 +18,8 @@ export class ContentManagerProfilesService {
     return `This action returns a #${id} contentManager`;
   }
 
-  update(id: number, updateContentManagerDto: UpdateContentManagerDto) {
+  update(id: number, updateContentManagerDto: UpdateContentManagerDTO) {
+    console.log(updateContentManagerDto);
     return `This action updates a #${id} contentManager`;
   }
 

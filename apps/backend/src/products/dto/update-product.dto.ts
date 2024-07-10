@@ -30,10 +30,10 @@ export class UpdateProductDTO extends PartialType(CreateProductDTO) {
   @IsOptional()
   @IsArray()
   @Type(() => ImageToDelete)
-  @Transform(({ value }) => {
+  @Transform(({ value }: { value: string[] }) => {
     const result: ImageToDelete[] = [];
-    value.forEach((v: any) => {
-      result.push(JSON.parse(v));
+    value.forEach((v: string) => {
+      result.push(JSON.parse(v) as ImageToDelete);
     });
     return result;
   })

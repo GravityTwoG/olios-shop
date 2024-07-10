@@ -35,9 +35,8 @@ export class ImagesService implements OnModuleInit {
           const newPolicy = JSON.stringify(createPolicy(bucketName));
 
           if (bucket) {
-            const existingPolicy = await this.s3ClientService.getBucketPolicy(
-              bucketName,
-            );
+            const existingPolicy =
+              await this.s3ClientService.getBucketPolicy(bucketName);
             if (!existingPolicy || existingPolicy !== newPolicy) {
               await this.s3ClientService.setBucketPolicy(bucketName, newPolicy);
             }

@@ -14,6 +14,7 @@ import {
   DomainException,
   DomainExceptionCodes,
 } from './lib/domain/domain.exception';
+import { ExpressAdapter } from '@nestjs/platform-express';
 
 type HttpExceptionData = {
   message: string;
@@ -33,9 +34,9 @@ const domainExceptionsMap = {
 export class GlobalExceptionFilter implements ExceptionFilter {
   logger = new Logger(GlobalExceptionFilter.name);
 
-  constructor(private httpAdapterHost: HttpAdapterHost) {}
+  constructor(private httpAdapterHost: HttpAdapterHost<ExpressAdapter>) {}
 
-  catch(exception: any, host: ArgumentsHost) {
+  catch(exception: Error, host: ArgumentsHost) {
     let httpException = {
       message: exception.message,
       status:
@@ -59,8 +60,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     } else if (exception instanceof DomainException) {
       httpException = this.handleDomainException(exception);
     } else {
-      if (exception.response?.message) {
-        httpException.message = exception.response.message;
+      const response = (
+        exception as unknown as { response: HttpExceptionData | null }
+      ).response;
+      if (response?.message) {
+        httpException.message = response.message;
       }
 
       this.logger.error(exception);

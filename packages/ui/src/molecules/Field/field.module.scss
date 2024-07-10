@@ -1,0 +1,18 @@
+.Field {
+  width: 100%;
+  display: block;
+}
+
+.Label {
+  display: block;
+  padding: 4px 0;
+  text-align: left;
+
+  & > .LabelText {
+    margin: 0 0 0.5rem;
+    color: var(--color-text);
+    font-size: 1.25rem;
+    line-height: 2rem;
+    cursor: pointer;
+  }
+}

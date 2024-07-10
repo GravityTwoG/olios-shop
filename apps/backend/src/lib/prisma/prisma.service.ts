@@ -1,49 +1,54 @@
-import {
-  INestApplication,
-  Injectable,
-  Logger,
-  OnModuleInit,
-} from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Prisma, PrismaClient } from '@prisma/client';
+
+const clientOptions = {
+  log: [
+    {
+      emit: 'event',
+      level: 'query',
+    },
+    {
+      emit: 'stdout',
+      level: 'error',
+    },
+    {
+      emit: 'stdout',
+      level: 'info',
+    },
+    {
+      emit: 'stdout',
+      level: 'warn',
+    },
+  ],
+} satisfies Prisma.PrismaClientOptions;
 
 @Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit {
+export class PrismaService
+  extends PrismaClient<typeof clientOptions>
+  implements OnModuleInit
+{
   private logger = new Logger(PrismaService.name);
 
   constructor() {
-    super({ log: ['query', 'error', 'info', 'warn'] });
+    super(clientOptions);
+
+    this.$on('query', (e) => {
+      this.logger.log('Query: ' + e.query);
+      this.logger.log('Params: ' + e.params);
+      this.logger.log('Duration: ' + e.duration + 'ms');
+    });
   }
 
   async onModuleInit() {
     await this.$connect();
-    this.enablePerformanceLogging(
-      process.env.NODE_ENV === 'production' ? 'long_queries' : 'all_queries',
-    );
   }
 
-  private enablePerformanceLogging(log: 'all_queries' | 'long_queries'): void {
-    (this as any).$on('query', (e: any) => {
-      if (log === 'all_queries') {
-        if (e.query !== 'SELECT 1') {
-          this.logger.log(
-            `query: ${e.query}, params: ${e.params}, duration: ${e.duration} ms`,
-          );
-        }
-      }
+  createSearchQuery = (fieldName: string, query: string) => {
+    const formatted = query.split(' ').join(' | ');
 
-      if (log === 'long_queries') {
-        if (e.duration >= 2000) {
-          this.logger.warn(
-            `query is slow: ${e.query}, params: ${e.params}, execution time: ${e.duration} ms`,
-          );
-        }
-      }
-    });
-  }
-
-  async enableShutdownHooks(app: INestApplication) {
-    this.$on('beforeExit', async () => {
-      await app.close();
-    });
-  }
+    return [
+      { [fieldName]: { contains: query, mode: 'insensitive' } },
+      { [fieldName]: { search: formatted, mode: 'insensitive' } },
+    ];
+  };
 }

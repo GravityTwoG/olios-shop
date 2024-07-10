@@ -1,5 +1,5 @@
-import { BaseListResponseDTO } from 'src/common/dto/base-list.dto';
-import { BaseResponseDTO } from 'src/common/dto/base-response.dto';
+import { BaseListResponseDTO } from 'src/lib/dto/base-list.dto';
+import { BaseResponseDTO } from 'src/lib/dto/base-response.dto';
 
 import { ProductCategoryDTO } from './product-category.dto';
 

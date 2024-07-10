@@ -1,4 +1,4 @@
-ARG IMAGE=node:16-alpine3.16
+ARG IMAGE=node:18-alpine3.18
 
 # Base image
 FROM ${IMAGE} AS development
@@ -12,6 +12,7 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 
 # Install dependencies
+RUN npm install @nestjs/cli@10.1.7 ts-node@10.9.1
 RUN npm ci && npm cache clean --force
 
 FROM ${IMAGE} AS build

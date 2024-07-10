@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tailwind": {
+    "config": "apps/**/tailwind.config.js",
+    "css": "apps/**/src/styles.css",
+    "baseColor": "stone",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@olios-shop/shadcn",
+    "utils": "@olios-shop/ui/utils"
+  }
+}

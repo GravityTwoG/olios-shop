@@ -1,5 +1,91 @@
 {
-  "name": "olios-shop-backend",
+  "name": "backend",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "application"
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "development",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/backend",
+        "main": "apps/backend/src/main.ts",
+        "tsConfig": "apps/backend/tsconfig.app.json",
+        "webpackConfig": "apps/backend/webpack.config.js",
+        "isolatedConfig": true,
+        "generateLockfile": true,
+        "generatePackageJson": true
+      },
+      "target": "node",
+      "compiler": "tsc",
+      "configurations": {
+        "development": {},
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "backend:build"
+      },
+      "target": "node",
+      "compiler": "tsc",
+      "configurations": {
+        "development": {
+          "buildTarget": "backend:build:development"
+        },
+        "production": {
+          "buildTarget": "backend:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/backend/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/backend/**/*.ts"]
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "defaultConfiguration": "local",
+      "options": {
+        "engine": "docker",
+        "context": "dist/apps/backend",
+        "file": "apps/backend/Dockerfile"
+      },
+      "configurations": {
+        "local": {
+          "tags": ["olios-backend:latest"],
+          "push": false
+        },
+        "production": {
+          "tags": ["ghcr.io/gravitytwog/olios-backend:latest"],
+          "push": true
+        }
+      }
+    }
+  }
 }

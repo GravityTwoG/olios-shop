@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString } from 'class-validator';
-import { ListQueryDTO } from 'src/common/dto/list-query-dto';
-import { TransformToNumberOrNull } from 'src/common/validators/TransformToNumberOrNull';
-import { IsNullable } from 'src/common/validators/IsNullable';
+import { ListQueryDTO } from 'src/lib/dto/list-query-dto';
+import { TransformToNumberOrNull } from 'src/lib/validators/TransformToNumberOrNull';
+import { IsNullable } from 'src/lib/validators/IsNullable';
 
 export class GetProductCategoriesDTO extends ListQueryDTO {
   @ApiProperty()

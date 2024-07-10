@@ -1,1 +1,1 @@
-export class UpdateContentManagerDto {}
+export class UpdateContentManagerDTO {}

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@olios-shop/ui": ["packages/ui/src/index.ts"],
+      "@olios-shop/ui/*": ["packages/ui/src/*"],
+      "@olios-shop/admin/*": ["apps/admin-panel/src/*"],
+      "@olios-shop/storefront/*": ["apps/storefront/src/*"]
+    }
+  },
+  "compileOnSave": false,
+  "exclude": ["node_modules", "tmp"]
+}
