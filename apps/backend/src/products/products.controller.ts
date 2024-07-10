@@ -15,7 +15,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { UploadedImageFiles } from 'src/common/decorators/uploaded-image-files.decorator';
+import { UploadedImageFiles } from 'src/lib/decorators/uploaded-image-files.decorator';
 
 import { ProductsService } from './products.service';
 import { ProductMapper } from './product.mapper';

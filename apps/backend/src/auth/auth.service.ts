@@ -53,9 +53,8 @@ export class AuthService {
   async registerEmployee(registerUserDto: RegisterEmployeeDto): Promise<User> {
     const { email, password, inviteCode: inviteCodeInput } = registerUserDto;
 
-    const inviteCode = await this.inviteCodesService.getInviteCode({
-      code: inviteCodeInput,
-    });
+    const inviteCode =
+      await this.inviteCodesService.getInviteCode(inviteCodeInput);
 
     assertFalsy(inviteCode.isUsed, EntityAlreadyUsedException, 'Invite-code');
 
@@ -73,13 +72,11 @@ export class AuthService {
         prisma,
       );
 
-      await this.inviteCodesService.updateInviteCodeInTransaction(
+      await this.inviteCodesService.updateInviteCode(
+        inviteCode.code,
         {
-          where: { code: inviteCode.code },
-          data: {
-            isUsed: true,
-            usedBy: user.id,
-          },
+          isUsed: true,
+          usedBy: user.id,
         },
         prisma,
       );

@@ -1,6 +1,6 @@
 import { EmployeeRole } from '@prisma/client';
 import { IsBoolean, IsDate, IsEnum, IsString } from 'class-validator';
-import { IsNullable } from 'src/common/validators/IsNullable';
+import { IsNullable } from 'src/lib/validators/IsNullable';
 
 export class InviteCodeDTO {
   @IsString()

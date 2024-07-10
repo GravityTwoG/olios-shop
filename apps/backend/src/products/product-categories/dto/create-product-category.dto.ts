@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsInt, IsString } from 'class-validator';
-import { IsNullable } from 'src/common/validators/IsNullable';
+import { IsNullable } from 'src/lib/validators/IsNullable';
 
 export class CreateProductCategoryDTO {
   @ApiProperty()

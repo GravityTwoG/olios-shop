@@ -6,7 +6,7 @@ import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 import { CreateProductDTO } from './dto/create-product.dto';
 import { UpdateProductDTO } from './dto/update-product.dto';
-import { BaseListDTO } from 'src/common/dto/base-list.dto';
+import { BaseListDTO } from 'src/lib/dto/base-list.dto';
 import { GetProductsDTO } from './dto/get-products.dto';
 import { GetRecommendedProductsDTO } from './dto/get-recommended-products.dto';
 import { ProductCategoriesService } from './product-categories/product-categories.service';

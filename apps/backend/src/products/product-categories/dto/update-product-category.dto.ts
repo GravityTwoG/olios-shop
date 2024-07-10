@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsInt } from 'class-validator';
 
 import { CreateProductCategoryDTO } from './create-product-category.dto';
-import { NotEqualsToField } from 'src/common/validators/NotEqualsToField';
+import { NotEqualsToField } from 'src/lib/validators/NotEqualsToField';
 
 export class UpdateProductCategoryDTO extends CreateProductCategoryDTO {
   @ApiProperty()

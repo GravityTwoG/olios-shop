@@ -18,7 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { UploadedImageFile } from 'src/common/decorators/uploaded-image-file.decorator';
+import { UploadedImageFile } from 'src/lib/decorators/uploaded-image-file.decorator';
 
 import { ProductCategoriesService } from './product-categories.service';
 import { ProductCategoryMapper } from './product-category.mapper';

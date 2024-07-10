@@ -1,8 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 
-import { createSearchQuery } from 'src/common/prisma/createSearchQuery';
-
 const clientOptions = {
   log: [
     {
@@ -45,5 +43,12 @@ export class PrismaService
     await this.$connect();
   }
 
-  createSearchQuery = createSearchQuery;
+  createSearchQuery = (fieldName: string, query: string) => {
+    const formatted = query.split(' ').join(' | ');
+
+    return [
+      { [fieldName]: { contains: query, mode: 'insensitive' } },
+      { [fieldName]: { search: formatted, mode: 'insensitive' } },
+    ];
+  };
 }

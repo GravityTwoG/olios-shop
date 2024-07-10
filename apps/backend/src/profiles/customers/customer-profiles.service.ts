@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { User, CustomerProfile, Prisma } from '@prisma/client';
 
 import { CartsService } from 'src/carts/carts.service';
-import { BaseListDTO } from 'src/common/dto/base-list.dto';
+import { BaseListDTO } from 'src/lib/dto/base-list.dto';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 @Injectable()

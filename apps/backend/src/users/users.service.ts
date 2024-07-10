@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, User, UserRole } from '@prisma/client';
 
 import { PrismaService } from 'src/lib/prisma/prisma.service';
-import { BaseListDTO } from 'src/common/dto/base-list.dto';
+import { BaseListDTO } from 'src/lib/dto/base-list.dto';
 
 import { CustomerProfilesService } from '../profiles/customers/customer-profiles.service';
 

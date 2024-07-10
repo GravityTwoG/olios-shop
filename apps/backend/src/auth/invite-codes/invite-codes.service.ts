@@ -5,8 +5,9 @@ import { InviteCode, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/lib/prisma/prisma.service';
 
 import { CreateInviteCodeDto } from './dto/create-invite-code.dto';
-import { BaseListDTO } from 'src/common/dto/base-list.dto';
+import { BaseListDTO } from 'src/lib/dto/base-list.dto';
 import { InviteCodeDTO } from './dto/invite-code.dto';
+import { GetInviteCodesDTO } from './dto/get-invite-codes.dto';
 
 @Injectable()
 export class InviteCodesService {
@@ -29,26 +30,30 @@ export class InviteCodesService {
     });
   }
 
-  async getInviteCode(
-    codeWhereUniqueInput: Prisma.InviteCodeWhereUniqueInput,
-  ): Promise<InviteCode> {
+  async getInviteCode(code: string): Promise<InviteCode> {
     return this.prisma.inviteCode.findUniqueOrThrow({
-      where: codeWhereUniqueInput,
+      where: {
+        code: code,
+      },
     });
   }
 
-  async getInviteCodes(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.InviteCodeWhereUniqueInput;
-    where?: Prisma.InviteCodeWhereInput;
-  }): Promise<BaseListDTO<InviteCodeDTO>> {
-    const { skip, take, cursor, where } = params;
+  async getInviteCodes(
+    dto: GetInviteCodesDTO,
+  ): Promise<BaseListDTO<InviteCodeDTO>> {
+    const where: Prisma.InviteCodeWhereInput = {};
+
+    if (dto.searchQuery) {
+      where.OR = [
+        ...this.prisma.createSearchQuery('firstName', dto.searchQuery),
+        ...this.prisma.createSearchQuery('lastName', dto.searchQuery),
+        ...this.prisma.createSearchQuery('patronymic', dto.searchQuery),
+      ];
+    }
 
     const list = await this.prisma.inviteCode.findMany({
-      skip,
-      take,
-      cursor,
+      take: dto.take,
+      skip: dto.skip,
       where,
       orderBy: [{ createdAt: 'desc' }, { isUsed: 'asc' }, { id: 'desc' }],
     });
@@ -58,35 +63,25 @@ export class InviteCodesService {
     return { list, count };
   }
 
-  async updateInviteCode(params: {
-    where: Prisma.InviteCodeWhereUniqueInput;
-    data: Prisma.InviteCodeUpdateInput;
-  }): Promise<InviteCode> {
-    return this.updateInviteCodeInTransaction(params, this.prisma);
-  }
-
-  async updateInviteCodeInTransaction(
-    params: {
-      where: Prisma.InviteCodeWhereUniqueInput;
-      data: Prisma.InviteCodeUpdateInput;
+  async updateInviteCode(
+    code: string,
+    data: {
+      isUsed: boolean;
+      usedBy: string;
     },
-    prisma: Prisma.TransactionClient,
+    prisma: Prisma.TransactionClient = this.prisma,
   ): Promise<InviteCode> {
-    const { where, data } = params;
     return prisma.inviteCode.update({
-      data,
-      where,
+      where: {
+        code: code,
+      },
+      data: data,
     });
   }
 
-  async deleteInviteCode(
-    where: Prisma.InviteCodeWhereUniqueInput,
-  ): Promise<void> {
-    await this.prisma.inviteCode.findFirstOrThrow({
-      where: { ...where, isUsed: false },
-    });
-    await this.prisma.inviteCode.delete({
-      where: where,
+  async deleteInviteCode(id: string): Promise<void> {
+    await this.prisma.inviteCode.deleteMany({
+      where: { id: id, isUsed: false },
     });
   }
 }
