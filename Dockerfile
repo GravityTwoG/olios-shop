@@ -7,4 +7,4 @@ WORKDIR /usr/src/app
 COPY .husky ./.husky
 COPY package*.json ./
 
-RUN npm ci --no-audit --maxsockets 1
+RUN npm ci --no-audit
